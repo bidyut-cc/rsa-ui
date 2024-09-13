@@ -199,7 +199,7 @@ function Header({ style, changeStyle1 }) {
               aria-expanded="false"
             >
               <span className="mr-2 d-none d-lg-inline text-gray-600 small">
-                Super Admin
+              {localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).first_name : 'RSA Admin'}
               </span>
               <img
                 className="img-profile rounded-circle"
