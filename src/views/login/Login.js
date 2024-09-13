@@ -4,16 +4,16 @@ import apiService from '../../services/apiService';
 import useAuth from '../../components/hooks/useAuth';
 import { message} from 'antd';
 function Login() {
-  const [loginInput,setLogin] = useState({
-    email:"",
-    password:"",
-    errors:{}
-});
-const handleInput = (e) =>{
-  e.persist();
-  const {name,value} = e.target;
-  setLogin({...loginInput,[ name] : value});
-}
+    const [loginInput,setLogin] = useState({
+      email:"",
+      password:"",
+      errors:{}
+  });
+  const handleInput = (e) =>{
+    e.persist();
+    const {name,value} = e.target;
+    setLogin({...loginInput,[ name] : value});
+  }
   const navigate = useNavigate();
   const auth = useAuth();
 
@@ -44,7 +44,13 @@ const handleInput = (e) =>{
         message.success(response.message);
       }
     } catch (error) {
-      setLogin({...loginInput,errors : error.response.data.errors});
+      if(error.response.data.errors){
+        setLogin({...loginInput,errors : error.response.data.errors});
+      }else{
+        setLogin({...loginInput,errors : {}});
+        message.error('Some Problem Occured! Please try again later.');
+      }
+      
     }
   
    
@@ -113,9 +119,9 @@ const handleInput = (e) =>{
                         <div className="text-center">
                           <Link className="small" href="">Forgot Password?</Link>
                         </div>
-                        <div className="text-center">
+                        {/* <div className="text-center">
                           <Link className="small" href="">Create an Account!</Link>
-                        </div>
+                        </div> */}
                       </form>
                     </div>
                   </div>
