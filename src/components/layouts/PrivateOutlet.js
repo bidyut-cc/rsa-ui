@@ -5,6 +5,7 @@ import Sidebar from "../inc/Sidebar.js";
 import Footer from "../inc/Footer.js";
 import Header from "../inc/Header.js";
 import apiService from "../../services/apiService.js";
+import { message } from "antd";
 
 export default function PrivateOutlet() {
     const [style, setStyle] = useState("navbar-nav bg-gradient-primary sidebar sidebar-dark accordion");
@@ -45,6 +46,7 @@ const navigate = useNavigate();
         // Redirect after the modal has been hidden
        // modalElement.addEventListener('hidden.bs.modal', () => {
           navigate('/login');
+          message.success('Logout Successfully.'); 
        // });
         } catch (error) {
           console.error('Error logging out:', error);

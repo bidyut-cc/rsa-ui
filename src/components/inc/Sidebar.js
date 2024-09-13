@@ -37,6 +37,13 @@ function Sidebar({ style, changeStyle }) {
             <span>Dashboard</span>
           </Link>
         </li>
+        <li className="nav-item">
+            <Link className="nav-link" to="users">
+                <i className="fas fa-fw fa fa-users"></i>
+                <span>Users</span></Link>
+        </li>
+       
+    
         {/*   <!-- Sidebar Toggler (Sidebar) --> */}
         {/* <div className="text-center d-none d-md-inline">
           <button
