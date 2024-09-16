@@ -3,7 +3,7 @@ import axios from 'axios';
 import { message} from 'antd';
 
 // Set your base URL for the API
-const API_BASE_URL = 'http://localhost:3001/api/';
+const API_BASE_URL = 'https://rsa-api-kappa.vercel.app/api/';
 const apiInstance = axios.create({
   baseURL: API_BASE_URL,
 });
