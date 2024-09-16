@@ -1,8 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function Sidebar({ style, changeStyle }) {
-
+  const location = useLocation(); // Get the current route path
   return (
     <>
       {/*  <!-- Sidebar --> */}
@@ -31,13 +31,13 @@ function Sidebar({ style, changeStyle }) {
         <hr className="sidebar-divider my-0" />
 
         {/*  <!-- Nav Item - Dashboard --> */}
-        <li className="nav-item active">
+        <li className={`nav-item ${location.pathname === '/dashboard' ? 'active' : ''}`}>
         <Link className="nav-link" to="/dashboard">
             <i className="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span>
           </Link>
         </li>
-        <li className="nav-item">
+        <li className={`nav-item ${location.pathname === '/users' ? 'active' : ''}`}>
             <Link className="nav-link" to="users">
                 <i className="fas fa-fw fa fa-users"></i>
                 <span>Users</span></Link>
