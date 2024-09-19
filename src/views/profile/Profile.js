@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import apiService from "../../services/apiService";
-import { message } from "antd";
+import { Form, Input, Button, Card, Row, Col ,message} from 'antd';
+import { useHeader } from "../../components/context/HeaderContext"; // Import the context
 
 function Profile() {
+  const { setHeaderTitle } = useHeader(); // Get the function to update the header
+  
+
+  const [form] = Form.useForm();
     const [profileData, setProfileData] = useState({
         "first_name":"",
         "last_name":"",
@@ -15,9 +20,17 @@ function Profile() {
     const fetchRecords = async () => {
       try {
         const response = await apiService.get('auth/profile');
-        setProfileData(prevData => ({ ...prevData, ...response }));
+        if(response.status === 200){
+          form.setFieldsValue({
+            first_name:response.data.first_name,
+            last_name:response.data.last_name,
+            email:response.data.email,
+            phone:response.data.phone,
+          });
+          setProfileData(prevData => ({ ...prevData, ...response.data }));
+        }
       } catch (error) {
-        console.error("Error fetching profile data:", error);
+        message.error(error.response?.statusText);
       }
     };
 
@@ -25,7 +38,7 @@ function Profile() {
     fetchRecords();
   }, []);
 
-    const handleProfileInput = (e) =>{
+    const handleInput = (e) =>{
         e.persist();
         const {name,value} = e.target;
         setProfileData({...profileData,[ name] : value});
@@ -40,11 +53,32 @@ function Profile() {
         }
         try {
             const response = await apiService.post('auth/update-profile', data);
-            if (response.status) {
-              message.success(response.message);
+            if (response.status === 200) {
+            // Extract user data from response (assuming response.data contains user info)
+            const { id, first_name,last_name, email, phone } = data;
+
+            // Update localStorage with new user info
+            localStorage.setItem('user', JSON.stringify({ id, first_name,last_name, email, phone }));
+
+            // Update the header title
+            setHeaderTitle(`${first_name} ${last_name}`); // Change the header title from Profile
+              message.success(response.data.message);
+              setProfileData({...profileData,errors : []});
             }
           } catch (error) {
-            setProfileData({...profileData,errors : error.response.data.errors});
+            if (error.response) {
+              if (error.response.status === 422) {
+                setProfileData({...profileData,errors : error.response.data.errors});
+              }else if (error.response.status === 500) {
+                setProfileData({...profileData,errors : []});
+                message.error(error.response.data.message);
+              } else {
+                message.error('Something went wrong. Please try again later.');
+              }
+            }else{
+               message.error('Some Problem Occured! Please try again later.');
+            }
+            
           }
    
        
@@ -52,113 +86,68 @@ function Profile() {
   return (
     <div className="container-fluid">
       <h1 className="h3 mb-4 text-gray-800">Update Profile</h1>
-      <section className="content">
-        <div className="container-fluid">
-          <div className="col-12 ">
-            <div className="card">
-              <div className="card-body">
-                <div className="tab-content">
-                  <div className="tab-pane active" id="profile">
-                    <form className="form-horizontal" onSubmit={UpdateProfile}>
-                      <div className="form-group">
-                        <label
-                          htmlFor="first_name"
-                          className="col-sm-2 control-label"
-                        >
-                          First Name :
-                        </label>
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className={`form-control ${profileData.errors?.first_name ? 'is-invalid' : ''}`}
-                            autoComplete="off"
-                            id="first_name"
-                            placeholder=" First Name"
-                            name="first_name"
-                            value={profileData?.first_name} 
-                            onChange={handleProfileInput}
-                          />
-                          <span className="text-danger">{profileData.errors.first_name?.message}</span>
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <label
-                          htmlFor="last_name"
-                          className="col-sm-2 control-label"
-                        >
-                          Last Name :
-                        </label>
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className={`form-control ${profileData.errors?.last_name ? 'is-invalid' : ''}`}
-                            autoComplete="off"
-                            id="last_name"
-                            placeholder=" Last Name"
-                            name="last_name"
-                            value={profileData?.last_name} 
-                            onChange={handleProfileInput}
-                          />
-                           <span className="text-danger">{profileData.errors.last_name?.message}</span>
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <label
-                          htmlFor="inputEmail"
-                          className="col-sm-2 control-label"
-                        >
-                          Email :
-                        </label>
-                        <div className="col-sm-10">
-                          <input
-                            type="email"
-                            className={`form-control ${profileData.errors?.email ? 'is-invalid' : ''}`}
-                            autoComplete="off"
-                            id="inputEmail"
-                            placeholder="Email"
-                            name="email"
-                            value={profileData?.email} 
-                            onChange={handleProfileInput}
-                          />
-                           <span className="text-danger">{profileData.errors.email?.message}</span>
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <label
-                          htmlFor="phone"
-                          className="col-sm-2 control-label"
-                        >
-                          Phone :
-                        </label>
-                        <div className="col-sm-10">
-                          <input
-                            type="text"
-                            className={`form-control ${profileData.errors?.phone ? 'is-invalid' : ''}`}
-                            autoComplete="off"
-                            id="phone"
-                            placeholder=" Phone"
-                            name="phone"
-                            value={profileData?.phone} 
-                            onChange={handleProfileInput}
-                          />
-                           <span className="text-danger">{profileData.errors.phone?.message}</span>
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <div className="col-sm-offset-2 col-sm-10 d-flex justify-content-center">
-                          <button type="submit" className="btn btn-primary">
-                            Update
-                          </button>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Row justify="center">
+        <Col xs={24} sm={20} md={18} lg={16}>
+          <Card>
+              <Form form={form} layout="vertical">
+                  <Form.Item
+                    label={<span>First Name <span style={{ color: 'red' }}>*</span></span>}
+                    name="first_name"
+                    validateStatus={profileData.errors?.first_name ? 'error' : ''}
+                    help={profileData.errors?.first_name?.message} // Display only the error message
+                  >
+                  <Input placeholder="First Name"  
+                    name="first_name"
+                    value={profileData?.first_name}
+                    onChange={handleInput} />
+                  </Form.Item>
+                  <Form.Item
+                    label={<span>Last Name <span style={{ color: 'red' }}>*</span></span>}
+                    name="last_name"
+                    validateStatus={profileData.errors?.last_name ? 'error' : ''}
+                    help={profileData.errors?.last_name?.message} // Display only the error message
+                  >
+                  <Input placeholder="Last Name"  
+                    name="last_name"
+                    value={profileData?.last_name}
+                    onChange={handleInput} />
+                  </Form.Item>
+                  <Form.Item
+                    label={<span>Email <span style={{ color: 'red' }}>*</span></span>}
+                    name="email"
+                    validateStatus={profileData.errors?.email ? 'error' : ''}
+                    help={profileData.errors?.email?.message} // Display only the error message
+                  >
+                  <Input placeholder="Email"  
+                    name="email"
+                    value={profileData?.email}
+                    onChange={handleInput} />
+                  </Form.Item>
+                  <Form.Item
+                    label={<span>Phone <span style={{ color: 'red' }}>*</span></span>}
+                    name="phone"
+                    validateStatus={profileData.errors?.phone ? 'error' : ''}
+                    help={profileData.errors?.phone?.message} // Display only the error message
+                  >
+                  <Input placeholder="Phone"  
+                    name="phone"
+                    value={profileData?.phone}
+                    onChange={handleInput} />
+                  </Form.Item>
+                    {/* Submit and Reset buttons */}
+                    <Form.Item
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <Button type="primary"  style={{ marginRight: 8 }} onClick={UpdateProfile}> Update</Button> 
+                      </Form.Item>
+
+                  </Form>
+            </Card>
+        </Col>
+      </Row>
     </div>
   );
 }

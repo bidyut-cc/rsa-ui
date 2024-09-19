@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useHeader } from "../context/HeaderContext"; // Import the context
 
-
-function Header({ style, changeStyle1 }) {
+function Header({ style, toggleSidebar }) {
+  const { headerTitle } = useHeader(); // Access the shared state
   return (
     <>
       {/*  <!-- Topbar --> */}
@@ -11,7 +12,7 @@ function Header({ style, changeStyle1 }) {
         <button
           id="sidebarToggleTop"
           className="btn btn-link d-md-none rounded-circle mr-3"
-          onClick={changeStyle1}
+          onClick={toggleSidebar}
         >
           <i className="fa fa-bars"></i>
         </button>
@@ -199,7 +200,7 @@ function Header({ style, changeStyle1 }) {
               aria-expanded="false"
             >
               <span className="mr-2 d-none d-lg-inline text-gray-600 small">
-              {localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).first_name : 'RSA Admin'}
+             {headerTitle}
               </span>
               <img
                 className="img-profile rounded-circle"

@@ -1,12 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Row, Space, Table, Input as AntInput, Modal,Form, message, Select } from "antd";
-import { PlusCircleOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import {
+  Button,
+  Col,
+  Row,
+  Space,
+  Table,
+  Input as AntInput,
+  Modal,
+  Form,
+  message,
+  Select,
+} from "antd";
+import {
+  PlusCircleOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import apiService from "../../services/apiService";
 import { debounce } from "lodash";
 const { Option } = Select;
 
 function User() {
-
   const [dataSource, setDataSource] = useState({
     loading: false,
     data: [],
@@ -16,18 +30,18 @@ function User() {
   });
 
   const [userData, setUserData] = useState({
-    id:"",
-    first_name:"",
-    last_name:"",
-    email:"",
-    phone:"",
-    roles:"",
-    status:"",
-    errors:[]
-});
+    id: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    roles: "",
+    status: "",
+    errors: [],
+  });
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
- 
+
   const columns = [
     {
       title: "Sl No.",
@@ -63,16 +77,16 @@ function User() {
             shape="circle"
             onClick={() => handleEdit(record)}
           >
-           <EditOutlined />
+            <EditOutlined />
           </Button>
-          <Button type="primary"
-           shape="circle"
-           danger
-           onClick={() => handleDelete(record.id)}
+          <Button
+            type="primary"
+            shape="circle"
+            danger
+            onClick={() => handleDelete(record.id)}
           >
-  <DeleteOutlined />
-</Button>
-
+            <DeleteOutlined />
+          </Button>
         </Space>
       ),
     },
@@ -84,14 +98,17 @@ function User() {
       const response = await apiService.get(
         `users/list?page=${dataSource.page}&show=${dataSource.pageSize}&search=${dataSource.search}`
       );
-      setDataSource((prev) => ({
-        ...prev,
-        loading: false,
-        data: response.results,
-      }));
+      if(response.status === 200){
+        setDataSource((prev) => ({
+          ...prev,
+          loading: false,
+          data: response.data.results,
+        }));
+      }
+     
     } catch (error) {
+      message.error(error.response.statusText);
       setDataSource((prev) => ({ ...prev, loading: false }));
-      console.error("Error fetching profile data:", error);
     }
   };
 
@@ -110,57 +127,68 @@ function User() {
   useEffect(() => {
     fetchRecords();
   }, [dataSource.page, dataSource.search]);
-  
+
   const showModal = () => {
     setIsModalOpen(true);
   };
 
-  
-  const handleInput = (e) =>{
+  const handleInput = (e) => {
     e.persist();
-    const {name,value} = e.target;
-    setUserData({...userData,[ name] : value});
-}
+    const { name, value } = e.target;
+    setUserData({ ...userData, [name]: value });
+  };
 
- // Handle select changes
- const handleSelectChange = (value, name) => {
-  setUserData(prevState => ({ ...prevState, [name]: value }));
-};
+  // Handle select changes
+  const handleSelectChange = (value, name) => {
+    setUserData((prevState) => ({ ...prevState, [name]: value }));
+  };
 
-  const handleAdd = async(e) => {
-   e.preventDefault();
-   const data = {
-       first_name : userData.first_name,
-       last_name : userData.last_name,
-       email : userData.email,
-       phone : userData.phone,
-       roles : userData.roles,
-       status : userData.status,
-   }
-   try {
-    const response = await apiService.post('users/save', data);
-    if (response.status) {
-      message.success(response.message);
-      handleReset();
-      fetchRecords();
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    const data = {
+      first_name: userData.first_name,
+      last_name: userData.last_name,
+      email: userData.email,
+      phone: userData.phone,
+      roles: userData.roles,
+      status: userData.status,
+    };
+    try {
+      const response = await apiService.post("users/save", data);
+      if (response.status === 200) {
+        message.success(response.data.message);
+        handleReset();
+        fetchRecords();
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 422) {
+          setUserData({ ...userData, errors: error.response.data.errors });
+        }else if (error.response.status === 500) {
+          setUserData({ ...userData, errors:[] });
+          message.error(error.response.data.message);
+        } else {
+          message.error('Something went wrong. Please try again later.');
+        }
+      }else{
+         message.error('Some Problem Occured! Please try again later.');
+      }
+      
     }
-  } catch (error) {
-    setUserData({...userData,errors : error.response.data.errors});
-  }
   };
 
   const handleReset = () => {
     form.resetFields(); // Reset form fields
     setUserData((prev) => ({
       ...prev,
-      id:"",
-      first_name:"",
-      last_name:"",
-      email:"",
-      phone:"",
-      roles:"",
-      status:"",
-      errors:[]
+      id: "",
+      first_name: "",
+      last_name: "",
+      email: "",
+      phone: "",
+      roles: "",
+      status: "",
+      errors: [],
     }));
   };
 
@@ -168,14 +196,14 @@ function User() {
     form.resetFields();
     setUserData((prev) => ({
       ...prev,
-      id:"",
-      first_name:"",
-      last_name:"",
-      email:"",
-      phone:"",
-      roles:"",
-      status:"",
-      errors:[]
+      id: "",
+      first_name: "",
+      last_name: "",
+      email: "",
+      phone: "",
+      roles: "",
+      status: "",
+      errors: [],
     }));
     setIsModalOpen(false);
   };
@@ -186,230 +214,285 @@ function User() {
       last_name: row.last_name,
       email: row.email,
       phone: row.phone,
-      roles: row.roles[0],  // Ensure this matches a value in your Select options
-      status: row.status    // Ensure this matches a value in your Select options
+      roles: row.roles[0], // Ensure this matches a value in your Select options
+      status: row.status, // Ensure this matches a value in your Select options
     });
-   setUserData((prev) => ({
-    ...prev,
-    id:row._id,
-    first_name:row.first_name,
-    last_name:row.last_name,
-    email:row.email,
-    phone:row.phone,
-    roles:row.roles[0],
-    status:row.status,
-    errors:[]
-  }));
+    setUserData((prev) => ({
+      ...prev,
+      id: row._id,
+      first_name: row.first_name,
+      last_name: row.last_name,
+      email: row.email,
+      phone: row.phone,
+      roles: row.roles[0],
+      status: row.status,
+      errors: [],
+    }));
     setIsModalOpen(true);
   };
 
-  const handleUpdate = async(e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
     const data = {
-        first_name : userData.first_name,
-        last_name : userData.last_name,
-        email : userData.email,
-        phone : userData.phone,
-        roles : userData.roles,
-        status : userData.status,
-    }
+      first_name: userData.first_name,
+      last_name: userData.last_name,
+      email: userData.email,
+      phone: userData.phone,
+      roles: userData.roles,
+      status: userData.status,
+    };
     try {
-     const response = await apiService.post(`users/update/${userData.id}`, data);
-     if (response.status) {
-       message.success(response.message);
-       setIsModalOpen(false);
-       handleReset();
-       fetchRecords();
-     }
-   } catch (error) {
-     setUserData({...userData,errors : error.response.data.errors});
-   }
-   };
+      const response = await apiService.post(
+        `users/update/${userData.id}`,
+        data
+      );
+      if (response.status === 200) {
+        message.success(response.data.message);
+        setIsModalOpen(false);
+        handleReset();
+        fetchRecords();
+      }
+    } catch (error) {
+        if (error.response) {
+        if (error.response.status === 422) {
+          setUserData({ ...userData, errors: error.response.data.errors });
+        }else if (error.response.status === 500) {
+          setUserData({ ...userData, errors:[] });
+          message.error(error.response.data.message);
+        } else {
+          message.error('Something went wrong. Please try again later.');
+        }
+      }else{
+         message.error('Some Problem Occured! Please try again later.');
+      }
+    }
+  };
 
-   const handleDelete = async (ids) => {
+  const handleDelete = async (ids) => {
     Modal.confirm({
-        title: "Are you sure you want to delete these records?",
-        okType: "danger",
-        onOk: async() => {
-            // Make an API call to delete multiple records
-                try {
-                  const response = await apiService.post('users/delete', { ids:[ids] });
-                  if (response.status) {
-                    fetchRecords(1); // Refresh records after deletion
-                    message.success(response.message);
-                  }
-                } catch (error) {
-                  message.error("Failed to delete records.");
-                    console.error("Error deleting records:", error);
-                }
-        },
+      title: "Are you sure you want to delete these records?",
+      okType: "danger",
+      onOk: async () => {
+        // Make an API call to delete multiple records
+        try {
+          const response = await apiService.post("users/delete", {
+            ids: [ids],
+          });
+          if (response.status === 200) {
+            fetchRecords(); // Refresh records after deletion
+            message.success(response.data.message);
+          }
+        } catch (error) {
+          if (error.response) {
+            if (error.response.status === 422) {
+              setUserData({ ...userData, errors: error.response.data.errors });
+            }else if (error.response.status === 500) {
+              setUserData({ ...userData, errors:[] });
+              message.error(error.response.data.message);
+            } else {
+              message.error('Something went wrong. Please try again later.');
+            }
+          }else{
+             message.error('Some Problem Occured! Please try again later.');
+          }
+        }
+      },
     });
-};
+  };
 
   return (
     <div className="container-fluid">
-    <h1 className="h3 mb-4 text-gray-800">Users</h1>
-    <section className="content">
-      <div className="container-fluid">
-        <div className="col-12">
-          <div className="card">
-            <div className="card-body">
-              <Row justify="end" style={{ marginBottom: 16 }}>
-                <Col>
-                  <Button type="primary" shape="circle" style={{ backgroundColor: 'green', borderColor: 'green' }} 
-                  onClick={showModal}>
-                  <PlusCircleOutlined />
-                  </Button>
-                </Col>
-                <Col style={{ marginLeft: 8 }}>
-                  <AntInput
-                    placeholder="Search"
-                    allowClear
-                    onChange={(e) => handleSearch(e.target.value)}
-                  />
-                </Col>
-              </Row>
-              <Table
-                loading={dataSource.loading}
-                rowKey="id"
-                dataSource={dataSource.data.results?.data}
-                columns={columns}
-                pagination={{
-                  current: dataSource.page,
-                  pageSize: dataSource.pageSize,
-                  total: dataSource.data.results_count,
-                  onChange: (page) => handlePaginate(page),
-                  showTotal: (total, range) =>
-                    `Showing ${range[0]} to ${range[1]} of ${total} entries`,
-                }}
-              />
+      <h1 className="h3 mb-4 text-gray-800">Users</h1>
+      <section className="content">
+        <div className="container-fluid">
+          <div className="col-12">
+            <div className="card">
+              <div className="card-body">
+                <Row justify="end" style={{ marginBottom: 16 }}>
+                  <Col>
+                    <Button
+                      type="primary"
+                      shape="circle"
+                      style={{ backgroundColor: "green", borderColor: "green" }}
+                      onClick={showModal}
+                    >
+                      <PlusCircleOutlined />
+                    </Button>
+                  </Col>
+                  <Col style={{ marginLeft: 8 }}>
+                    <AntInput
+                      placeholder="Search"
+                      allowClear
+                      onChange={(e) => handleSearch(e.target.value)}
+                    />
+                  </Col>
+                </Row>
+                <Table
+                  loading={dataSource.loading}
+                  rowKey="id"
+                  dataSource={dataSource.data.results?.data}
+                  columns={columns}
+                  pagination={{
+                    current: dataSource.page,
+                    pageSize: dataSource.pageSize,
+                    total: dataSource.data.results_count,
+                    onChange: (page) => handlePaginate(page),
+                    showTotal: (total, range) =>
+                      `Showing ${range[0]} to ${range[1]} of ${total} entries`,
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-    <Modal title={userData?.id ? "Update User" : "Add User"} 
-    open={isModalOpen}  
-    onCancel={handleCancel} 
-    footer={null}
-   
-    >
-    <Form form={form} layout="vertical">
-                  <Form.Item
-                    label="First Name"
-                    name="first_name"
-                    rules={[{ required: true }]}
-                    validateStatus={userData.errors?.first_name ? 'error' : ''}
-                    help={userData.errors?.first_name?.message} // Display only the error message
-                  >
-                    <AntInput
-                      placeholder="First Name"
-                      name="first_name"
-                      value={userData?.first_name}
-                      onChange={handleInput}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label="Last Name"
-                    name="last_name"
-                    rules={[{ required: true }]}
-                    validateStatus={userData.errors?.last_name ? 'error' : ''}
-                    help={userData.errors?.last_name?.message} // Display only the error message
-                  >
-                    <AntInput
-                      placeholder="Last Name"
-                      name="last_name"
-                      value={userData?.last_name}
-                      onChange={handleInput}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label="Email"
-                    name="email"
-                    rules={[{ required: true }]}
-                    validateStatus={userData.errors?.email ? 'error' : ''}
-                    help={userData.errors?.email?.message} // Display only the error message
-                  >
-                    <AntInput
-                      placeholder="Email"
-                      name="email"
-                      value={userData?.email}
-                      onChange={handleInput}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label="Phone"
-                    name="phone"
-                    rules={[{ required: true }]}
-                    validateStatus={userData.errors?.phone ? 'error' : ''}
-                    help={userData.errors?.phone?.message} // Display only the error message
-                  >
-                    <AntInput
-                      placeholder="Phone"
-                      name="phone"
-                      rules={[{ required: true }]}
-                      value={userData?.phone}
-                      onChange={handleInput}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    label="Role"
-                    name="roles"
-                    rules={[{ required: true }]}
-                    validateStatus={userData.errors?.roles ? 'error' : ''}
-                    help={userData.errors?.roles?.message} // Display only the error message
-                  >
-                  <Select 
-                      placeholder="Select Roles" 
-                      onChange={(value) => handleSelectChange(value, 'roles')} // Handle select change
-                      value={userData.roles}
-                    >
-                    <Option value="user">User</Option>
-                    <Option value="developer">Developer</Option>
-                    <Option value="super_admin">Super Admin</Option>
-                  </Select>
-                  </Form.Item>
-                  <Form.Item
-                    label="Status"
-                    name="status"
-                    rules={[{ required: true }]}
-                    validateStatus={userData.errors?.status ? 'error' : ''}
-                    help={userData.errors?.status?.message} // Display only the error message
-                  >
-                    <Select 
-              placeholder="Select Status" 
-              onChange={(value) => handleSelectChange(value, 'status')} // Handle select change
+      </section>
+      <Modal
+        title={userData?.id ? "Edit User" : "Add User"}
+        open={isModalOpen}
+        onCancel={handleCancel}
+        footer={null}
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            label={
+              <span>
+                First Name <span style={{ color: "red" }}>*</span>
+              </span>
+            }
+            name="first_name"
+            validateStatus={userData.errors?.first_name ? "error" : ""}
+            help={userData.errors?.first_name?.message} // Display only the error message
+          >
+            <AntInput
+              placeholder="First Name"
+              name="first_name"
+              value={userData?.first_name}
+              onChange={handleInput}
+            />
+          </Form.Item>
+          <Form.Item
+            label={
+              <span>
+                Last Name <span style={{ color: "red" }}>*</span>
+              </span>
+            }
+            name="last_name"
+            validateStatus={userData.errors?.last_name ? "error" : ""}
+            help={userData.errors?.last_name?.message} // Display only the error message
+          >
+            <AntInput
+              placeholder="Last Name"
+              name="last_name"
+              value={userData?.last_name}
+              onChange={handleInput}
+            />
+          </Form.Item>
+          <Form.Item
+            label={
+              <span>
+                Email <span style={{ color: "red" }}>*</span>
+              </span>
+            }
+            name="email"
+            validateStatus={userData.errors?.email ? "error" : ""}
+            help={userData.errors?.email?.message} // Display only the error message
+          >
+            <AntInput
+              placeholder="Email"
+              name="email"
+              value={userData?.email}
+              onChange={handleInput}
+            />
+          </Form.Item>
+          <Form.Item
+            label={
+              <span>
+                Phone <span style={{ color: "red" }}>*</span>
+              </span>
+            }
+            name="phone"
+            validateStatus={userData.errors?.phone ? "error" : ""}
+            help={userData.errors?.phone?.message} // Display only the error message
+          >
+            <AntInput
+              placeholder="Phone"
+              name="phone"
+              value={userData?.phone}
+              onChange={handleInput}
+            />
+          </Form.Item>
+          <Form.Item
+            label={
+              <span>
+                Role <span style={{ color: "red" }}>*</span>
+              </span>
+            }
+            name="roles"
+            validateStatus={userData.errors?.roles ? "error" : ""}
+            help={userData.errors?.roles?.message} // Display only the error message
+          >
+            <Select
+              placeholder="Select Roles"
+              onChange={(value) => handleSelectChange(value, "roles")} // Handle select change
+              value={userData.roles}
+            >
+              <Option value="user">User</Option>
+              <Option value="developer">Developer</Option>
+              <Option value="super_admin">Super Admin</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label={
+              <span>
+                Status <span style={{ color: "red" }}>*</span>
+              </span>
+            }
+            name="status"
+            validateStatus={userData.errors?.status ? "error" : ""}
+            help={userData.errors?.status?.message} // Display only the error message
+          >
+            <Select
+              placeholder="Select Status"
+              onChange={(value) => handleSelectChange(value, "status")} // Handle select change
               value={userData.status}
             >
-                    <Option value="Active">Active</Option>
-                    <Option value="Inactive">Inactive</Option>
-                  </Select>
-                  </Form.Item>
-                    {/* Submit and Reset buttons */}
-                    <Form.Item
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                        }}
-                      >
-                       
-                        { userData?.id ? 
-                        <Button type="primary" onClick={handleUpdate} style={{ marginRight: 8 }}> Update</Button> : 
-                        <>
-                        <Button type="primary" onClick={handleAdd} style={{ marginRight: 8 }}> Save </Button>
-                         <Button onClick={handleReset}>
-                          Reset
-                        </Button>
-                        </>
-                      
-                          }
-                        
-                      </Form.Item>
-
-                  </Form>
+              <Option value="Active">Active</Option>
+              <Option value="Inactive">Inactive</Option>
+            </Select>
+          </Form.Item>
+          {/* Submit and Reset buttons */}
+          <Form.Item
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            {userData?.id ? (
+              <Button
+                type="primary"
+                onClick={handleUpdate}
+                style={{ marginRight: 8 }}
+              >
+                {" "}
+                Update
+              </Button>
+            ) : (
+              <>
+                <Button
+                  type="primary"
+                  onClick={handleAdd}
+                  style={{ marginRight: 8 }}
+                >
+                  {" "}
+                  Save{" "}
+                </Button>
+                <Button onClick={handleReset}>Reset</Button>
+              </>
+            )}
+          </Form.Item>
+        </Form>
       </Modal>
-  </div>
-  
+    </div>
   );
 }
 

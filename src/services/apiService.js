@@ -3,15 +3,14 @@ import axios from 'axios';
 import { message} from 'antd';
 
 // Set your base URL for the API
-const API_BASE_URL = 'https://rsa-api-kappa.vercel.app/api/';
+// const REACT_APP_API_URL = 'http://localhost:3001/api/';
 const apiInstance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: process.env.REACT_APP_API_URL,
 });
 
 // Request interceptor to add the token to headers
 apiInstance.interceptors.request.use(config => {
   const token = localStorage.getItem('token');
-  // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIfdjp7ImlkIjoiNjY0NzIwNDhlNDAyMmY5MWJkMGMyYmQxIn0sImlhdCI6MTcyNjA1NjU0NCwiZXhwIjoxNzI2MTU2NTQ0fQ.E0tk9-lAbD2DwDS9ToXxgMi3ydmVMpI9UIGPcv-G650';
   if (token) {
     config.headers['token'] = `${token}`;
   }
@@ -27,7 +26,9 @@ apiInstance.interceptors.response.use(response => {
   if (error.response) {
     console.error(error.response);
     if(error.response.data.token_expired){
-      localStorage.clear();
+       // Remove the token from localStorage
+       localStorage.removeItem("token");
+       localStorage.removeItem("user");
       message.error('Session Expired! Please Login Again.');
       window.location.href = '/login';
     }else{
@@ -44,9 +45,9 @@ const apiService = {
   get: async (endpoint, params = {}) => {
     try {
       const response = await apiInstance.get(endpoint, { params });
-      return response.data;
+      return response;
     } catch (error) {
-      console.error('GET request error:', error);
+    //  console.error('GET request error:', error.message);
       throw error;
     }
   },
@@ -54,10 +55,10 @@ const apiService = {
   post: async (endpoint, data) => {
     try {
       const response = await apiInstance.post(endpoint, data);
-      return response.data;
+      return response;
     } catch (error) {
-      console.error('POST request error:', error);
-      throw error;
+     // console.error('POST request error:', error);
+     throw error;
     }
   },
 

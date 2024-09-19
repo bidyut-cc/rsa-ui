@@ -33,23 +33,31 @@ function Login() {
     
     try {
       const response = await apiService.post('auth/login', data);
-      if (response.status) {
+      if (response.status === 200) {
         // Assuming the response contains user data
-        const { id, first_name, email, phone } = response.data;
+        const { id, first_name, last_name, email, phone } = response.data.data;
         // Store user data in localStorage
-        localStorage.setItem('user', JSON.stringify({ id, first_name, email, phone }));
-        localStorage.setItem('token', response.access_token);
+        localStorage.setItem('user', JSON.stringify({ id, first_name, last_name, email, phone }));
+        localStorage.setItem('token', response.data.access_token);
         // Redirect to dashboard
         navigate('/dashboard');
-        message.success(response.message);
+        message.success(response.data.message);
       }
+      
     } catch (error) {
-      if(error.response.data.errors){
-        setLogin({...loginInput,errors : error.response.data.errors});
+      if (error.response) {
+        if (error.response.status === 422) {
+           setLogin({...loginInput, errors: error.response.data.errors});
+        }else if (error.response.status === 500) {
+          setLogin({...loginInput,errors : []});
+          message.error(error.response.data.message);
+        } else {
+          message.error('Something went wrong. Please try again later.');
+        }
       }else{
-        setLogin({...loginInput,errors : {}});
-        message.error('Some Problem Occured! Please try again later.');
+         message.error('Some Problem Occured! Please try again later.');
       }
+      
       
     }
   
