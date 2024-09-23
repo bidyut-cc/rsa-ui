@@ -28,7 +28,7 @@ function User() {
     data: [],
     search: "",
     page: 1,
-    pageSize: 1,
+    pageSize: 10,
   });
 
   const [userData, setUserData] = useState({
