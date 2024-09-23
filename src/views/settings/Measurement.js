@@ -24,7 +24,7 @@ function Measurement() {
     errors: [],
     loading: false,
   });
-
+  const [buttonLoading, setButtonLoading] = useState(false); // Separate state for button-specific loading
   const fetchRecords = useCallback(async () => {
     setData((prev) => ({ ...prev, loading: true }));
     try {
@@ -93,14 +93,17 @@ function Measurement() {
         show_maximum_room_no: data.show_maximum_room_no,
     };
     setData((prev) => ({ ...prev, loading: true }));
+    setButtonLoading(true); // Set button loading to true when the update starts
     try {
       const response = await apiService.post(`settings/updateMeasurement/${data.id}`, request);
       if (response.status === 200) {
         message.success(response.data.message);
         setData({ ...data, loading: false, errors: [] });
+        setButtonLoading(false); // Set button loading to false after success
       }
     } catch (error) {
       setData((prev) => ({ ...prev, loading: false }));
+      setButtonLoading(false); // Set button loading to false on error
         if (error.response) {
             if (error.response.status === 422) {
               setData({ ...data, errors: error.response.data.errors });
@@ -183,9 +186,9 @@ function Measurement() {
 
     <Form.Item style={{ display: "flex", justifyContent: "center" }}>
       <Button type="primary" style={{ marginRight: 8 }} onClick={updateData}
-       loading={data.loading}  // Show loading spinner when loading is true 
+       loading={buttonLoading}  // Show loading spinner when loading is true 
       >
-        Update
+         {buttonLoading ? "Processing..." : "Update"}
       </Button>
     </Form.Item>
   </Form>

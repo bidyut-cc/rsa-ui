@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import apiService from "../../services/apiService";
 import { Form, Input, Button, Card, Row, Col , message, Spin} from 'antd';
 import { useHeader } from "../../components/context/HeaderContext"; // Import the context
@@ -16,9 +16,9 @@ function Profile() {
         errors:[],
         loading: false,
     });
+    const [buttonLoading, setButtonLoading] = useState(false); // Separate state for button-specific loading
 
-
-    const fetchRecords = async () => {
+    const fetchRecords = useCallback(async () => {
       try {
         setProfileData((prev) => ({ ...prev, loading: true }));
         const response = await apiService.get('auth/profile');
@@ -35,11 +35,11 @@ function Profile() {
         setProfileData((prevData) => ({ ...prevData, loading: false,errors: [] }));
         message.error(error.response?.statusText);
       }
-    };
+    },[form]);
 
   useEffect(() => {
     fetchRecords();
-  }, []);
+  }, [fetchRecords]);
 
     const handleInput = (e) =>{
         e.persist();
@@ -55,6 +55,7 @@ function Profile() {
             phone : profileData.phone,
         }
         setProfileData((prev) => ({ ...prev, loading: true }));
+        setButtonLoading(true); // Set button loading to true when the update starts
         try {
             const response = await apiService.post('auth/update-profile', data);
             if (response.status === 200) {
@@ -68,9 +69,11 @@ function Profile() {
             setHeaderTitle(`${first_name} ${last_name}`); // Change the header title from Profile
               message.success(response.data.message);
               setProfileData({...profileData,loading: false, errors : []});
+              setButtonLoading(false); // Set button loading to false after success
             }
           } catch (error) {
             setProfileData((prev) => ({ ...prev, loading: false }));
+            setButtonLoading(false); // Set button loading to false on error
             if (error.response) {
               if (error.response.status === 422) {
                 setProfileData({...profileData,errors : error.response.data.errors});
@@ -148,8 +151,8 @@ function Profile() {
                         }}
                       >
                         <Button type="primary"  style={{ marginRight: 8 }} onClick={UpdateProfile}
-                        loading={profileData.loading}   // Show loading spinner when loading is true
-                        > Update</Button> 
+                        loading={buttonLoading}   // Show loading spinner when loading is true
+                        > {buttonLoading ? "Processing..." : "Update"}</Button> 
                       </Form.Item>
 
                   </Form>

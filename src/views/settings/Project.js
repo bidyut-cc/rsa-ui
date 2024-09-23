@@ -15,6 +15,8 @@ function Project() {
     loading: false,
   });
   
+  const [buttonLoading, setButtonLoading] = useState(false); // Separate state for button-specific loading
+
   const fetchRecords = useCallback(async () => {
     setData((prev) => ({ ...prev, loading: true }));
     try {
@@ -54,6 +56,7 @@ function Project() {
         data.interested_for_material_installation_quote,
     };
     setData((prev) => ({ ...prev, loading: true }));
+    setButtonLoading(true); // Set button loading to true when the update starts
     try {
       const response = await apiService.post(
         `settings/updateProject/${data.id}`,
@@ -62,9 +65,11 @@ function Project() {
       if (response.status === 200) {
         message.success(response.data.message);
         setData({ ...data, loading: false, errors: [] });
+        setButtonLoading(false); // Set button loading to false after success
       }
     } catch (error) {
       setData((prev) => ({ ...prev, loading: false }));
+      setButtonLoading(false); // Set button loading to false on error
       if (error.response) {
         if (error.response.status === 422) {
           setData({ ...data, errors: error.response.data.errors });
@@ -191,9 +196,9 @@ function Project() {
                   type="primary"
                   style={{ marginRight: 8 }}
                   onClick={updateData}
-                  loading={data.loading}  // Show loading spinner when loading is true 
+                  loading={buttonLoading}  // Show loading spinner when loading is true 
                 >
-                  Update
+                   {buttonLoading ? "Processing..." : "Update"}
                 </Button>
               </Form.Item>
             </Form>

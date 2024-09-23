@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Form, Button, Card, Row, Col, Select, Checkbox, Image, Spin, message,Switch } from "antd";
+import { Form, Button, Card, Row, Col, Checkbox, Image, Spin, message,Switch } from "antd";
 import apiService from "../../services/apiService";
 
-const { Option } = Select;
+
 
 function Layout() {
   const [form] = Form.useForm();
@@ -26,6 +26,8 @@ function Layout() {
     errors: [],
     loading: false,
   });
+
+  const [buttonLoading, setButtonLoading] = useState(false); // Separate state for button-specific loading
 
   const fetchRecords = useCallback(async () => {
     setData((prev) => ({ ...prev, loading: true }));
@@ -95,14 +97,17 @@ function Layout() {
       is_include_handicap_accessible_stall: data.is_include_handicap_accessible_stall,
     };
     setData((prev) => ({ ...prev, loading: true }));
+    setButtonLoading(true); // Set button loading to true when the update starts
     try {
       const response = await apiService.post(`settings/updateLayout/${data.id}`, request);
       if (response.status === 200) {
         message.success(response.data.message);
         setData({ ...data, loading: false, errors: [] });
+        setButtonLoading(false); // Set button loading to false after success
       }
     } catch (error) {
       setData((prev) => ({ ...prev, loading: false }));
+      setButtonLoading(false); // Set button loading to false on error
         if (error.response) {
             if (error.response.status === 422) {
               setData({ ...data, errors: error.response.data.errors });
@@ -169,14 +174,6 @@ function Layout() {
       validateStatus={data.errors?.is_include_handicap_accessible_stall ? "error" : ""}
       help={data.errors?.is_include_handicap_accessible_stall?.message}
     >
-      {/* <Select
-        placeholder="Is Include Handicap Accessible Stall"
-        onChange={(value) => handleSelectChange(value, "is_include_handicap_accessible_stall")}
-        value={data.is_include_handicap_accessible_stall}
-      >
-        <Option value="No">No</Option>
-        <Option value="Yes">Yes</Option>
-      </Select> */}
       <Switch
     checked={data.is_include_handicap_accessible_stall === "Yes"} // Set the switch state based on 'Yes' or 'No'
     onChange={(checked) =>
@@ -187,9 +184,9 @@ function Layout() {
 
     <Form.Item style={{ display: "flex", justifyContent: "center" }}>
       <Button type="primary" style={{ marginRight: 8 }} onClick={updateData}
-       loading={data.loading}  // Show loading spinner when loading is true 
+       loading={buttonLoading}  // Show loading spinner when loading is true 
       >
-        Update
+        {buttonLoading ? "Processing..." : "Update"}
       </Button>
     </Form.Item>
   </Form>
