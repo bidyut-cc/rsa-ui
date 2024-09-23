@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Form, Button, Card, Row, Col, Select, Checkbox, message } from "antd";
+import { Form, Button, Card, Row, Col, Select, Checkbox, message, Spin } from "antd";
 import apiService from "../../services/apiService";
 
 const { Option } = Select;
@@ -22,9 +22,11 @@ function Measurement() {
     swings: [],
     show_maximum_room_no: "",
     errors: [],
+    loading: false,
   });
 
   const fetchRecords = useCallback(async () => {
+    setData((prev) => ({ ...prev, loading: true }));
     try {
       const response = await apiService.get(`settings/view/?step=step3`);
       if (response.status === 200) {
@@ -43,6 +45,7 @@ function Measurement() {
           id: response.data.id,
           swings: fetchedSwings,  // Store fetched layouts
           show_maximum_room_no: response.data?.config.show_maximum_room_no,
+          loading: false,
         }));
 
         // Check the checkboxes for selected layouts
@@ -53,6 +56,7 @@ function Measurement() {
         });
       }
     } catch (error) {
+      setData((prev) => ({ ...prev, loading: false }));
       message.error(error.response?.statusText || "Failed to fetch records");
     }
   },[form,swings]);
@@ -88,13 +92,15 @@ function Measurement() {
         swings: data.swings,
         show_maximum_room_no: data.show_maximum_room_no,
     };
+    setData((prev) => ({ ...prev, loading: true }));
     try {
       const response = await apiService.post(`settings/updateStep3/${data.id}`, request);
       if (response.status === 200) {
         message.success(response.data.message);
-        setData({ ...data, errors: [] });
+        setData({ ...data, loading: false, errors: [] });
       }
     } catch (error) {
+      setData((prev) => ({ ...prev, loading: false }));
         if (error.response) {
             if (error.response.status === 422) {
               setData({ ...data, errors: error.response.data.errors });
@@ -113,77 +119,79 @@ function Measurement() {
   return (
     <div className="container-fluid">
       <h1 className="h3 mb-4 text-gray-800">Measurement Setting</h1>
-      <Row justify="center">
-        <Col xs={24} sm={20} md={18} lg={15}>
-          <Card>
-          <Form form={form} layout="vertical">
-  <Form.Item
-    label={
-      <span>
-        Select Maximum Door Swings
-        <span style={{ color: "red" }}>*</span>
-      </span>
-    }
-  >
-    <Row gutter={[16, 16]}>
-      {swings.map((swing) => (
-        <Col xs={24} sm={12} md={6} key={swing.id}>
-          <div> {/* Wrapper div to ensure single child */}
-            
-            <Form.Item
-              name={`swing_${swing.id}`}
-              validateStatus={data.errors?.swings ? "error" : ""}
-              help={data.errors?.swings?.message}
-              style={{ marginTop: "10px" }} // Adjust margin here if needed
-            >
-              <Checkbox
-                checked={data.swings.some((l) => l.id === swing.id)} // Automatically check
-                onChange={(e) => handleCheckboxChange(e.target.checked, swing)}
+      <Spin spinning={data.loading}>
+        <Row justify="center">
+          <Col xs={24} sm={20} md={18} lg={15}>
+            <Card>
+            <Form form={form} layout="vertical">
+    <Form.Item
+      label={
+        <span>
+          Select Maximum Door Swings
+          <span style={{ color: "red" }}>*</span>
+        </span>
+      }
+    >
+      <Row gutter={[16, 16]}>
+        {swings.map((swing) => (
+          <Col xs={24} sm={12} md={6} key={swing.id}>
+            <div> {/* Wrapper div to ensure single child */}
+              
+              <Form.Item
+                name={`swing_${swing.id}`}
+                validateStatus={data.errors?.swings ? "error" : ""}
+                help={data.errors?.swings?.message}
+                style={{ marginTop: "10px" }} // Adjust margin here if needed
               >
-                {swing.name}
-              </Checkbox>
-            </Form.Item>
-          </div>
-        </Col>
-      ))}
-    </Row>
-  </Form.Item>
-
-  <Form.Item
-    label={
-      <span>
-        Show Maximum Room No
-        <span style={{ color: "red" }}>*</span>
-      </span>
-    }
-    name="show_maximum_room_no"
-    validateStatus={data.errors?.show_maximum_room_no ? "error" : ""}
-    help={data.errors?.show_maximum_room_no?.message}
-  >
-     <Select placeholder="Show Maximum Room No"
-                  onChange={(value) =>
-                    handleSelectChange(value, "show_maximum_room_no")
-                  } // Handle select change
-                  value={data.show_maximum_room_no}
+                <Checkbox
+                  checked={data.swings.some((l) => l.id === swing.id)} // Automatically check
+                  onChange={(e) => handleCheckboxChange(e.target.checked, swing)}
                 >
-                  {max_room_no.map((room) => (
-                    <Option key={room} value={room}>
-                      {room}
-                    </Option>
-                  ))}
-                </Select>
-  </Form.Item>
-
-  <Form.Item style={{ display: "flex", justifyContent: "center" }}>
-    <Button type="primary" style={{ marginRight: 8 }} onClick={updateData}>
-      Update
-    </Button>
-  </Form.Item>
-</Form>
-
-          </Card>
-        </Col>
+                  {swing.name}
+                </Checkbox>
+              </Form.Item>
+            </div>
+          </Col>
+        ))}
       </Row>
+    </Form.Item>
+
+    <Form.Item
+      label={
+        <span>
+          Show Maximum Room No
+          <span style={{ color: "red" }}>*</span>
+        </span>
+      }
+      name="show_maximum_room_no"
+      validateStatus={data.errors?.show_maximum_room_no ? "error" : ""}
+      help={data.errors?.show_maximum_room_no?.message}
+    >
+      <Select placeholder="Show Maximum Room No"
+                    onChange={(value) =>
+                      handleSelectChange(value, "show_maximum_room_no")
+                    } // Handle select change
+                    value={data.show_maximum_room_no}
+                  >
+                    {max_room_no.map((room) => (
+                      <Option key={room} value={room}>
+                        {room}
+                      </Option>
+                    ))}
+                  </Select>
+    </Form.Item>
+
+    <Form.Item style={{ display: "flex", justifyContent: "center" }}>
+      <Button type="primary" style={{ marginRight: 8 }} onClick={updateData}>
+        Update
+      </Button>
+    </Form.Item>
+  </Form>
+
+            </Card>
+          </Col>
+        </Row>
+      </Spin>
     </div>
   );
 }

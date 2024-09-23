@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import apiService from "../../services/apiService";
-import { Form, Input, Button, Card, Row, Col ,message} from 'antd';
+import { Form, Input, Button, Card, Row, Col , message, Spin} from 'antd';
 import { useHeader } from "../../components/context/HeaderContext"; // Import the context
 
 function Profile() {
@@ -9,16 +9,18 @@ function Profile() {
 
   const [form] = Form.useForm();
     const [profileData, setProfileData] = useState({
-        "first_name":"",
-        "last_name":"",
-        "email":"",
-        "phone":"",
-        "errors":[]
+        first_name:"",
+        last_name:"",
+        email:"",
+        phone:"",
+        errors:[],
+        loading: false,
     });
 
 
     const fetchRecords = async () => {
       try {
+        setProfileData((prev) => ({ ...prev, loading: true }));
         const response = await apiService.get('auth/profile');
         if(response.status === 200){
           form.setFieldsValue({
@@ -27,9 +29,10 @@ function Profile() {
             email:response.data.email,
             phone:response.data.phone,
           });
-          setProfileData(prevData => ({ ...prevData, ...response.data }));
+          setProfileData(prevData => ({ ...prevData, loading: false, ...response.data }));
         }
       } catch (error) {
+        setProfileData((prevData) => ({ ...prevData, loading: false,errors: [] }));
         message.error(error.response?.statusText);
       }
     };
@@ -51,6 +54,7 @@ function Profile() {
             email : profileData.email,
             phone : profileData.phone,
         }
+        setProfileData((prev) => ({ ...prev, loading: true }));
         try {
             const response = await apiService.post('auth/update-profile', data);
             if (response.status === 200) {
@@ -63,9 +67,10 @@ function Profile() {
             // Update the header title
             setHeaderTitle(`${first_name} ${last_name}`); // Change the header title from Profile
               message.success(response.data.message);
-              setProfileData({...profileData,errors : []});
+              setProfileData({...profileData,loading: false, errors : []});
             }
           } catch (error) {
+            setProfileData((prev) => ({ ...prev, loading: false }));
             if (error.response) {
               if (error.response.status === 422) {
                 setProfileData({...profileData,errors : error.response.data.errors});
@@ -88,7 +93,8 @@ function Profile() {
       <h1 className="h3 mb-4 text-gray-800">Update Profile</h1>
       <Row justify="center">
         <Col xs={24} sm={20} md={18} lg={16}>
-          <Card>
+        <Spin spinning={profileData.loading}> 
+           <Card>
               <Form form={form} layout="vertical">
                   <Form.Item
                     label={<span>First Name <span style={{ color: 'red' }}>*</span></span>}
@@ -146,6 +152,7 @@ function Profile() {
 
                   </Form>
             </Card>
+          </Spin>
         </Col>
       </Row>
     </div>

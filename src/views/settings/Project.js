@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Form, Button, Card, Row, Col, message, Select } from "antd";
+import { Form, Button, Card, Row, Col, message, Select, Spin } from "antd";
 import apiService from "../../services/apiService";
 const { Option } = Select;
 function Project() {
@@ -12,9 +12,11 @@ function Project() {
     show_number_of_urinal: "",
     interested_for_material_installation_quote: "",
     errors: [],
+    loading: false,
   });
-
+  
   const fetchRecords = useCallback(async () => {
+    setData((prev) => ({ ...prev, loading: true }));
     try {
       const response = await apiService.get(`settings/view/?step=step1`);
       if (response.status === 200) {
@@ -27,12 +29,13 @@ function Project() {
         setData((prevData) => ({
           ...prevData,
           id: response.data.id,
+          loading: false,
           ...response.data.config,
         }));
       }
     } catch (error) {
       message.error(error.response?.statusText);
-      setData((prevData) => ({ ...prevData, errors: [] }));
+      setData((prevData) => ({ ...prevData, loading: false,errors: [] }));
     }
   },[form]);
 
@@ -50,6 +53,7 @@ function Project() {
       interested_for_material_installation_quote:
         data.interested_for_material_installation_quote,
     };
+    setData((prev) => ({ ...prev, loading: true }));
     try {
       const response = await apiService.post(
         `settings/updateStep1/${data.id}`,
@@ -57,9 +61,10 @@ function Project() {
       );
       if (response.status === 200) {
         message.success(response.data.message);
-        setData({ ...data, errors: [] });
+        setData({ ...data, loading: false, errors: [] });
       }
     } catch (error) {
+      setData((prev) => ({ ...prev, loading: false }));
       if (error.response) {
         if (error.response.status === 422) {
           setData({ ...data, errors: error.response.data.errors });
@@ -79,6 +84,7 @@ function Project() {
       <h1 className="h3 mb-4 text-gray-800">Project Setting</h1>
       <Row justify="center">
         <Col xs={24} sm={20} md={18} lg={16}>
+        <Spin spinning={data.loading}>
           <Card>
             <Form form={form} layout="vertical">
               <Form.Item
@@ -183,6 +189,7 @@ function Project() {
               </Form.Item>
             </Form>
           </Card>
+          </Spin>
         </Col>
       </Row>
     </div>
