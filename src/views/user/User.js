@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback,useEffect, useState } from "react";
 import {
   Button,
   Col,
@@ -28,7 +28,7 @@ function User() {
     data: [],
     search: "",
     page: 1,
-    pageSize: 10,
+    pageSize: 1,
   });
 
   const [userData, setUserData] = useState({
@@ -44,6 +44,7 @@ function User() {
   });
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false); // Separate state for button-specific loading
 
   const columns = [
     {
@@ -95,7 +96,7 @@ function User() {
     },
   ];
 
-  const fetchRecords = async () => {
+  const fetchRecords = useCallback(async () => {
     setDataSource((prev) => ({ ...prev, loading: true }));
     try {
       const response = await apiService.get(
@@ -113,7 +114,7 @@ function User() {
       message.error(error.response.statusText);
       setDataSource((prev) => ({ ...prev, loading: false }));
     }
-  };
+  },[dataSource.page, dataSource.search,dataSource.pageSize]);
 
   const handlePaginate = (page) => {
     setDataSource((prev) => ({ ...prev, page }));
@@ -129,7 +130,7 @@ function User() {
 
   useEffect(() => {
     fetchRecords();
-  }, [dataSource.page, dataSource.search]);
+  }, [fetchRecords]);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -158,14 +159,17 @@ function User() {
     };
     try {
       setUserData((prev) => ({ ...prev, loading: true }));
+      setButtonLoading(true); // Set button loading to true when the update starts
       const response = await apiService.post("users/save", data);
       if (response.status === 200) {
         message.success(response.data.message);
         handleReset();
         fetchRecords();
+        setButtonLoading(false); // Set button loading to false after success
       }
     } catch (error) {
       setUserData((prev) => ({ ...prev, loading: false }));
+      setButtonLoading(false); // Set button loading to false on error
       if (error.response) {
         if (error.response.status === 422) {
           setUserData({ ...userData, errors: error.response.data.errors });
@@ -250,6 +254,7 @@ function User() {
       status: userData.status,
     };
     setUserData((prev) => ({ ...prev, loading: true }));
+    setButtonLoading(true); // Set button loading to true when the update starts
     try {
       const response = await apiService.post(
         `users/update/${userData.id}`,
@@ -260,9 +265,11 @@ function User() {
         setIsModalOpen(false);
         handleReset();
         fetchRecords();
+        setButtonLoading(false); // Set button loading to false after success
       }
     } catch (error) {
         setUserData((prev) => ({ ...prev, loading: false }));
+        setButtonLoading(false); // Set button loading to false on error
         if (error.response) {
         if (error.response.status === 422) {
           setUserData({ ...userData, errors: error.response.data.errors });
@@ -489,9 +496,9 @@ function User() {
                   type="primary"
                   onClick={handleUpdate}
                   style={{ marginRight: 8 }}
-                  loading={userData.loading}  // Show loading spinner when loading is true
+                  loading={buttonLoading}  // Show loading spinner when loading is true
                 >
-                  Update
+                  {buttonLoading ? "Processing..." : "Update"}
                 </Button>
               ) : (
                 <>
@@ -499,9 +506,9 @@ function User() {
                     type="primary"
                     onClick={handleAdd}
                     style={{ marginRight: 8 }}
-                    loading={userData.loading}  // Show loading spinner when loading is true
+                    loading={buttonLoading}  // Show loading spinner when loading is true
                   >
-                    Save
+                    {buttonLoading ? "Processing..." : "Save"}
                   </Button>
                   <Button onClick={handleReset}>Reset</Button>
                 </>

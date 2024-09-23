@@ -11,7 +11,7 @@ function Password() {
         errors:[],
         loading: false,
     });
- 
+    const [buttonLoading, setButtonLoading] = useState(false); // Separate state for button-specific loading
     const handleInput = (e) =>{
         e.persist();
         const {name,value} = e.target;
@@ -24,6 +24,7 @@ function Password() {
             confirm_new_password : passwordData.confirm_new_password 
         }
         setPasswordData((prev) => ({ ...prev, loading: true }));
+        setButtonLoading(true); // Set button loading to true when the update starts
         try {
             const response = await apiService.post('auth/change-password', data);
             if(response.status === 200){
@@ -35,10 +36,12 @@ function Password() {
                 errors:[],
                 loading: false
             });
+            setButtonLoading(false); // Set button loading to false after success
             form.resetFields();
             }
           } catch (error) {
             setPasswordData((prev) => ({ ...prev, loading: false }));
+            setButtonLoading(false); // Set button loading to false on error
             if (error.response) {
               if (error.response.status === 422) {
                 setPasswordData({...passwordData,errors : error.response.data.errors});
@@ -112,8 +115,8 @@ function Password() {
                         }}
                       >
                         <Button type="primary"  style={{ marginRight: 8 }} onClick={UpdatePassword}
-                        loading={passwordData.loading}  // Show loading spinner when loading is true
-                        >Update</Button> 
+                        loading={buttonLoading}  // Show loading spinner when loading is true
+                        >{buttonLoading ? "Processing..." : "Update"}</Button> 
                       </Form.Item>
 
                   </Form>
