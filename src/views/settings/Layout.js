@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Form, Button, Card, Row, Col, Select, Checkbox, Image, message } from "antd";
+import { Form, Button, Card, Row, Col, Select, Checkbox, Image, Spin, message } from "antd";
 import apiService from "../../services/apiService";
 
 const { Option } = Select;
@@ -24,9 +24,11 @@ function Layout() {
     layouts: [],
     is_include_handicap_accessible_stall: "",
     errors: [],
+    loading: false,
   });
 
   const fetchRecords = useCallback(async () => {
+    setData((prev) => ({ ...prev, loading: true }));
     try {
       const response = await apiService.get(`settings/view/?step=step2`);
       if (response.status === 200) {
@@ -45,6 +47,7 @@ function Layout() {
           id: response.data.id,
           layouts: fetchedLayouts,  // Store fetched layouts
           is_include_handicap_accessible_stall: response.data?.config.is_include_handicap_accessible_stall,
+          loading: false,
         }));
 
         // Check the checkboxes for selected layouts
@@ -55,6 +58,7 @@ function Layout() {
         });
       }
     } catch (error) {
+      setData((prev) => ({ ...prev, loading: false }));
       message.error(error.response?.statusText || "Failed to fetch records");
     }
   },[form,layouts]);
@@ -90,13 +94,15 @@ function Layout() {
       layouts: data.layouts,
       is_include_handicap_accessible_stall: data.is_include_handicap_accessible_stall,
     };
+    setData((prev) => ({ ...prev, loading: true }));
     try {
       const response = await apiService.post(`settings/updateStep2/${data.id}`, request);
       if (response.status === 200) {
         message.success(response.data.message);
-        setData({ ...data, errors: [] });
+        setData({ ...data, loading: false, errors: [] });
       }
     } catch (error) {
+      setData((prev) => ({ ...prev, loading: false }));
         if (error.response) {
             if (error.response.status === 422) {
               setData({ ...data, errors: error.response.data.errors });
@@ -115,73 +121,75 @@ function Layout() {
   return (
     <div className="container-fluid">
       <h1 className="h3 mb-4 text-gray-800">Layout Setting</h1>
-      <Row justify="center">
-        <Col xs={24} sm={20} md={18} lg={15}>
-          <Card>
-          <Form form={form} layout="vertical">
-  <Form.Item
-    label={
-      <span>
-        Select Maximum Layouts
-        <span style={{ color: "red" }}>*</span>
-      </span>
-    }
-  >
-    <Row gutter={[16, 16]}>
-      {layouts.map((layout) => (
-        <Col xs={24} sm={12} md={6} key={layout.id}>
-          <div> {/* Wrapper div to ensure single child */}
-            <Image width={50} src={layout.src} preview={false} />
-            <Form.Item
-              name={`layout_${layout.id}`}
-              validateStatus={data.errors?.layouts ? "error" : ""}
-              help={data.errors?.layouts?.message}
-              style={{ marginTop: "10px" }} // Adjust margin here if needed
-            >
-              <Checkbox
-                checked={data.layouts.some((l) => l.id === layout.id)} // Automatically check
-                onChange={(e) => handleCheckboxChange(e.target.checked, layout)}
-              >
-                {layout.name}
-              </Checkbox>
-            </Form.Item>
-          </div>
-        </Col>
-      ))}
-    </Row>
-  </Form.Item>
-
-  <Form.Item
-    label={
-      <span>
-        Show Handicap Accessible Stall
-        <span style={{ color: "red" }}>*</span>
-      </span>
-    }
-    name="is_include_handicap_accessible_stall"
-    validateStatus={data.errors?.is_include_handicap_accessible_stall ? "error" : ""}
-    help={data.errors?.is_include_handicap_accessible_stall?.message}
-  >
-    <Select
-      placeholder="Is Include Handicap Accessible Stall"
-      onChange={(value) => handleSelectChange(value, "is_include_handicap_accessible_stall")}
-      value={data.is_include_handicap_accessible_stall}
+      <Spin spinning={data.loading}>
+        <Row justify="center">
+          <Col xs={24} sm={20} md={18} lg={15}>
+            <Card>
+            <Form form={form} layout="vertical">
+    <Form.Item
+      label={
+        <span>
+          Select Maximum Layouts
+          <span style={{ color: "red" }}>*</span>
+        </span>
+      }
     >
-      <Option value="No">No</Option>
-      <Option value="Yes">Yes</Option>
-    </Select>
-  </Form.Item>
-
-  <Form.Item style={{ display: "flex", justifyContent: "center" }}>
-    <Button type="primary" style={{ marginRight: 8 }} onClick={updateData}>
-      Update
-    </Button>
-  </Form.Item>
-</Form>
-
-          </Card>
-        </Col>
+      <Row gutter={[16, 16]}>
+        {layouts.map((layout) => (
+          <Col xs={24} sm={12} md={6} key={layout.id}>
+            <div> {/* Wrapper div to ensure single child */}
+              <Image width={50} src={layout.src} preview={false} />
+              <Form.Item
+                name={`layout_${layout.id}`}
+                validateStatus={data.errors?.layouts ? "error" : ""}
+                help={data.errors?.layouts?.message}
+                style={{ marginTop: "10px" }} // Adjust margin here if needed
+              >
+                <Checkbox
+                  checked={data.layouts.some((l) => l.id === layout.id)} // Automatically check
+                  onChange={(e) => handleCheckboxChange(e.target.checked, layout)}
+                >
+                  {layout.name}
+                </Checkbox>
+              </Form.Item>
+            </div>
+          </Col>
+        ))}
       </Row>
+    </Form.Item>
+
+    <Form.Item
+      label={
+        <span>
+          Show Handicap Accessible Stall
+          <span style={{ color: "red" }}>*</span>
+        </span>
+      }
+      name="is_include_handicap_accessible_stall"
+      validateStatus={data.errors?.is_include_handicap_accessible_stall ? "error" : ""}
+      help={data.errors?.is_include_handicap_accessible_stall?.message}
+    >
+      <Select
+        placeholder="Is Include Handicap Accessible Stall"
+        onChange={(value) => handleSelectChange(value, "is_include_handicap_accessible_stall")}
+        value={data.is_include_handicap_accessible_stall}
+      >
+        <Option value="No">No</Option>
+        <Option value="Yes">Yes</Option>
+      </Select>
+    </Form.Item>
+
+    <Form.Item style={{ display: "flex", justifyContent: "center" }}>
+      <Button type="primary" style={{ marginRight: 8 }} onClick={updateData}>
+        Update
+      </Button>
+    </Form.Item>
+  </Form>
+
+            </Card>
+          </Col>
+        </Row>
+      </Spin>
     </div>
   );
 }

@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import apiService from "../../services/apiService";
-import { Form, Input as AntInput, Button, Card, Row, Col ,message} from 'antd';
+import { Form, Input as AntInput, Button, Card, Row, Col ,message, Spin} from 'antd';
 
 function Password() {
   const [form] = Form.useForm();
     const [passwordData, setPasswordData] = useState({
-        "new_password":"",
-        "old_password":"",
-        "confirm_new_password":"",
-        "errors":[]
+        new_password:"",
+        old_password:"",
+        confirm_new_password:"",
+        errors:[],
+        loading: false,
     });
  
     const handleInput = (e) =>{
@@ -22,19 +23,22 @@ function Password() {
             old_password : passwordData.old_password,
             confirm_new_password : passwordData.confirm_new_password 
         }
+        setPasswordData((prev) => ({ ...prev, loading: true }));
         try {
             const response = await apiService.post('auth/change-password', data);
             if(response.status === 200){
               message.success(response.data.message);
               setPasswordData({
-                "new_password":"",
-                "old_password":"",
-                "confirm_new_password":"",
-                "errors":[]
+                new_password:"",
+                old_password:"",
+                confirm_new_password:"",
+                errors:[],
+                loading: false
             });
             form.resetFields();
             }
           } catch (error) {
+            setPasswordData((prev) => ({ ...prev, loading: false }));
             if (error.response) {
               if (error.response.status === 422) {
                 setPasswordData({...passwordData,errors : error.response.data.errors});
@@ -57,7 +61,8 @@ function Password() {
       <h1 className="h3 mb-4 text-gray-800">Change Password</h1>
       <Row justify="center">
         <Col xs={24} sm={20} md={18} lg={16}>
-          <Card>
+        <Spin spinning={passwordData.loading}> 
+            <Card>
               <Form form={form} layout="vertical">
                   <Form.Item
                     label={<span>Old Password <span style={{ color: 'red' }}>*</span></span>}
@@ -111,6 +116,7 @@ function Password() {
 
                   </Form>
             </Card>
+          </Spin>
         </Col>
       </Row>
     </div>

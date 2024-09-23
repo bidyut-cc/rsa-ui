@@ -10,6 +10,7 @@ import {
   Form,
   message,
   Select,
+  Spin
 } from "antd";
 import {
   PlusCircleOutlined,
@@ -38,6 +39,7 @@ function User() {
     roles: "",
     status: "",
     errors: [],
+    loading: false,
   });
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -154,6 +156,7 @@ function User() {
       status: userData.status,
     };
     try {
+      setUserData((prev) => ({ ...prev, loading: true }));
       const response = await apiService.post("users/save", data);
       if (response.status === 200) {
         message.success(response.data.message);
@@ -161,6 +164,7 @@ function User() {
         fetchRecords();
       }
     } catch (error) {
+      setUserData((prev) => ({ ...prev, loading: false }));
       if (error.response) {
         if (error.response.status === 422) {
           setUserData({ ...userData, errors: error.response.data.errors });
@@ -189,6 +193,7 @@ function User() {
       roles: "",
       status: "",
       errors: [],
+      loading: false
     }));
   };
 
@@ -204,6 +209,7 @@ function User() {
       roles: "",
       status: "",
       errors: [],
+      loading: false
     }));
     setIsModalOpen(false);
   };
@@ -227,6 +233,7 @@ function User() {
       roles: row.roles[0],
       status: row.status,
       errors: [],
+      loading: false
     }));
     setIsModalOpen(true);
   };
@@ -241,6 +248,7 @@ function User() {
       roles: userData.roles,
       status: userData.status,
     };
+    setUserData((prev) => ({ ...prev, loading: true }));
     try {
       const response = await apiService.post(
         `users/update/${userData.id}`,
@@ -253,6 +261,7 @@ function User() {
         fetchRecords();
       }
     } catch (error) {
+        setUserData((prev) => ({ ...prev, loading: false }));
         if (error.response) {
         if (error.response.status === 422) {
           setUserData({ ...userData, errors: error.response.data.errors });
@@ -352,145 +361,148 @@ function User() {
         onCancel={handleCancel}
         footer={null}
       >
-        <Form form={form} layout="vertical">
-          <Form.Item
-            label={
-              <span>
-                First Name <span style={{ color: "red" }}>*</span>
-              </span>
-            }
-            name="first_name"
-            validateStatus={userData.errors?.first_name ? "error" : ""}
-            help={userData.errors?.first_name?.message} // Display only the error message
-          >
-            <AntInput
-              placeholder="First Name"
+         <Spin spinning={userData.loading}>
+          <Form form={form} layout="vertical">
+            <Form.Item
+              label={
+                <span>
+                  First Name <span style={{ color: "red" }}>*</span>
+                </span>
+              }
               name="first_name"
-              value={userData?.first_name}
-              onChange={handleInput}
-            />
-          </Form.Item>
-          <Form.Item
-            label={
-              <span>
-                Last Name <span style={{ color: "red" }}>*</span>
-              </span>
-            }
-            name="last_name"
-            validateStatus={userData.errors?.last_name ? "error" : ""}
-            help={userData.errors?.last_name?.message} // Display only the error message
-          >
-            <AntInput
-              placeholder="Last Name"
+              validateStatus={userData.errors?.first_name ? "error" : ""}
+              help={userData.errors?.first_name?.message} // Display only the error message
+            >
+              <AntInput
+                placeholder="First Name"
+                name="first_name"
+                value={userData?.first_name}
+                onChange={handleInput}
+              />
+            </Form.Item>
+            <Form.Item
+              label={
+                <span>
+                  Last Name <span style={{ color: "red" }}>*</span>
+                </span>
+              }
               name="last_name"
-              value={userData?.last_name}
-              onChange={handleInput}
-            />
-          </Form.Item>
-          <Form.Item
-            label={
-              <span>
-                Email <span style={{ color: "red" }}>*</span>
-              </span>
-            }
-            name="email"
-            validateStatus={userData.errors?.email ? "error" : ""}
-            help={userData.errors?.email?.message} // Display only the error message
-          >
-            <AntInput
-              placeholder="Email"
+              validateStatus={userData.errors?.last_name ? "error" : ""}
+              help={userData.errors?.last_name?.message} // Display only the error message
+            >
+              <AntInput
+                placeholder="Last Name"
+                name="last_name"
+                value={userData?.last_name}
+                onChange={handleInput}
+              />
+            </Form.Item>
+            <Form.Item
+              label={
+                <span>
+                  Email <span style={{ color: "red" }}>*</span>
+                </span>
+              }
               name="email"
-              value={userData?.email}
-              onChange={handleInput}
-            />
-          </Form.Item>
-          <Form.Item
-            label={
-              <span>
-                Phone <span style={{ color: "red" }}>*</span>
-              </span>
-            }
-            name="phone"
-            validateStatus={userData.errors?.phone ? "error" : ""}
-            help={userData.errors?.phone?.message} // Display only the error message
-          >
-            <AntInput
-              placeholder="Phone"
+              validateStatus={userData.errors?.email ? "error" : ""}
+              help={userData.errors?.email?.message} // Display only the error message
+            >
+              <AntInput
+                placeholder="Email"
+                name="email"
+                value={userData?.email}
+                onChange={handleInput}
+              />
+            </Form.Item>
+            <Form.Item
+              label={
+                <span>
+                  Phone <span style={{ color: "red" }}>*</span>
+                </span>
+              }
               name="phone"
-              value={userData?.phone}
-              onChange={handleInput}
-            />
-          </Form.Item>
-          <Form.Item
-            label={
-              <span>
-                Role <span style={{ color: "red" }}>*</span>
-              </span>
-            }
-            name="roles"
-            validateStatus={userData.errors?.roles ? "error" : ""}
-            help={userData.errors?.roles?.message} // Display only the error message
-          >
-            <Select
-              placeholder="Select Roles"
-              onChange={(value) => handleSelectChange(value, "roles")} // Handle select change
-              value={userData.roles}
+              validateStatus={userData.errors?.phone ? "error" : ""}
+              help={userData.errors?.phone?.message} // Display only the error message
             >
-              <Option value="user">User</Option>
-              <Option value="developer">Developer</Option>
-              <Option value="super_admin">Super Admin</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            label={
-              <span>
-                Status <span style={{ color: "red" }}>*</span>
-              </span>
-            }
-            name="status"
-            validateStatus={userData.errors?.status ? "error" : ""}
-            help={userData.errors?.status?.message} // Display only the error message
-          >
-            <Select
-              placeholder="Select Status"
-              onChange={(value) => handleSelectChange(value, "status")} // Handle select change
-              value={userData.status}
+              <AntInput
+                placeholder="Phone"
+                name="phone"
+                value={userData?.phone}
+                onChange={handleInput}
+              />
+            </Form.Item>
+            <Form.Item
+              label={
+                <span>
+                  Role <span style={{ color: "red" }}>*</span>
+                </span>
+              }
+              name="roles"
+              validateStatus={userData.errors?.roles ? "error" : ""}
+              help={userData.errors?.roles?.message} // Display only the error message
             >
-              <Option value="Active">Active</Option>
-              <Option value="Inactive">Inactive</Option>
-            </Select>
-          </Form.Item>
-          {/* Submit and Reset buttons */}
-          <Form.Item
-            style={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            {userData?.id ? (
-              <Button
-                type="primary"
-                onClick={handleUpdate}
-                style={{ marginRight: 8 }}
+              <Select
+                placeholder="Select Roles"
+                onChange={(value) => handleSelectChange(value, "roles")} // Handle select change
+                value={userData.roles}
               >
-                {" "}
-                Update
-              </Button>
-            ) : (
-              <>
+                <Option value="user">User</Option>
+                <Option value="developer">Developer</Option>
+                <Option value="super_admin">Super Admin</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label={
+                <span>
+                  Status <span style={{ color: "red" }}>*</span>
+                </span>
+              }
+              name="status"
+              validateStatus={userData.errors?.status ? "error" : ""}
+              help={userData.errors?.status?.message} // Display only the error message
+            >
+              <Select
+                placeholder="Select Status"
+                onChange={(value) => handleSelectChange(value, "status")} // Handle select change
+                value={userData.status}
+              >
+                <Option value="Active">Active</Option>
+                <Option value="Inactive">Inactive</Option>
+              </Select>
+            </Form.Item>
+            {/* Submit and Reset buttons */}
+            <Form.Item
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              {userData?.id ? (
                 <Button
                   type="primary"
-                  onClick={handleAdd}
+                  onClick={handleUpdate}
                   style={{ marginRight: 8 }}
                 >
                   {" "}
-                  Save{" "}
+                  Update
                 </Button>
-                <Button onClick={handleReset}>Reset</Button>
-              </>
-            )}
-          </Form.Item>
-        </Form>
+              ) : (
+                <>
+                  <Button
+                    type="primary"
+                    onClick={handleAdd}
+                    style={{ marginRight: 8 }}
+                  >
+                    {" "}
+                    Save{" "}
+                  </Button>
+                  <Button onClick={handleReset}>Reset</Button>
+                </>
+              )}
+            </Form.Item>
+          </Form>
+         </Spin>
+       
       </Modal>
     </div>
   );
