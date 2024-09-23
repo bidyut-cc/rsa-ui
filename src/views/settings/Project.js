@@ -191,8 +191,7 @@ function Project() {
                   type="primary"
                   style={{ marginRight: 8 }}
                   onClick={updateData}
-                  disabled={data.loading} // Disable button when loading
-                  loading={data.loading}  // Show loading spinner when loading is true
+                  loading={data.loading}  // Show loading spinner when loading is true 
                 >
                   Update
                 </Button>
