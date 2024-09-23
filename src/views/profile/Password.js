@@ -113,7 +113,7 @@ function Password() {
                       >
                         <Button type="primary"  style={{ marginRight: 8 }} onClick={UpdatePassword}
                         loading={passwordData.loading}  // Show loading spinner when loading is true
-                        > Update</Button> 
+                        >Update</Button> 
                       </Form.Item>
 
                   </Form>

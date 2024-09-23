@@ -148,7 +148,7 @@ function Profile() {
                         }}
                       >
                         <Button type="primary"  style={{ marginRight: 8 }} onClick={UpdateProfile}
-                        loading={profileData.loading}  // Show loading spinner when loading is true
+                        loading={profileData.loading}   // Show loading spinner when loading is true
                         > Update</Button> 
                       </Form.Item>
 
