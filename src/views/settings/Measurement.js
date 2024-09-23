@@ -28,7 +28,7 @@ function Measurement() {
   const fetchRecords = useCallback(async () => {
     setData((prev) => ({ ...prev, loading: true }));
     try {
-      const response = await apiService.get(`settings/view/?step=step3`);
+      const response = await apiService.get(`settings/view/?step=measurement`);
       if (response.status === 200) {
         const fetchedSwings = response.data?.config.swings || [];
         
@@ -94,7 +94,7 @@ function Measurement() {
     };
     setData((prev) => ({ ...prev, loading: true }));
     try {
-      const response = await apiService.post(`settings/updateStep3/${data.id}`, request);
+      const response = await apiService.post(`settings/updateMeasurement/${data.id}`, request);
       if (response.status === 200) {
         message.success(response.data.message);
         setData({ ...data, loading: false, errors: [] });
@@ -182,7 +182,10 @@ function Measurement() {
     </Form.Item>
 
     <Form.Item style={{ display: "flex", justifyContent: "center" }}>
-      <Button type="primary" style={{ marginRight: 8 }} onClick={updateData}>
+      <Button type="primary" style={{ marginRight: 8 }} onClick={updateData}
+       disabled={data.loading} // Disable button when loading
+       loading={data.loading}  // Show loading spinner when loading is true
+      >
         Update
       </Button>
     </Form.Item>

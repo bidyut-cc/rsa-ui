@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import apiService from '../../services/apiService';
 import useAuth from '../../components/hooks/useAuth';
-import { message} from 'antd';
+import { message, Spin} from 'antd';
 function Login() {
     const [loginInput,setLogin] = useState({
       email:"",
       password:"",
-      errors:{}
+      errors:[],
+      loading: false,
   });
   const handleInput = (e) =>{
     e.persist();
@@ -30,7 +31,7 @@ function Login() {
         email : loginInput.email,
         password : loginInput.password 
     }
-    
+    setLogin((prev) => ({ ...prev, loading: true }));
     try {
       const response = await apiService.post('auth/login', data);
       if (response.status === 200) {
@@ -41,10 +42,12 @@ function Login() {
         localStorage.setItem('token', response.data.access_token);
         // Redirect to dashboard
         navigate('/dashboard');
+        setLogin((prev) => ({ ...prev, loading: false,errors:[] }));
         message.success(response.data.message);
       }
       
     } catch (error) {
+      setLogin((prev) => ({ ...prev, loading: false }));
       if (error.response) {
         if (error.response.status === 422) {
            setLogin({...loginInput, errors: error.response.data.errors});
@@ -78,6 +81,7 @@ function Login() {
                     </div>
                   </div>
                   <div className="col-lg-6">
+                  <Spin spinning={loginInput.loading}>
                     <div className="p-5">
                       <div className="text-center">
                         <h1 className="h4 text-gray-900 mb-4">Login!</h1>
@@ -132,6 +136,7 @@ function Login() {
                         </div> */}
                       </form>
                     </div>
+                  </Spin>
                   </div>
                 </div>
               </div>

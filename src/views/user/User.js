@@ -10,7 +10,8 @@ import {
   Form,
   message,
   Select,
-  Spin
+  Spin,
+  Switch
 } from "antd";
 import {
   PlusCircleOutlined,
@@ -37,7 +38,7 @@ function User() {
     email: "",
     phone: "",
     roles: "",
-    status: "",
+    status: "Inactive",
     errors: [],
     loading: false,
   });
@@ -461,14 +462,20 @@ function User() {
               validateStatus={userData.errors?.status ? "error" : ""}
               help={userData.errors?.status?.message} // Display only the error message
             >
-              <Select
+              {/* <Select
                 placeholder="Select Status"
                 onChange={(value) => handleSelectChange(value, "status")} // Handle select change
                 value={userData.status}
               >
                 <Option value="Active">Active</Option>
                 <Option value="Inactive">Inactive</Option>
-              </Select>
+              </Select> */}
+              <Switch
+                checked={userData.status === "Active"} // Set the switch state based on 'Active' or 'Inactive'
+                onChange={(checked) =>
+                  handleSelectChange(checked ? "Active" : "Inactive", "status")
+                } // Handle switch change
+               />
             </Form.Item>
             {/* Submit and Reset buttons */}
             <Form.Item

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Form, Button, Card, Row, Col, message, Select, Spin } from "antd";
+import { Form, Button, Card, Row, Col, message, Select, Spin,Switch } from "antd";
 import apiService from "../../services/apiService";
 const { Option } = Select;
 function Project() {
@@ -18,7 +18,7 @@ function Project() {
   const fetchRecords = useCallback(async () => {
     setData((prev) => ({ ...prev, loading: true }));
     try {
-      const response = await apiService.get(`settings/view/?step=step1`);
+      const response = await apiService.get(`settings/view/?step=project`);
       if (response.status === 200) {
         form.setFieldsValue({
           show_number_of_stall: response.data?.config.show_number_of_stall,
@@ -56,7 +56,7 @@ function Project() {
     setData((prev) => ({ ...prev, loading: true }));
     try {
       const response = await apiService.post(
-        `settings/updateStep1/${data.id}`,
+        `settings/updateProject/${data.id}`,
         request
       );
       if (response.status === 200) {
@@ -158,7 +158,7 @@ function Project() {
                     ?.message
                 } // Display only the error message
               >
-                <Select
+                {/* <Select
                   placeholder="Interested For Material Installation Quote"
                   onChange={(value) =>
                     handleSelectChange(
@@ -170,7 +170,15 @@ function Project() {
                 >
                   <Option value="No">No</Option>
                   <Option value="Yes">Yes</Option>
-                </Select>
+                </Select> */}
+
+                <Switch
+                    checked={data.interested_for_material_installation_quote === "Yes"} // Set the switch state based on 'Yes' or 'No'
+                    onChange={(checked) =>
+                      handleSelectChange(checked ? "Yes" : "No", "interested_for_material_installation_quote")
+                    } // Handle switch change
+                  />
+               
               </Form.Item>
               {/* Submit and Reset buttons */}
               <Form.Item
@@ -183,6 +191,8 @@ function Project() {
                   type="primary"
                   style={{ marginRight: 8 }}
                   onClick={updateData}
+                  disabled={data.loading} // Disable button when loading
+                  loading={data.loading}  // Show loading spinner when loading is true
                 >
                   Update
                 </Button>

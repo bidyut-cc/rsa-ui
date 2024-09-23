@@ -26,7 +26,7 @@ function Sidebar({ style, toggleSidebar }) {
         {/*  <!-- Sidebar - Brand --> */}
         <Link
           className="sidebar-brand d-flex align-items-center justify-content-center"
-          href="#"
+          to="dashboard"
         >
           <div className="sidebar-brand-icon rotate-n-15">
             <i className="fas fa-user"></i>

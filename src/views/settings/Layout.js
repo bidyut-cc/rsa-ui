@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Form, Button, Card, Row, Col, Select, Checkbox, Image, Spin, message } from "antd";
+import { Form, Button, Card, Row, Col, Select, Checkbox, Image, Spin, message,Switch } from "antd";
 import apiService from "../../services/apiService";
 
 const { Option } = Select;
@@ -30,7 +30,7 @@ function Layout() {
   const fetchRecords = useCallback(async () => {
     setData((prev) => ({ ...prev, loading: true }));
     try {
-      const response = await apiService.get(`settings/view/?step=step2`);
+      const response = await apiService.get(`settings/view/?step=layout`);
       if (response.status === 200) {
         const fetchedLayouts = response.data?.config.layouts || [];
         
@@ -96,7 +96,7 @@ function Layout() {
     };
     setData((prev) => ({ ...prev, loading: true }));
     try {
-      const response = await apiService.post(`settings/updateStep2/${data.id}`, request);
+      const response = await apiService.post(`settings/updateLayout/${data.id}`, request);
       if (response.status === 200) {
         message.success(response.data.message);
         setData({ ...data, loading: false, errors: [] });
@@ -169,18 +169,27 @@ function Layout() {
       validateStatus={data.errors?.is_include_handicap_accessible_stall ? "error" : ""}
       help={data.errors?.is_include_handicap_accessible_stall?.message}
     >
-      <Select
+      {/* <Select
         placeholder="Is Include Handicap Accessible Stall"
         onChange={(value) => handleSelectChange(value, "is_include_handicap_accessible_stall")}
         value={data.is_include_handicap_accessible_stall}
       >
         <Option value="No">No</Option>
         <Option value="Yes">Yes</Option>
-      </Select>
+      </Select> */}
+      <Switch
+    checked={data.is_include_handicap_accessible_stall === "Yes"} // Set the switch state based on 'Yes' or 'No'
+    onChange={(checked) =>
+      handleSelectChange(checked ? "Yes" : "No", "is_include_handicap_accessible_stall")
+    } // Handle switch change
+  />
     </Form.Item>
 
     <Form.Item style={{ display: "flex", justifyContent: "center" }}>
-      <Button type="primary" style={{ marginRight: 8 }} onClick={updateData}>
+      <Button type="primary" style={{ marginRight: 8 }} onClick={updateData}
+       disabled={data.loading} // Disable button when loading
+       loading={data.loading}  // Show loading spinner when loading is true
+      >
         Update
       </Button>
     </Form.Item>
