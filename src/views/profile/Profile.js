@@ -147,7 +147,9 @@ function Profile() {
                           justifyContent: 'center',
                         }}
                       >
-                        <Button type="primary"  style={{ marginRight: 8 }} onClick={UpdateProfile}> Update</Button> 
+                        <Button type="primary"  style={{ marginRight: 8 }} onClick={UpdateProfile}
+                        loading={profileData.loading}  // Show loading spinner when loading is true
+                        > Update</Button> 
                       </Form.Item>
 
                   </Form>

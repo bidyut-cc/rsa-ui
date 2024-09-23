@@ -489,8 +489,8 @@ function User() {
                   type="primary"
                   onClick={handleUpdate}
                   style={{ marginRight: 8 }}
+                  loading={userData.loading}  // Show loading spinner when loading is true
                 >
-                  {" "}
                   Update
                 </Button>
               ) : (
@@ -499,9 +499,9 @@ function User() {
                     type="primary"
                     onClick={handleAdd}
                     style={{ marginRight: 8 }}
+                    loading={userData.loading}  // Show loading spinner when loading is true
                   >
-                    {" "}
-                    Save{" "}
+                    Save
                   </Button>
                   <Button onClick={handleReset}>Reset</Button>
                 </>
