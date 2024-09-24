@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Form, Button, Card, Row, Col, Select, Checkbox, message, Spin } from "antd";
+import { Form, Button, Card, Row, Col, Select, Checkbox, message, Spin, Input } from "antd";
 import apiService from "../../services/apiService";
 
 const { Option } = Select;
@@ -20,11 +20,16 @@ function Measurement() {
   const [data, setData] = useState({
     id: "",
     swings: [],
+    ada_stall_min_width: "",
+    ada_stall_max_width: "",
+    standard_stall_min_width: "",
+    standard_stall_max_width: "",
     show_maximum_room_no: "",
     errors: [],
     loading: false,
   });
   const [buttonLoading, setButtonLoading] = useState(false); // Separate state for button-specific loading
+
   const fetchRecords = useCallback(async () => {
     setData((prev) => ({ ...prev, loading: true }));
     try {
@@ -37,13 +42,21 @@ function Measurement() {
         
         // Populate the form and state with fetched data
         form.setFieldsValue({
-            show_maximum_room_no: response.data?.config.show_maximum_room_no
+          ada_stall_min_width: response.data?.config.ada_stall_min_width,
+          ada_stall_max_width: response.data?.config.ada_stall_max_width,
+          standard_stall_min_width: response.data?.config.standard_stall_min_width,
+          standard_stall_max_width: response.data?.config.standard_stall_max_width,
+          show_maximum_room_no: response.data?.config.show_maximum_room_no
         });
 
         setData((prevData) => ({
           ...prevData,
           id: response.data.id,
           swings: fetchedSwings,  // Store fetched layouts
+          ada_stall_min_width: response.data?.config.ada_stall_min_width,
+          ada_stall_max_width: response.data?.config.ada_stall_max_width,
+          standard_stall_min_width: response.data?.config.standard_stall_min_width,
+          standard_stall_max_width: response.data?.config.standard_stall_max_width,
           show_maximum_room_no: response.data?.config.show_maximum_room_no,
           loading: false,
         }));
@@ -64,6 +77,12 @@ function Measurement() {
   useEffect(() => {
     fetchRecords();
   }, [fetchRecords]);
+
+  const handleInput = (e) =>{
+    e.persist();
+    const {name,value} = e.target;
+    setData((prevState) => ({ ...prevState, [name]: value }));
+}
 
   // Handle select changes
   const handleSelectChange = (value, name) => {
@@ -90,6 +109,10 @@ function Measurement() {
   const updateData = async () => {
     const request = {
         swings: data.swings,
+        ada_stall_min_width: data.ada_stall_min_width,
+        ada_stall_max_width: data.ada_stall_max_width,
+        standard_stall_min_width: data.standard_stall_min_width,
+        standard_stall_max_width: data.standard_stall_max_width,
         show_maximum_room_no: data.show_maximum_room_no,
     };
     setData((prev) => ({ ...prev, loading: true }));
@@ -158,7 +181,50 @@ function Measurement() {
         ))}
       </Row>
     </Form.Item>
-
+    <Form.Item
+                    label={<span>ADA Stall Min Width <span style={{ color: 'red' }}>*</span></span>}
+                    name="ada_stall_min_width"
+                    validateStatus={data.errors?.ada_stall_min_width ? 'error' : ''}
+                    help={data.errors?.ada_stall_min_width?.message} // Display only the error message
+                  >
+                  <Input placeholder="ADA Stall Min Width"  
+                    name="ada_stall_min_width"
+                    value={data?.ada_stall_min_width}
+                    onChange={handleInput} />
+    </Form.Item>
+    <Form.Item
+                    label={<span>ADA Stall Max Width <span style={{ color: 'red' }}>*</span></span>}
+                    name="ada_stall_max_width"
+                    validateStatus={data.errors?.ada_stall_max_width ? 'error' : ''}
+                    help={data.errors?.ada_stall_max_width?.message} // Display only the error message
+                  >
+                  <Input placeholder="ADA Stall Max Width"  
+                    name="ada_stall_max_width"
+                    value={data?.ada_stall_min_width}
+                    onChange={handleInput} />
+    </Form.Item>
+    <Form.Item
+                    label={<span>Standard Stall Min Width <span style={{ color: 'red' }}>*</span></span>}
+                    name="standard_stall_min_width"
+                    validateStatus={data.errors?.standard_stall_min_width ? 'error' : ''}
+                    help={data.errors?.standard_stall_min_width?.message} // Display only the error message
+                  >
+                  <Input placeholder="Standard Stall Min Width"  
+                    name="standard_stall_min_width"
+                    value={data?.standard_stall_min_width}
+                    onChange={handleInput} />
+    </Form.Item>
+    <Form.Item
+                    label={<span>Standard Stall Max Width <span style={{ color: 'red' }}>*</span></span>}
+                    name="standard_stall_max_width"
+                    validateStatus={data.errors?.standard_stall_max_width ? 'error' : ''}
+                    help={data.errors?.standard_stall_max_width?.message} // Display only the error message
+                  >
+                  <Input placeholder="Standard Stall Max Width"  
+                    name="standard_stall_max_width"
+                    value={data?.standard_stall_max_width}
+                    onChange={handleInput} />
+    </Form.Item>
     <Form.Item
       label={
         <span>
