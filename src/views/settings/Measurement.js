@@ -153,7 +153,7 @@ function Measurement() {
     <Form.Item
       label={
         <span>
-          Select Maximum Door Swings
+          Select Door Swing Options
           <span style={{ color: "red" }}>*</span>
         </span>
       }
@@ -228,7 +228,7 @@ function Measurement() {
     <Form.Item
       label={
         <span>
-          Show Maximum Room No
+           Maximum Room No
           <span style={{ color: "red" }}>*</span>
         </span>
       }

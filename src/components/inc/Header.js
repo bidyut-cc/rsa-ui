@@ -33,11 +33,10 @@ function Header({ style, toggleSidebar }) {
               aria-expanded="false"
             >
               <i className="fas fa-bell fa-fw"></i>
-              {/*  <!-- Counter - Alerts --> */}
               <span className="badge badge-danger badge-counter">3+</span>
             </Link>
             {/*   <!-- Dropdown - Alerts --> */}
-            <div
+            {/* <div
               className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
               aria-labelledby="alertsDropdown"
             >
@@ -84,7 +83,7 @@ function Header({ style, toggleSidebar }) {
               >
                 Show All Alerts
               </Link>
-            </div>
+            </div> */}
           </li>
 
           {/*  <!-- Nav Item - Messages --> */}

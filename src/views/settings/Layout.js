@@ -134,7 +134,7 @@ function Layout() {
     <Form.Item
       label={
         <span>
-          Select Maximum Layouts
+          Select Layouts
           <span style={{ color: "red" }}>*</span>
         </span>
       }
@@ -166,7 +166,7 @@ function Layout() {
     <Form.Item
       label={
         <span>
-          Show Handicap Accessible Stall
+          Show "Handicap Accessible Stall"
           <span style={{ color: "red" }}>*</span>
         </span>
       }
