@@ -7,7 +7,6 @@ function Sidebar({ style, toggleSidebar }) {
   // Define navigation items
   const navItems = [
     { path: '/dashboard', label: 'Dashboard', icon: 'fas fa-fw fa-tachometer-alt' },
-    { path: '/users', label: 'Users', icon: 'fas fa-fw fa-users' },
     { 
       label: 'Settings', 
       icon: 'fas fa-fw fa-cogs', 
@@ -16,7 +15,8 @@ function Sidebar({ style, toggleSidebar }) {
         { path: '/layout', label: 'Layout (2)' },
         { path: '/measurement', label: 'Measurement (3)' }
       ]
-    }
+    },
+    { path: '/users', label: 'Users', icon: 'fas fa-fw fa-users' },
  
   ];
   return (
@@ -28,19 +28,26 @@ function Sidebar({ style, toggleSidebar }) {
           className="sidebar-brand d-flex align-items-center justify-content-center"
           to="dashboard"
         >
+          <img
+                className="img-profile rounded-circle"
+                src="img/undraw_profile.svg"
+                alt=""
+                style={{ height: "2rem", width: "2rem" }}
+              />
           <div className="sidebar-brand-icon rotate-n-15">
-            <i className="fas fa-user"></i>
+            {/* <i className="fas fa-user"></i> */}
+            
           </div>
-          <div className="sidebar-brand-text mx-3">
+          {/* <div className="sidebar-brand-text mx-3">
             RSA Admin
-          </div>
-          <div className="text-center d-none d-md-inline">
+          </div> */}
+          {/* <div className="text-center d-none d-md-inline">
             <button
               className="rounded-circle border-0"
               id="sidebarToggle"
               onClick={toggleSidebar}
             ></button>
-          </div>
+          </div> */}
         </Link>
 
         {/*   <!-- Divider --> */}

@@ -95,7 +95,7 @@ function Project() {
               <Form.Item
                 label={
                   <span>
-                    Show Maximum Number Of Stall <span style={{ color: "red" }}>*</span>
+                     Maximum Number Of Stalls <span style={{ color: "red" }}>*</span>
                   </span>
                 }
                 name="show_number_of_stall"
@@ -105,7 +105,7 @@ function Project() {
                 help={data.errors?.show_number_of_stall?.message} // Display only the error message
               >
                 <Select
-                  placeholder="Show Number Of Stall"
+                  placeholder="Maximum Number Of Stalls"
                   onChange={(value) =>
                     handleSelectChange(value, "show_number_of_stall")
                   } // Handle select change
@@ -121,7 +121,7 @@ function Project() {
               <Form.Item
                 label={
                   <span>
-                    Show Maximum Number Of Urinal{" "}
+                    Maximum Number Of Urinal screens
                     <span style={{ color: "red" }}>*</span>
                   </span>
                 }
@@ -132,7 +132,7 @@ function Project() {
                 help={data.errors?.show_number_of_urinal?.message} // Display only the error message
               >
                 <Select
-                  placeholder="Show Number Of Urinal"
+                  placeholder="Maximum Number Of Urinal screens"
                   onChange={(value) =>
                     handleSelectChange(value, "show_number_of_urinal")
                   } // Handle select change
@@ -148,7 +148,7 @@ function Project() {
               <Form.Item
                 label={
                   <span>
-                    Show Interested For Material Installation Quote
+                    Show "Interested For Material Installation Quote"
                     <span style={{ color: "red" }}>*</span>
                   </span>
                 }
@@ -163,20 +163,6 @@ function Project() {
                     ?.message
                 } // Display only the error message
               >
-                {/* <Select
-                  placeholder="Interested For Material Installation Quote"
-                  onChange={(value) =>
-                    handleSelectChange(
-                      value,
-                      "interested_for_material_installation_quote"
-                    )
-                  } // Handle select change
-                  value={data.interested_for_material_installation_quote}
-                >
-                  <Option value="No">No</Option>
-                  <Option value="Yes">Yes</Option>
-                </Select> */}
-
                 <Switch
                     checked={data.interested_for_material_installation_quote === "Yes"} // Set the switch state based on 'Yes' or 'No'
                     onChange={(checked) =>
