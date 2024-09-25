@@ -11,6 +11,7 @@ import Project from "./views/settings/Project";
 import Layout from "./views/settings/Layout";
 import NotFound from "./views/error/NotFound";
 import Measurement from "./views/settings/Measurement";
+import Quatation from "./views/quotation/Quotation";
 function App() {
   return (
     <>
@@ -29,6 +30,7 @@ function App() {
           <Route path="project" element={<Project title="Project Setting" />} />
           <Route path="layout" element={<Layout title="Layout Setting" />} />
           <Route path="measurement" element={<Measurement title="Measurement Setting" />} />
+          <Route path="quotation" element={<Quatation title="Quotation" />} />
 
           {/* Catch-all route for unmatched URLs */}
           <Route path="*" element={<NotFound />} />

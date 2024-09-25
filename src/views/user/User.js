@@ -11,7 +11,8 @@ import {
   message,
   Select,
   Spin,
-  Switch
+  Switch,
+  Tooltip
 } from "antd";
 import {
   PlusCircleOutlined,
@@ -81,7 +82,9 @@ function User() {
             shape="circle"
             onClick={() => handleEdit(record)}
           >
-            <EditOutlined />
+            <Tooltip title="Edit">
+              <EditOutlined />
+            </Tooltip>
           </Button>
           <Button
             type="primary"
@@ -89,7 +92,9 @@ function User() {
             danger
             onClick={() => handleDelete(record.id)}
           >
-            <DeleteOutlined />
+            <Tooltip title="Delete">
+              <DeleteOutlined />
+            </Tooltip>
           </Button>
         </Space>
       ),
@@ -333,7 +338,9 @@ function User() {
                       style={{ backgroundColor: "green", borderColor: "green" }}
                       onClick={showModal}
                     >
-                      <PlusCircleOutlined />
+                      <Tooltip title="Add">
+                        <PlusCircleOutlined />
+                      </Tooltip>
                     </Button>
                   </Col>
                   <Col style={{ marginLeft: 8 }}>
