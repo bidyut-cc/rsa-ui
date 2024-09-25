@@ -8,8 +8,8 @@ function Project() {
   const max_urinal_no = Array.from({ length: 10 }, (_, i) => i + 1);
   const [data, setData] = useState({
     id: "",
-    show_number_of_stall: "",
-    show_number_of_urinal: "",
+    maximum_number_of_stalls: "",
+    maximum_number_of_urinal_screens: "",
     interested_for_material_installation_quote: "",
     errors: [],
     loading: false,
@@ -23,8 +23,8 @@ function Project() {
       const response = await apiService.get(`settings/view/?step=project`);
       if (response.status === 200) {
         form.setFieldsValue({
-          show_number_of_stall: response.data?.config.show_number_of_stall,
-          show_number_of_urinal: response.data?.config.show_number_of_urinal,
+          maximum_number_of_stalls: response.data?.config.maximum_number_of_stalls,
+          maximum_number_of_urinal_screens: response.data?.config.maximum_number_of_urinal_screens,
           interested_for_material_installation_quote:
             response.data?.config.interested_for_material_installation_quote,
         });
@@ -50,8 +50,8 @@ function Project() {
   };
   const updateData = async () => {
     const request = {
-      show_number_of_stall: data.show_number_of_stall,
-      show_number_of_urinal: data.show_number_of_urinal,
+      maximum_number_of_stalls: data.maximum_number_of_stalls,
+      maximum_number_of_urinal_screens: data.maximum_number_of_urinal_screens,
       interested_for_material_installation_quote:
         data.interested_for_material_installation_quote,
     };
@@ -98,18 +98,17 @@ function Project() {
                      Maximum Number Of Stalls <span style={{ color: "red" }}>*</span>
                   </span>
                 }
-                name="show_number_of_stall"
                 validateStatus={
-                  data.errors?.show_number_of_stall ? "error" : ""
+                  data.errors?.maximum_number_of_stalls ? "error" : ""
                 }
-                help={data.errors?.show_number_of_stall?.message} // Display only the error message
+                help={data.errors?.maximum_number_of_stalls?.message} // Display only the error message
               >
                 <Select
                   placeholder="Maximum Number Of Stalls"
                   onChange={(value) =>
-                    handleSelectChange(value, "show_number_of_stall")
+                    handleSelectChange(value, "maximum_number_of_stalls")
                   } // Handle select change
-                  value={data.show_number_of_stall}
+                  value={data.maximum_number_of_stalls}
                 >
                   {max_stall_no.map((stall) => (
                     <Option key={stall} value={stall}>
@@ -125,18 +124,17 @@ function Project() {
                     <span style={{ color: "red" }}>*</span>
                   </span>
                 }
-                name="show_number_of_urinal"
                 validateStatus={
-                  data.errors?.show_number_of_urinal ? "error" : ""
+                  data.errors?.maximum_number_of_urinal_screens ? "error" : ""
                 }
-                help={data.errors?.show_number_of_urinal?.message} // Display only the error message
+                help={data.errors?.maximum_number_of_urinal_screens?.message} // Display only the error message
               >
                 <Select
                   placeholder="Maximum Number Of Urinal screens"
                   onChange={(value) =>
-                    handleSelectChange(value, "show_number_of_urinal")
+                    handleSelectChange(value, "maximum_number_of_urinal_screens")
                   } // Handle select change
-                  value={data.show_number_of_urinal}
+                  value={data.maximum_number_of_urinal_screens}
                 >
                   {max_urinal_no.map((stall) => (
                     <Option key={stall} value={stall}>
@@ -152,7 +150,6 @@ function Project() {
                     <span style={{ color: "red" }}>*</span>
                   </span>
                 }
-                name="interested_for_material_installation_quote"
                 validateStatus={
                   data.errors?.interested_for_material_installation_quote
                     ? "error"

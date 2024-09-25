@@ -22,7 +22,7 @@ function Layout() {
   const [data, setData] = useState({
     id: "",
     layouts: [],
-    is_include_handicap_accessible_stall: "",
+    show_handicap_accessible_stall: "",
     errors: [],
     loading: false,
   });
@@ -41,14 +41,14 @@ function Layout() {
         
         // Populate the form and state with fetched data
         form.setFieldsValue({
-          is_include_handicap_accessible_stall: response.data?.config.is_include_handicap_accessible_stall
+          show_handicap_accessible_stall: response.data?.config.show_handicap_accessible_stall
         });
 
         setData((prevData) => ({
           ...prevData,
           id: response.data.id,
           layouts: fetchedLayouts,  // Store fetched layouts
-          is_include_handicap_accessible_stall: response.data?.config.is_include_handicap_accessible_stall,
+          show_handicap_accessible_stall: response.data?.config.show_handicap_accessible_stall,
           loading: false,
         }));
 
@@ -94,7 +94,7 @@ function Layout() {
   const updateData = async () => {
     const request = {
       layouts: data.layouts,
-      is_include_handicap_accessible_stall: data.is_include_handicap_accessible_stall,
+      show_handicap_accessible_stall: data.show_handicap_accessible_stall,
     };
     setData((prev) => ({ ...prev, loading: true }));
     setButtonLoading(true); // Set button loading to true when the update starts
@@ -170,14 +170,13 @@ function Layout() {
           <span style={{ color: "red" }}>*</span>
         </span>
       }
-      name="is_include_handicap_accessible_stall"
-      validateStatus={data.errors?.is_include_handicap_accessible_stall ? "error" : ""}
-      help={data.errors?.is_include_handicap_accessible_stall?.message}
+      validateStatus={data.errors?.show_handicap_accessible_stall ? "error" : ""}
+      help={data.errors?.show_handicap_accessible_stall?.message}
     >
       <Switch
-    checked={data.is_include_handicap_accessible_stall === "Yes"} // Set the switch state based on 'Yes' or 'No'
+    checked={data.show_handicap_accessible_stall === "Yes"} // Set the switch state based on 'Yes' or 'No'
     onChange={(checked) =>
-      handleSelectChange(checked ? "Yes" : "No", "is_include_handicap_accessible_stall")
+      handleSelectChange(checked ? "Yes" : "No", "show_handicap_accessible_stall")
     } // Handle switch change
   />
     </Form.Item>
