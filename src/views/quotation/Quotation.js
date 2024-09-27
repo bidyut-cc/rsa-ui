@@ -183,66 +183,68 @@ function Quotation() {
   
 
   const renderForm = (form, onFinish, label, loading) => (
-  <Form form={form} layout="vertical" onFinish={onFinish}>
-      {materials.length > 0 ? (
-        <Row gutter={24} style={{ textAlign: 'center' }}>
-          <Col span={4}>
-            <Form.Item label="Stall No" style={{ paddingLeft: '60px',fontWeight: 'bold' }}/>
-          </Col>
-          {materials.map((material, index) => (
-            <Col span={4} key={index}>
-              <span  style={{fontWeight: 'bold' }}>{material.name}</span>
-            </Col>
-          ))}
-        </Row>
-      ) : null}
-
-      {materials.length > 0 &&
-        [...Array(maxStall)].map((_, stallIndex) => (
-          <Row gutter={24} key={stallIndex} style={{ textAlign: 'center' }}>
-            <Col span={4}>
-              <span style={{ display: "block" }}>
-                {stallIndex + 1}
-              </span>
-            </Col>
-            {materials.map((material, index) => (
-              <Col span={4} key={index}>
-                <Form.Item
-                  name={`${material.name}_${stallIndex}`}
-                  rules={[
-                    { required: true, message: `Please enter ${material.name} price for stall ${stallIndex + 1}.` },
-                    {
-                      validator: (_, value) => {
-                        if (value && isNaN(value)) {
-                          return Promise.reject(new Error(`${material.name} price must be a valid number for stall ${stallIndex + 1}.`));
-                        }
-                        if (value && value.includes(' ')) {
-                          return Promise.reject(new Error(`${material.name} price cannot contain spaces for stall ${stallIndex + 1}.`));
-                        }
-                        return Promise.resolve();
-                      },
-                    },
-                  ]}
-                >
-                  <Input
-                    prefix={<span style={{ color: 'blue' }}>$</span>}
-                    placeholder={`Enter ${material.name} price`}
-                    type="text"
-                  />
-                </Form.Item>
+    <Spin spinning={data.loading}>
+      <Form form={form} layout="vertical" onFinish={onFinish}>
+          {materials.length > 0 ? (
+            <Row gutter={24} style={{ textAlign: 'center' }}>
+              <Col span={4}>
+                <Form.Item label="Stall No" style={{ paddingLeft: '60px',fontWeight: 'bold' }}/>
               </Col>
-            ))}
-          </Row>
-        ))}
+              {materials.map((material, index) => (
+                <Col span={4} key={index}>
+                  <span  style={{fontWeight: 'bold' }}>{material.name}</span>
+                </Col>
+              ))}
+            </Row>
+          ) : null}
 
-      {materials.length > 0 ? (
-        <Form.Item style={{ display: "flex", justifyContent: "center", marginTop: 16 }}>
-          <Button type="primary" htmlType="submit" loading={buttonLoading}>
-            {buttonLoading ? "Processing..." :  `Update ${label}`}
-          </Button>
-        </Form.Item>
-      ) : null}
-    </Form>
+          {materials.length > 0 &&
+            [...Array(maxStall)].map((_, stallIndex) => (
+              <Row gutter={24} key={stallIndex} style={{ textAlign: 'center' }}>
+                <Col span={4}>
+                  <span style={{ display: "block" }}>
+                    {stallIndex + 1}
+                  </span>
+                </Col>
+                {materials.map((material, index) => (
+                  <Col span={4} key={index}>
+                    <Form.Item
+                      name={`${material.name}_${stallIndex}`}
+                      rules={[
+                        { required: true, message: `Please enter ${material.name} price for stall ${stallIndex + 1}.` },
+                        {
+                          validator: (_, value) => {
+                            if (value && isNaN(value)) {
+                              return Promise.reject(new Error(`${material.name} price must be a valid number for stall ${stallIndex + 1}.`));
+                            }
+                            if (value && value.includes(' ')) {
+                              return Promise.reject(new Error(`${material.name} price cannot contain spaces for stall ${stallIndex + 1}.`));
+                            }
+                            return Promise.resolve();
+                          },
+                        },
+                      ]}
+                    >
+                      <Input
+                        prefix={<span style={{ color: 'blue' }}>$</span>}
+                        placeholder={`Enter ${material.name} price`}
+                        type="text"
+                      />
+                    </Form.Item>
+                  </Col>
+                ))}
+              </Row>
+            ))}
+
+          {materials.length > 0 ? (
+            <Form.Item style={{ display: "flex", justifyContent: "center", marginTop: 16 }}>
+              <Button type="primary" htmlType="submit" loading={buttonLoading}>
+                {buttonLoading ? "Processing..." :  `Update ${label}`}
+              </Button>
+            </Form.Item>
+          ) : null}
+        </Form>
+    </Spin>
   );
   
 
@@ -272,11 +274,11 @@ function Quotation() {
   return (
     <div className="container-fluid">
     <h1 className="h3 mb-4 text-gray-800">Quotation Builder</h1>
-    <Spin spinning={data.loading}>
+   
     <Card>
       <Tabs defaultActiveKey="1" type="card" items={tabItems} />
     </Card>
-    </Spin>
+    
   </div>
   );
 }
