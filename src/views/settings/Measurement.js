@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Form,
   Button,
@@ -17,18 +17,11 @@ const { Option } = Select;
 
 function Measurement() {
   const [form] = Form.useForm();
-  const max_room_no = Array.from({ length: 4 }, (_, i) => i + 1);
+    // Dynamically fetched layouts
+    const [swings, setSwings] = useState([]); 
+    const [maxRoom, setMaxRoom] = useState([1]);
 
-  // Memoize swings array to ensure stability
-  const swings = useMemo(
-    () => [
-      { id: 1, name: "Left In" },
-      { id: 2, name: "Left Out" },
-      { id: 3, name: "Right In" },
-      { id: 4, name: "Right Out" },
-    ],
-    []
-  );
+
 
   const [data, setData] = useState({
     id: "",
@@ -43,57 +36,80 @@ function Measurement() {
   });
   const [buttonLoading, setButtonLoading] = useState(false); // Separate state for button-specific loading
 
-  const fetchRecords = useCallback(async () => {
-    setData((prev) => ({ ...prev, loading: true }));
-    try {
-      const response = await apiService.get(`settings/view/?step=measurement`);
-      if (response.status === 200) {
-        const fetchedSwings = response.data?.config.swings || [];
-
-        // Set the checkbox values based on the fetched data
-        const selectedSwingIds = fetchedSwings.map((swing) => swing.id);
-
-        // Populate the form and state with fetched data
-        form.setFieldsValue({
-          ada_stall_min_width: response.data?.config.ada_stall_min_width,
-          ada_stall_max_width: response.data?.config.ada_stall_max_width,
-          standard_stall_min_width:
-            response.data?.config.standard_stall_min_width,
-          standard_stall_max_width:
-            response.data?.config.standard_stall_max_width,
-          maximum_room_no: response.data?.config.maximum_room_no,
-        });
-
-        setData((prevData) => ({
-          ...prevData,
-          id: response.data.id,
-          swings: fetchedSwings, // Store fetched layouts
-          ada_stall_min_width: response.data?.config.ada_stall_min_width,
-          ada_stall_max_width: response.data?.config.ada_stall_max_width,
-          standard_stall_min_width:
-            response.data?.config.standard_stall_min_width,
-          standard_stall_max_width:
-            response.data?.config.standard_stall_max_width,
-          maximum_room_no: response.data?.config.maximum_room_no,
-          loading: false,
-        }));
-
-        // Check the checkboxes for selected layouts
-        swings.forEach((swing) => {
-          form.setFieldsValue({
-            [`swing_${swing.id}`]: selectedSwingIds.includes(swing.id),
-          });
-        });
+    // Fetch the layouts from the API
+    const fetchSwings = async () => {
+      try {
+        const response = await apiService.get(`masterSettings/view/?key=swings`);
+        if (response.status === 200) {
+          setSwings(response.data.value || []); // Set fetched layouts
+        }
+      } catch (error) {
+        setSwings([]); // Default to an empty array on error
+        message.error(error.response?.statusText || 'Error fetching layouts');
       }
-    } catch (error) {
-      setData((prev) => ({ ...prev, loading: false }));
-      message.error(error.response?.statusText || "Failed to fetch records");
-    }
-  }, [form, swings]);
+    };
+
+    const fetchMaxRoom = async () => {
+      try {
+        const response = await apiService.get(`masterSettings/view/?key=maximum_room_no`);
+        if (response.status === 200) {
+          const maxValue = response.data.value;
+          setMaxRoom(Array.from({ length: maxValue }, (_, i) => i + 1));
+        }
+      } catch (error) {
+        setMaxRoom(Array.from({ length: 1 }, (_, i) => i + 1)); 
+        message.error(error.response?.statusText || 'Error fetching stall');
+      }
+    };
+
+    const fetchRecords = useCallback(async () => {
+      setData((prev) => ({ ...prev, loading: true }));
+      try {
+        const response = await apiService.get(`settings/view/?step=measurement`);
+        if (response.status === 200) {
+          const fetchedSwings = response.data?.config.swings || [];
+          const selectedSwingIds = fetchedSwings.map((swing) => swing.id);
+  
+          form.setFieldsValue({
+            ada_stall_min_width: response.data?.config.ada_stall_min_width,
+            ada_stall_max_width: response.data?.config.ada_stall_max_width,
+            standard_stall_min_width: response.data?.config.standard_stall_min_width,
+            standard_stall_max_width: response.data?.config.standard_stall_max_width,
+            maximum_room_no: response.data?.config.maximum_room_no,
+          });
+  
+          setData((prevData) => ({
+            ...prevData,
+            id: response.data.id,
+            swings: fetchedSwings, // Store fetched swings
+            ada_stall_min_width: response.data?.config.ada_stall_min_width,
+            ada_stall_max_width: response.data?.config.ada_stall_max_width,
+            standard_stall_min_width: response.data?.config.standard_stall_min_width,
+            standard_stall_max_width: response.data?.config.standard_stall_max_width,
+            maximum_room_no: response.data?.config.maximum_room_no,
+            loading: false,
+          }));
+  
+          swings.forEach((swing) => {
+            form.setFieldsValue({
+              [`swing_${swing.id}`]: selectedSwingIds.includes(swing.id),
+            });
+          });
+        }
+      } catch (error) {
+        setData((prev) => ({ ...prev, loading: false }));
+        message.error(error.response?.statusText || "Failed to fetch records");
+      }
+    }, [form, swings]);
 
   useEffect(() => {
     fetchRecords();
+    fetchMaxRoom();
   }, [fetchRecords]);
+
+  useEffect(() => {
+    fetchSwings(); 
+  }, []);
 
   const handleInput = (e) => {
     e.persist();
@@ -166,9 +182,9 @@ function Measurement() {
     <div className="container-fluid">
       <h1 className="h3 mb-4 text-gray-800">Measurement Setting</h1>
       <Spin spinning={data.loading}>
-        <Row justify="center">
-          <Col xs={24} sm={20} md={18} lg={15}>
-            <Card>
+        <Card>
+          <Row justify="center">
+            <Col xs={24} sm={20} md={18} lg={12}>
               <Form form={form} layout="vertical">
                 <Form.Item
                   label={
@@ -298,7 +314,7 @@ function Measurement() {
                     } // Handle select change
                     value={data.maximum_room_no}
                   >
-                    {max_room_no.map((room) => (
+                    {maxRoom.map((room) => (
                       <Option key={room} value={room}>
                         {room}
                       </Option>
@@ -319,9 +335,9 @@ function Measurement() {
                   </Button>
                 </Form.Item>
               </Form>
-            </Card>
-          </Col>
-        </Row>
+            </Col>
+          </Row>
+        </Card>
       </Spin>
     </div>
   );
