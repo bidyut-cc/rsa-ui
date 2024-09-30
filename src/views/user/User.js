@@ -1,4 +1,4 @@
-import React, { useCallback,useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Button,
   Col,
@@ -12,7 +12,8 @@ import {
   Select,
   Spin,
   Switch,
-  Tooltip
+  Tooltip,
+  Card,
 } from "antd";
 import {
   PlusCircleOutlined,
@@ -20,7 +21,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import apiService from "../../services/apiService";
-import { debounce } from "lodash"; 
+import { debounce } from "lodash";
 const { Option } = Select;
 
 function User() {
@@ -107,19 +108,18 @@ function User() {
       const response = await apiService.get(
         `users/list?page=${dataSource.page}&show=${dataSource.pageSize}&search=${dataSource.search}`
       );
-      if(response.status === 200){
+      if (response.status === 200) {
         setDataSource((prev) => ({
           ...prev,
           loading: false,
           data: response.data.results,
         }));
       }
-     
     } catch (error) {
       message.error(error.response.statusText);
       setDataSource((prev) => ({ ...prev, loading: false }));
     }
-  },[dataSource.page, dataSource.search,dataSource.pageSize]);
+  }, [dataSource.page, dataSource.search, dataSource.pageSize]);
 
   const handlePaginate = (page) => {
     setDataSource((prev) => ({ ...prev, page }));
@@ -178,16 +178,15 @@ function User() {
       if (error.response) {
         if (error.response.status === 422) {
           setUserData({ ...userData, errors: error.response.data.errors });
-        }else if (error.response.status === 500) {
-          setUserData({ ...userData, errors:[] });
+        } else if (error.response.status === 500) {
+          setUserData({ ...userData, errors: [] });
           message.error(error.response.data.message);
         } else {
-          message.error('Something went wrong. Please try again later.');
+          message.error("Something went wrong. Please try again later.");
         }
-      }else{
-         message.error('Some Problem Occured! Please try again later.');
+      } else {
+        message.error("Some Problem Occured! Please try again later.");
       }
-      
     }
   };
 
@@ -203,7 +202,7 @@ function User() {
       roles: "",
       status: "",
       errors: [],
-      loading: false
+      loading: false,
     }));
   };
 
@@ -219,7 +218,7 @@ function User() {
       roles: "",
       status: "",
       errors: [],
-      loading: false
+      loading: false,
     }));
     setIsModalOpen(false);
   };
@@ -243,7 +242,7 @@ function User() {
       roles: row.roles[0],
       status: row.status,
       errors: [],
-      loading: false
+      loading: false,
     }));
     setIsModalOpen(true);
   };
@@ -273,19 +272,19 @@ function User() {
         setButtonLoading(false); // Set button loading to false after success
       }
     } catch (error) {
-        setUserData((prev) => ({ ...prev, loading: false }));
-        setButtonLoading(false); // Set button loading to false on error
-        if (error.response) {
+      setUserData((prev) => ({ ...prev, loading: false }));
+      setButtonLoading(false); // Set button loading to false on error
+      if (error.response) {
         if (error.response.status === 422) {
           setUserData({ ...userData, errors: error.response.data.errors });
-        }else if (error.response.status === 500) {
-          setUserData({ ...userData, errors:[] });
+        } else if (error.response.status === 500) {
+          setUserData({ ...userData, errors: [] });
           message.error(error.response.data.message);
         } else {
-          message.error('Something went wrong. Please try again later.');
+          message.error("Something went wrong. Please try again later.");
         }
-      }else{
-         message.error('Some Problem Occured! Please try again later.');
+      } else {
+        message.error("Some Problem Occured! Please try again later.");
       }
     }
   };
@@ -308,14 +307,14 @@ function User() {
           if (error.response) {
             if (error.response.status === 422) {
               setUserData({ ...userData, errors: error.response.data.errors });
-            }else if (error.response.status === 500) {
-              setUserData({ ...userData, errors:[] });
+            } else if (error.response.status === 500) {
+              setUserData({ ...userData, errors: [] });
               message.error(error.response.data.message);
             } else {
-              message.error('Something went wrong. Please try again later.');
+              message.error("Something went wrong. Please try again later.");
             }
-          }else{
-             message.error('Some Problem Occured! Please try again later.');
+          } else {
+            message.error("Some Problem Occured! Please try again later.");
           }
         }
       },
@@ -325,58 +324,50 @@ function User() {
   return (
     <div className="container-fluid">
       <h1 className="h3 mb-4 text-gray-800">Users</h1>
-      <section className="content">
-        <div className="container-fluid">
-          <div className="col-12">
-            <div className="card">
-              <div className="card-body">
-                <Row justify="end" style={{ marginBottom: 16 }}>
-                  <Col>
-                    <Button
-                      type="primary"
-                      shape="circle"
-                      style={{ backgroundColor: "green", borderColor: "green" }}
-                      onClick={showModal}
-                    >
-                      <Tooltip title="Add">
-                        <PlusCircleOutlined />
-                      </Tooltip>
-                    </Button>
-                  </Col>
-                  <Col style={{ marginLeft: 8 }}>
-                    <AntInput
-                      placeholder="Search"
-                      allowClear
-                      onChange={(e) => handleSearch(e.target.value)}
-                    />
-                  </Col>
-                </Row>
-                <Table
-                  loading={dataSource.loading}
-                  rowKey="id"
-                  dataSource={dataSource.data.results?.data}
-                  columns={columns}
-                  pagination={{
-                    current: dataSource.page,
-                    pageSize: dataSource.pageSize,
-                    total: dataSource.data.results_count,
-                    onChange: (page) => handlePaginate(page),
-                    showTotal: (total, range) =>
-                      `Showing ${range[0]} to ${range[1]} of ${total} entries`,
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Card>
+        <Row justify="end" style={{ marginBottom: 16 }}>
+          <Col>
+            <Button
+              type="primary"
+              shape="circle"
+              style={{ backgroundColor: "green", borderColor: "green" }}
+              onClick={showModal}
+            >
+              <Tooltip title="Add">
+                <PlusCircleOutlined />
+              </Tooltip>
+            </Button>
+          </Col>
+          <Col style={{ marginLeft: 8 }}>
+            <AntInput
+              placeholder="Search"
+              allowClear
+              onChange={(e) => handleSearch(e.target.value)}
+            />
+          </Col>
+        </Row>
+        <Table
+          loading={dataSource.loading}
+          rowKey="id"
+          dataSource={dataSource.data.results?.data}
+          columns={columns}
+          pagination={{
+            current: dataSource.page,
+            pageSize: dataSource.pageSize,
+            total: dataSource.data.results_count,
+            onChange: (page) => handlePaginate(page),
+            showTotal: (total, range) =>
+              `Showing ${range[0]} to ${range[1]} of ${total} entries`,
+          }}
+        />
+      </Card>
       <Modal
         title={userData?.id ? "Edit User" : "Add User"}
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
       >
-         <Spin spinning={userData.loading}>
+        <Spin spinning={userData.loading}>
           <Form form={form} layout="vertical">
             <Form.Item
               label={
@@ -489,7 +480,7 @@ function User() {
                 onChange={(checked) =>
                   handleSelectChange(checked ? "Active" : "Inactive", "status")
                 } // Handle switch change
-               />
+              />
             </Form.Item>
             {/* Submit and Reset buttons */}
             <Form.Item
@@ -503,7 +494,7 @@ function User() {
                   type="primary"
                   onClick={handleUpdate}
                   style={{ marginRight: 8 }}
-                  loading={buttonLoading}  // Show loading spinner when loading is true
+                  loading={buttonLoading} // Show loading spinner when loading is true
                 >
                   {buttonLoading ? "Processing..." : "Update"}
                 </Button>
@@ -513,7 +504,7 @@ function User() {
                     type="primary"
                     onClick={handleAdd}
                     style={{ marginRight: 8 }}
-                    loading={buttonLoading}  // Show loading spinner when loading is true
+                    loading={buttonLoading} // Show loading spinner when loading is true
                   >
                     {buttonLoading ? "Processing..." : "Save"}
                   </Button>
@@ -522,8 +513,7 @@ function User() {
               )}
             </Form.Item>
           </Form>
-         </Spin>
-       
+        </Spin>
       </Modal>
     </div>
   );
