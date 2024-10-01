@@ -7,7 +7,8 @@ function Quotation() {
   const [formIC] = Form.useForm();
   const [formBW] = Form.useForm(); 
   const [formALIC] = Form.useForm();
-  const [formALBW] = Form.useForm(); 
+  const [formALBW] = Form.useForm();
+  const [formADA] = Form.useForm();  
   const [materials, setMaterials] = useState([]);
   const [maxStall, setMaxStall] = useState(1);
   const [data, setData] = useState({
@@ -89,6 +90,11 @@ function Quotation() {
           mapConfigToFormValues(config.ALBW, formValuesALBW);
           formALBW.setFieldsValue(formValuesALBW);
         }
+        if (config.ADA_price) {
+          formADA.setFieldsValue({
+            ADA_price: config.ADA_price // Populate the ADA form with the price
+          });
+        }
   
         setData((prevData) => ({
           ...prevData,
@@ -145,8 +151,6 @@ function Quotation() {
       type,
     };
   
-    
-  
     try {
       const response = await apiService.post(`settings/updateQuotationBuilder/${data.id}`, request);
       if (response.status === 200) {
@@ -172,6 +176,40 @@ function Quotation() {
       }
     }
   };
+
+  const handleADAFinish = async (formValues, type) => {
+    setData((prev) => ({ ...prev, loading: true }));
+    setButtonLoading(true);
+    const request = {
+      ADA_price: formValues.ADA_price.toString(),
+    };
+  
+    try {
+      const response = await apiService.post(`settings/updateQuotationBuilderADAprice/${data.id}`, request);
+      if (response.status === 200) {
+        message.success(response.data.message);
+        setData({ ...data, loading: false, errors: [] });
+        setButtonLoading(false);
+      }
+    } catch (error) {
+      console.error("Error response:", error.response); // Debugging the error response
+      setData((prev) => ({ ...prev, loading: false }));
+      setButtonLoading(false);
+      if (error.response) {
+        if (error.response.status === 422) {
+          setData({ ...data, errors: error.response.data.errors });
+        } else if (error.response.status === 500) {
+          setData({ ...data, errors: [] });
+          message.error(error.response.data.message);
+        } else {
+          message.error("Something went wrong. Please try again later.");
+        }
+      } else {
+        message.error("Some Problem Occurred! Please try again later.");
+      }
+    }
+  };
+  
   
   const handleTabChange = (key) => {
     console.log(key)
@@ -252,6 +290,57 @@ function Quotation() {
       </Form>
     </Spin>
   );
+
+  const renderADAForm = (form, handleADAFinish, label) => (
+    <Spin spinning={data.loading}>
+      <Row justify="center">
+      <Col xs={24} sm={20} md={18} lg={12}>
+      <Form form={form} layout="vertical" onFinish={handleADAFinish} requiredMark={false}>
+        <Form.Item
+          label={
+            <span>
+              Price <span style={{ color: "red" }}>*</span>
+            </span>
+          }
+          name="ADA_price"
+          validateStatus={data.errors?.ADA_price ? "error" : ""}
+          help={data.errors?.ADA_price?.message} // Display only the error message
+          rules={[
+            { required: true, message: 'Please enter ADA price.' },
+            {
+              validator: (_, value) => {
+                if (value && isNaN(value)) {
+                  return Promise.reject(new Error('Price must be a valid number.'));
+                }
+                if (value && value.includes(' ')) {
+                  return Promise.reject(new Error('Price cannot contain spaces.'));
+                }
+                if (value && parseFloat(value) <= 0) {
+                  return Promise.reject(new Error('Price must be greater than 0.'));
+                }
+                return Promise.resolve();
+              }
+            }
+          ]}
+        >
+          <Input
+            prefix={<span style={{ color: 'blue' }}>$</span>}
+            placeholder="Enter ADA price"
+          />
+        </Form.Item>
+  
+        <Form.Item style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
+          <Button type="primary" htmlType="submit" loading={buttonLoading}>
+            {buttonLoading ? 'Processing...' : `Update ${label}`}
+          </Button>
+        </Form.Item>
+      </Form>
+      </Col>
+      </Row>
+      
+    </Spin>
+  );
+  
   
 
   const tabItems = [
@@ -274,6 +363,11 @@ function Quotation() {
       label: "ALBW",
       key: "4",
       children: renderForm(formALBW, (values) => handleFinish(values, 'ALBW'), 'ALBW'),
+    },
+    {
+      label: "ADA",
+      key: "5",
+      children: renderADAForm(formADA, (values) => handleADAFinish(values, 'ADA'), 'ADA'),
     },
   ];
 
