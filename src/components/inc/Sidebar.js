@@ -16,8 +16,9 @@ function Sidebar({ style, toggleSidebar }) {
         { path: '/measurement', label: 'Measurement (3)' }
       ]
     },
-    { path: '/users', label: 'Users', icon: 'fas fa-fw fa-users' },
     { path: '/quotation', label: 'Quatation Builder', icon: 'fas fa-list' },
+    { path: '/users', label: 'Users', icon: 'fas fa-fw fa-users' },
+    
  
   ];
   return (
