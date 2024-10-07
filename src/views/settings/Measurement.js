@@ -30,6 +30,14 @@ function Measurement() {
     ada_stall_max_width: "",
     standard_stall_min_width: "",
     standard_stall_max_width: "",
+    ada_stall_min_depth: "",
+    ada_stall_max_depth: "",
+    standard_stall_min_depth:"",
+    standard_stall_max_depth:"",
+    ada_stall_min_door_opening:"",
+    ada_stall_max_door_opening:"",
+    standard_stall_min_door_opening:"",
+    standard_stall_max_door_opening:"",
     maximum_room_no: "",
     errors: [],
     loading: false,
@@ -75,6 +83,14 @@ function Measurement() {
             ada_stall_max_width: response.data?.config.ada_stall_max_width,
             standard_stall_min_width: response.data?.config.standard_stall_min_width,
             standard_stall_max_width: response.data?.config.standard_stall_max_width,
+            ada_stall_min_depth:response.data?.config.ada_stall_min_depth,
+            ada_stall_max_depth:response.data?.config.ada_stall_max_depth,
+            standard_stall_min_depth:response.data?.config.standard_stall_min_depth,
+            standard_stall_max_depth:response.data?.config.standard_stall_max_depth,
+            ada_stall_min_door_opening:response.data?.config.ada_stall_min_door_opening,
+            ada_stall_max_door_opening:response.data?.config.ada_stall_max_door_opening,
+            standard_stall_min_door_opening:response.data?.config.standard_stall_min_door_opening,
+            standard_stall_max_door_opening:response.data?.config.standard_stall_max_door_opening,
             maximum_room_no: response.data?.config.maximum_room_no,
           });
   
@@ -86,6 +102,14 @@ function Measurement() {
             ada_stall_max_width: response.data?.config.ada_stall_max_width,
             standard_stall_min_width: response.data?.config.standard_stall_min_width,
             standard_stall_max_width: response.data?.config.standard_stall_max_width,
+            ada_stall_min_depth:response.data?.config.ada_stall_min_depth,
+            ada_stall_max_depth:response.data?.config.ada_stall_max_depth,
+            standard_stall_min_depth:response.data?.config.standard_stall_min_depth,
+            standard_stall_max_depth:response.data?.config.standard_stall_max_depth,
+            ada_stall_min_door_opening:response.data?.config.ada_stall_min_door_opening,
+            ada_stall_max_door_opening:response.data?.config.ada_stall_max_door_opening,
+            standard_stall_min_door_opening:response.data?.config.standard_stall_min_door_opening,
+            standard_stall_max_door_opening:response.data?.config.standard_stall_max_door_opening,
             maximum_room_no: response.data?.config.maximum_room_no,
             loading: false,
           }));
@@ -146,6 +170,14 @@ function Measurement() {
       ada_stall_max_width: data.ada_stall_max_width,
       standard_stall_min_width: data.standard_stall_min_width,
       standard_stall_max_width: data.standard_stall_max_width,
+      ada_stall_min_depth: data.ada_stall_min_depth,
+      ada_stall_max_depth: data.ada_stall_max_depth,
+      standard_stall_min_depth: data.standard_stall_min_depth,
+      standard_stall_max_depth: data.standard_stall_max_depth,
+      ada_stall_min_door_opening:data.ada_stall_min_door_opening,
+      ada_stall_max_door_opening:data.ada_stall_max_door_opening,
+      standard_stall_min_door_opening:data.standard_stall_min_door_opening,
+      standard_stall_max_door_opening:data.standard_stall_max_door_opening,
       maximum_room_no: data.maximum_room_no,
     };
     setData((prev) => ({ ...prev, loading: true }));
@@ -294,6 +326,158 @@ function Measurement() {
                     placeholder="Standard Stall Max Width"
                     name="standard_stall_max_width"
                     value={data?.standard_stall_max_width}
+                    onChange={handleInput}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label={
+                    <span>
+                      ADA Stall Min Depth
+                      <span style={{ color: "red" }}>*</span>
+                    </span>
+                  }
+                  validateStatus={
+                    data.errors?.ada_stall_min_depth ? "error" : ""
+                  }
+                  help={data.errors?.ada_stall_min_depth?.message} // Display only the error message
+                >
+                  <Input
+                    placeholder="ADA Stall Min Depth"
+                    name="ada_stall_min_depth"
+                    value={data?.ada_stall_min_depth}
+                    onChange={handleInput}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label={
+                    <span>
+                      ADA Stall Max Depth
+                      <span style={{ color: "red" }}>*</span>
+                    </span>
+                  }
+                  validateStatus={
+                    data.errors?.ada_stall_max_depth ? "error" : ""
+                  }
+                  help={data.errors?.ada_stall_max_depth?.message} // Display only the error message
+                >
+                  <Input
+                    placeholder="ADA Stall Max Depth"
+                    name="ada_stall_max_depth"
+                    value={data?.ada_stall_max_depth}
+                    onChange={handleInput}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label={
+                    <span>
+                      Standard Stall Min Depth
+                      <span style={{ color: "red" }}>*</span>
+                    </span>
+                  }
+                  validateStatus={
+                    data.errors?.standard_stall_min_depth ? "error" : ""
+                  }
+                  help={data.errors?.standard_stall_min_depth?.message} // Display only the error message
+                >
+                  <Input
+                    placeholder="Standard Stall Min Depth"
+                    name="standard_stall_min_depth"
+                    value={data?.standard_stall_min_depth}
+                    onChange={handleInput}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label={
+                    <span>
+                      Standard Stall Max Depth
+                      <span style={{ color: "red" }}>*</span>
+                    </span>
+                  }
+                  validateStatus={
+                    data.errors?.standard_stall_max_depth ? "error" : ""
+                  }
+                  help={data.errors?.standard_stall_max_depth?.message} // Display only the error message
+                >
+                  <Input
+                    placeholder="Standard Stall Max Depth"
+                    name="standard_stall_max_depth"
+                    value={data?.standard_stall_max_depth}
+                    onChange={handleInput}
+                  />
+                </Form.Item>
+                <Form.Item
+  label={
+    <span>
+      ADA Stall Min Door Opening
+      <span style={{ color: "red" }}>*</span>
+    </span>
+  }
+  validateStatus={
+    data.errors?.ada_stall_min_door_opening ? "error" : ""
+  }
+  help={data.errors?.ada_stall_min_door_opening?.message} // Display only the error message
+>
+  <Input
+    placeholder="ADA Stall Min Door Opening"
+    name="ada_stall_min_door_opening"
+    value={data?.ada_stall_min_door_opening}
+    onChange={handleInput}
+  />
+                </Form.Item>
+                <Form.Item
+                  label={
+                    <span>
+                      ADA Stall Max Door Opening
+                      <span style={{ color: "red" }}>*</span>
+                    </span>
+                  }
+                  validateStatus={
+                    data.errors?.ada_stall_max_door_opening ? "error" : ""
+                  }
+                  help={data.errors?.ada_stall_max_door_opening?.message} // Display only the error message
+                >
+                  <Input
+                    placeholder="ADA Stall Max Door Opening"
+                    name="ada_stall_max_door_opening"
+                    value={data?.ada_stall_max_door_opening}
+                    onChange={handleInput}
+                  />
+                </Form.Item>
+                <Form.Item
+  label={
+    <span>
+      Standard Stall Min Door Opening
+      <span style={{ color: "red" }}>*</span>
+    </span>
+  }
+  validateStatus={
+    data.errors?.standard_stall_min_door_opening ? "error" : ""
+  }
+  help={data.errors?.standard_stall_min_door_opening?.message} // Display only the error message
+>
+  <Input
+    placeholder="Standard Stall Min Door Opening"
+    name="standard_stall_min_door_opening"
+    value={data?.standard_stall_min_door_opening}
+    onChange={handleInput}
+  />
+                </Form.Item>
+                <Form.Item
+                  label={
+                    <span>
+                      Standard Stall Max Door Opening
+                      <span style={{ color: "red" }}>*</span>
+                    </span>
+                  }
+                  validateStatus={
+                    data.errors?.standard_stall_max_door_opening ? "error" : ""
+                  }
+                  help={data.errors?.standard_stall_max_door_opening?.message} // Display only the error message
+                >
+                  <Input
+                    placeholder="Standard Stall Max Door Opening"
+                    name="standard_stall_max_door_opening"
+                    value={data?.standard_stall_max_door_opening}
                     onChange={handleInput}
                   />
                 </Form.Item>
