@@ -110,7 +110,7 @@ function Quotation() {
     } finally {
        setData((prev) => ({ ...prev, loading: false }));
     }
-  }, [formIC, formBW, formALIC, formALBW]);
+  }, [formIC, formBW, formALIC, formALBW, formADA]);
   
   
   useEffect(() => {
