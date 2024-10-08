@@ -214,274 +214,289 @@ function Measurement() {
     <div className="container-fluid">
       <h1 className="h3 mb-4 text-gray-800">Measurement Setting</h1>
       <Spin spinning={data.loading}>
-        <Card>
-          <Row justify="center">
-            <Col xs={24} sm={20} md={18} lg={12}>
-              <Form form={form} layout="vertical">
-                <Form.Item
-                  label={
-                    <span>
-                      Select Door Swing Options
-                      <span style={{ color: "red" }}>*</span>
-                    </span>
-                  }
-                >
-                  <Row gutter={[16, 16]}>
-                    {swings.map((swing) => (
-                      <Col xs={24} sm={12} md={6} key={swing.id}>
-                        <div>
-                          {/* Wrapper div to ensure single child */}
-                          <Form.Item
-                            name={`swing_${swing.id}`}
-                            validateStatus={data.errors?.swings ? "error" : ""}
-                            help={data.errors?.swings?.message}
-                            style={{ marginTop: "10px" }} // Adjust margin here if needed
-                          >
-                            <Checkbox
-                              checked={data.swings.some(
-                                (l) => l.id === swing.id
-                              )} // Automatically check
-                              onChange={(e) =>
-                                handleCheckboxChange(e.target.checked, swing)
-                              }
-                            >
-                              {swing.name}
-                            </Checkbox>
-                          </Form.Item>
-                        </div>
-                      </Col>
-                    ))}
-                  </Row>
-                </Form.Item>
-                <Form.Item
-                  label={
-                    <span>
-                      ADA Stall Min Width
-                      <span style={{ color: "red" }}>*</span>
-                    </span>
-                  }
-                  validateStatus={
-                    data.errors?.ada_stall_min_width ? "error" : ""
-                  }
-                  help={data.errors?.ada_stall_min_width?.message} // Display only the error message
-                >
-                  <Input
-                    placeholder="ADA Stall Min Width"
-                    name="ada_stall_min_width"
-                    value={data?.ada_stall_min_width}
-                    onChange={handleInput}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label={
-                    <span>
-                      ADA Stall Max Width
-                      <span style={{ color: "red" }}>*</span>
-                    </span>
-                  }
-                  validateStatus={
-                    data.errors?.ada_stall_max_width ? "error" : ""
-                  }
-                  help={data.errors?.ada_stall_max_width?.message} // Display only the error message
-                >
-                  <Input
-                    placeholder="ADA Stall Max Width"
-                    name="ada_stall_max_width"
-                    value={data?.ada_stall_max_width}
-                    onChange={handleInput}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label={
-                    <span>
-                      Standard Stall Min Width
-                      <span style={{ color: "red" }}>*</span>
-                    </span>
-                  }
-                  validateStatus={
-                    data.errors?.standard_stall_min_width ? "error" : ""
-                  }
-                  help={data.errors?.standard_stall_min_width?.message} // Display only the error message
-                >
-                  <Input
-                    placeholder="Standard Stall Min Width"
-                    name="standard_stall_min_width"
-                    value={data?.standard_stall_min_width}
-                    onChange={handleInput}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label={
-                    <span>
-                      Standard Stall Max Width
-                      <span style={{ color: "red" }}>*</span>
-                    </span>
-                  }
-                  validateStatus={
-                    data.errors?.standard_stall_max_width ? "error" : ""
-                  }
-                  help={data.errors?.standard_stall_max_width?.message} // Display only the error message
-                >
-                  <Input
-                    placeholder="Standard Stall Max Width"
-                    name="standard_stall_max_width"
-                    value={data?.standard_stall_max_width}
-                    onChange={handleInput}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label={
-                    <span>
-                      ADA Stall Min Depth
-                      <span style={{ color: "red" }}>*</span>
-                    </span>
-                  }
-                  validateStatus={
-                    data.errors?.ada_stall_min_depth ? "error" : ""
-                  }
-                  help={data.errors?.ada_stall_min_depth?.message} // Display only the error message
-                >
-                  <Input
-                    placeholder="ADA Stall Min Depth"
-                    name="ada_stall_min_depth"
-                    value={data?.ada_stall_min_depth}
-                    onChange={handleInput}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label={
-                    <span>
-                      ADA Stall Max Depth
-                      <span style={{ color: "red" }}>*</span>
-                    </span>
-                  }
-                  validateStatus={
-                    data.errors?.ada_stall_max_depth ? "error" : ""
-                  }
-                  help={data.errors?.ada_stall_max_depth?.message} // Display only the error message
-                >
-                  <Input
-                    placeholder="ADA Stall Max Depth"
-                    name="ada_stall_max_depth"
-                    value={data?.ada_stall_max_depth}
-                    onChange={handleInput}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label={
-                    <span>
-                      Standard Stall Min Depth
-                      <span style={{ color: "red" }}>*</span>
-                    </span>
-                  }
-                  validateStatus={
-                    data.errors?.standard_stall_min_depth ? "error" : ""
-                  }
-                  help={data.errors?.standard_stall_min_depth?.message} // Display only the error message
-                >
-                  <Input
-                    placeholder="Standard Stall Min Depth"
-                    name="standard_stall_min_depth"
-                    value={data?.standard_stall_min_depth}
-                    onChange={handleInput}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label={
-                    <span>
-                      Standard Stall Max Depth
-                      <span style={{ color: "red" }}>*</span>
-                    </span>
-                  }
-                  validateStatus={
-                    data.errors?.standard_stall_max_depth ? "error" : ""
-                  }
-                  help={data.errors?.standard_stall_max_depth?.message} // Display only the error message
-                >
-                  <Input
-                    placeholder="Standard Stall Max Depth"
-                    name="standard_stall_max_depth"
-                    value={data?.standard_stall_max_depth}
-                    onChange={handleInput}
-                  />
-                </Form.Item>
-                <Form.Item
-  label={
-    <span>
-      ADA Stall Min Door Opening
-      <span style={{ color: "red" }}>*</span>
-    </span>
-  }
-  validateStatus={
-    data.errors?.ada_stall_min_door_opening ? "error" : ""
-  }
-  help={data.errors?.ada_stall_min_door_opening?.message} // Display only the error message
->
-  <Input
-    placeholder="ADA Stall Min Door Opening"
-    name="ada_stall_min_door_opening"
-    value={data?.ada_stall_min_door_opening}
-    onChange={handleInput}
-  />
-                </Form.Item>
-                <Form.Item
-                  label={
-                    <span>
-                      ADA Stall Max Door Opening
-                      <span style={{ color: "red" }}>*</span>
-                    </span>
-                  }
-                  validateStatus={
-                    data.errors?.ada_stall_max_door_opening ? "error" : ""
-                  }
-                  help={data.errors?.ada_stall_max_door_opening?.message} // Display only the error message
-                >
-                  <Input
-                    placeholder="ADA Stall Max Door Opening"
-                    name="ada_stall_max_door_opening"
-                    value={data?.ada_stall_max_door_opening}
-                    onChange={handleInput}
-                  />
-                </Form.Item>
-                <Form.Item
-  label={
-    <span>
-      Standard Stall Min Door Opening
-      <span style={{ color: "red" }}>*</span>
-    </span>
-  }
-  validateStatus={
-    data.errors?.standard_stall_min_door_opening ? "error" : ""
-  }
-  help={data.errors?.standard_stall_min_door_opening?.message} // Display only the error message
->
-  <Input
-    placeholder="Standard Stall Min Door Opening"
-    name="standard_stall_min_door_opening"
-    value={data?.standard_stall_min_door_opening}
-    onChange={handleInput}
-  />
-                </Form.Item>
-                <Form.Item
-                  label={
-                    <span>
-                      Standard Stall Max Door Opening
-                      <span style={{ color: "red" }}>*</span>
-                    </span>
-                  }
-                  validateStatus={
-                    data.errors?.standard_stall_max_door_opening ? "error" : ""
-                  }
-                  help={data.errors?.standard_stall_max_door_opening?.message} // Display only the error message
-                >
-                  <Input
-                    placeholder="Standard Stall Max Door Opening"
-                    name="standard_stall_max_door_opening"
-                    value={data?.standard_stall_max_door_opening}
-                    onChange={handleInput}
-                  />
-                </Form.Item>
-                <Form.Item
+      <Card>
+  <Row justify="center">
+    <Col xs={24} sm={20} md={18} lg={12}>
+      <Form form={form} layout="vertical">
+        <Form.Item
+          label={
+            <span>
+              Select Door Swing Options
+              <span style={{ color: "red" }}>*</span>
+            </span>
+          }
+        >
+          <Row gutter={[16, 16]}>
+            {swings.map((swing) => (
+              <Col xs={24} sm={12} md={6} key={swing.id}>
+                <div>
+                  <Form.Item
+                    name={`swing_${swing.id}`}
+                    validateStatus={data.errors?.swings ? "error" : ""}
+                    help={data.errors?.swings?.message}
+                    style={{ marginTop: "10px" }}
+                  >
+                    <Checkbox
+                      checked={data.swings.some((l) => l.id === swing.id)}
+                      onChange={(e) => handleCheckboxChange(e.target.checked, swing)}
+                    >
+                      {swing.name}
+                    </Checkbox>
+                  </Form.Item>
+                </div>
+              </Col>
+            ))}
+          </Row>
+        </Form.Item>
+
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              label={
+                <span>
+                  ADA Stall Min Width
+                  <span style={{ color: "red" }}>*</span>
+                </span>
+              }
+              validateStatus={data.errors?.ada_stall_min_width ? "error" : ""}
+              help={data.errors?.ada_stall_min_width?.message}
+            >
+              <Input
+                placeholder="ADA Stall Min Width"
+                name="ada_stall_min_width"
+                value={data?.ada_stall_min_width}
+                onChange={handleInput}
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              label={
+                <span>
+                  ADA Stall Max Width
+                  <span style={{ color: "red" }}>*</span>
+                </span>
+              }
+              validateStatus={data.errors?.ada_stall_max_width ? "error" : ""}
+              help={data.errors?.ada_stall_max_width?.message}
+            >
+              <Input
+                placeholder="ADA Stall Max Width"
+                name="ada_stall_max_width"
+                value={data?.ada_stall_max_width}
+                onChange={handleInput}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              label={
+                <span>
+                  Standard Stall Min Width
+                  <span style={{ color: "red" }}>*</span>
+                </span>
+              }
+              validateStatus={data.errors?.standard_stall_min_width ? "error" : ""}
+              help={data.errors?.standard_stall_min_width?.message}
+            >
+              <Input
+                placeholder="Standard Stall Min Width"
+                name="standard_stall_min_width"
+                value={data?.standard_stall_min_width}
+                onChange={handleInput}
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              label={
+                <span>
+                  Standard Stall Max Width
+                  <span style={{ color: "red" }}>*</span>
+                </span>
+              }
+              validateStatus={data.errors?.standard_stall_max_width ? "error" : ""}
+              help={data.errors?.standard_stall_max_width?.message}
+            >
+              <Input
+                placeholder="Standard Stall Max Width"
+                name="standard_stall_max_width"
+                value={data?.standard_stall_max_width}
+                onChange={handleInput}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              label={
+                <span>
+                  ADA Stall Min Depth
+                  <span style={{ color: "red" }}>*</span>
+                </span>
+              }
+              validateStatus={data.errors?.ada_stall_min_depth ? "error" : ""}
+              help={data.errors?.ada_stall_min_depth?.message}
+            >
+              <Input
+                placeholder="ADA Stall Min Depth"
+                name="ada_stall_min_depth"
+                value={data?.ada_stall_min_depth}
+                onChange={handleInput}
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              label={
+                <span>
+                  ADA Stall Max Depth
+                  <span style={{ color: "red" }}>*</span>
+                </span>
+              }
+              validateStatus={data.errors?.ada_stall_max_depth ? "error" : ""}
+              help={data.errors?.ada_stall_max_depth?.message}
+            >
+              <Input
+                placeholder="ADA Stall Max Depth"
+                name="ada_stall_max_depth"
+                value={data?.ada_stall_max_depth}
+                onChange={handleInput}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              label={
+                <span>
+                  Standard Stall Min Depth
+                  <span style={{ color: "red" }}>*</span>
+                </span>
+              }
+              validateStatus={data.errors?.standard_stall_min_depth ? "error" : ""}
+              help={data.errors?.standard_stall_min_depth?.message}
+            >
+              <Input
+                placeholder="Standard Stall Min Depth"
+                name="standard_stall_min_depth"
+                value={data?.standard_stall_min_depth}
+                onChange={handleInput}
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              label={
+                <span>
+                  Standard Stall Max Depth
+                  <span style={{ color: "red" }}>*</span>
+                </span>
+              }
+              validateStatus={data.errors?.standard_stall_max_depth ? "error" : ""}
+              help={data.errors?.standard_stall_max_depth?.message}
+            >
+              <Input
+                placeholder="Standard Stall Max Depth"
+                name="standard_stall_max_depth"
+                value={data?.standard_stall_max_depth}
+                onChange={handleInput}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              label={
+                <span>
+                  ADA Stall Min Door Opening
+                  <span style={{ color: "red" }}>*</span>
+                </span>
+              }
+              validateStatus={data.errors?.ada_stall_min_door_opening ? "error" : ""}
+              help={data.errors?.ada_stall_min_door_opening?.message}
+            >
+              <Input
+                placeholder="ADA Stall Min Door Opening"
+                name="ada_stall_min_door_opening"
+                value={data?.ada_stall_min_door_opening}
+                onChange={handleInput}
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              label={
+                <span>
+                  ADA Stall Max Door Opening
+                  <span style={{ color: "red" }}>*</span>
+                </span>
+              }
+              validateStatus={data.errors?.ada_stall_max_door_opening ? "error" : ""}
+              help={data.errors?.ada_stall_max_door_opening?.message}
+            >
+              <Input
+                placeholder="ADA Stall Max Door Opening"
+                name="ada_stall_max_door_opening"
+                value={data?.ada_stall_max_door_opening}
+                onChange={handleInput}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              label={
+                <span>
+                  Standard Stall Min Door Opening
+                  <span style={{ color: "red" }}>*</span>
+                </span>
+              }
+              validateStatus={data.errors?.standard_stall_min_door_opening ? "error" : ""}
+              help={data.errors?.standard_stall_min_door_opening?.message}
+            >
+              <Input
+                placeholder="Standard Stall Min Door Opening"
+                name="standard_stall_min_door_opening"
+                value={data?.standard_stall_min_door_opening}
+                onChange={handleInput}
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              label={
+                <span>
+                  Standard Stall Max Door Opening
+                  <span style={{ color: "red" }}>*</span>
+                </span>
+              }
+              validateStatus={data.errors?.standard_stall_max_door_opening ? "error" : ""}
+              help={data.errors?.standard_stall_max_door_opening?.message}
+            >
+              <Input
+                placeholder="Standard Stall Max Door Opening"
+                name="standard_stall_max_door_opening"
+                value={data?.standard_stall_max_door_opening}
+                onChange={handleInput}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+         <Row gutter={[16, 16]}>
+          <Col xs={24} sm={24}>
+           <Form.Item
                   label={
                     <span>
                       Maximum Room No
@@ -505,6 +520,10 @@ function Measurement() {
                     ))}
                   </Select>
                 </Form.Item>
+          </Col>
+          </Row>
+          <Row gutter={[16, 16]}>
+          <Col xs={24} sm={24}>
 
                 <Form.Item
                   style={{ display: "flex", justifyContent: "center" }}
@@ -518,10 +537,13 @@ function Measurement() {
                     {buttonLoading ? "Processing..." : "Update"}
                   </Button>
                 </Form.Item>
-              </Form>
-            </Col>
+          </Col>
           </Row>
-        </Card>
+      </Form>
+    </Col>
+  </Row>
+</Card>
+
       </Spin>
     </div>
   );
