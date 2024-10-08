@@ -141,6 +141,7 @@ function Quotation() {
         return {
           id: material.id,
           name: material.name,
+          src: material.src,
           price: price.toString(),
         };
       });

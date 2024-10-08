@@ -17,9 +17,8 @@ function Sidebar({ style, toggleSidebar }) {
       ]
     },
     { path: '/quotation', label: 'Quatation Builder', icon: 'fas fa-list' },
-    { path: '/users', label: 'Users', icon: 'fas fa-fw fa-users' },
-    
- 
+    { path: '/users', label: 'Users', icon: 'fas fa-fw fa-users' }
+
   ];
   return (
     <>
