@@ -68,7 +68,7 @@ function Lead() {
       title: "Action",
       render: (_, record) => (
         <Space size="middle">
-          <Button type="primary" shape="circle" danger  onClick={() => handlePDF(record)}>
+          <Button type="primary" shape="circle" danger onClick={() => handleGeneratePDF(record)}>
             <Tooltip title="View PDF">
               <FilePdfOutlined />
             </Tooltip>
@@ -138,8 +138,9 @@ function Lead() {
     setIsModalOpen(true);
   };
 
-  const handlePDF = (row) => {
-alert('Work in progress');
+  const handleGeneratePDF = async (leadData) => {
+   alert('Work in progress.');
+    
   };
 
   const handleCancel = () => {
@@ -215,45 +216,50 @@ alert('Work in progress');
         <h3 style={{ marginTop: "20px" }}>Materials</h3>
         {quotationData.materials.length > 0 ? (
           quotationData.materials.map((material) => (
-            <div key={material.id} style={{ marginBottom: "20px" }}>
-              <Row gutter={[16, 16]} align="middle">
-                <Col span={6}>
-                  <img
-                    src={material.src}
-                    alt={material.name}
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      objectFit: "contain",
-                    }}
-                  />
+            <Card
+            key={material.id}
+            title={material.name}
+            style={{ marginBottom: "20px" }}
+          >
+            <Row gutter={16} align="middle">
+              <Col span={6}>
+                <img
+                  alt={material.name}
+                  src={material.src}
+                  style={{
+                    width: "100px",
+                    objectFit: "contain",
+                  }}
+                />
+              </Col>
+              <Col span={18}>
+                <p>
+                  <strong>Total Price:</strong> ${material.price}
+                </p>
+              </Col>
+            </Row>
+          
+           {/* Material Type Details */}
+           <h4>Room Material Type Details:</h4>
+            {quotationData.roomData.map((room_data) => (
+              <Row key={room_data.roomId} gutter={[8, 8]}>
+                <Col span={12}>
+                  <strong>Room {room_data.roomId}:</strong>
                 </Col>
-                <Col span={18}>
-                  <Row gutter={[8, 8]}>
-                    <Col span={12}>
-                      <strong>Material:</strong> {material.name}
-                    </Col>
-                    <Col span={12}>
-                      <strong>Total Price:</strong> ${material.price}
-                    </Col>
-                    
-                  </Row>
-
-                  {/* Room Price Details */}
-                  <Row gutter={[8, 8]} style={{ marginTop: "10px" }}>
-                    <Col span={24}>
-                      <strong>Room Price Details:</strong>
-                    </Col>
-                    {material.price_details.map((priceDetail) => (
-                      <Row key={priceDetail.room_id} gutter={[8, 8]}>
-                        <Col span={14}><strong>Room {priceDetail.room_id}:</strong></Col>
-                        <Col span={14}>${priceDetail.price}</Col>
-                      </Row>
-                    ))}
-                  </Row>
-                </Col>
+                <Col span={12}>{room_data.full_type_name}</Col>
               </Row>
-            </div>
+            ))}
+            {/* Room Price Details */}
+            <h4>Room Price Details:</h4>
+            {material.price_details.map((priceDetail) => (
+              <Row key={priceDetail.room_id} gutter={[8, 8]}>
+                <Col span={12}>
+                  <strong>Room {priceDetail.room_id}:</strong>
+                </Col>
+                <Col span={12}>${priceDetail.price}</Col>
+              </Row>
+            ))}
+          </Card>
           ))
         ) : (
           <p>No materials available</p>
