@@ -13,6 +13,7 @@ import NotFound from "./views/error/NotFound";
 import Measurement from "./views/settings/Measurement";
 import Quatation from "./views/quotation/Quotation";
 import Lead from "./views/lead/Lead";
+import Order from "./views/order/Order";
 function App() {
   return (
     <>
@@ -33,6 +34,7 @@ function App() {
           <Route path="measurement" element={<Measurement title="Measurement Setting" />} />
           <Route path="quotation" element={<Quatation title="Quotation" />} />
           <Route path="leads" element={<Lead title="Lead" />} />
+          <Route path="orders" element={<Order title="Order" />} />
 
           {/* Catch-all route for unmatched URLs */}
           <Route path="*" element={<NotFound />} />

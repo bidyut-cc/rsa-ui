@@ -14,7 +14,7 @@ import {
 import { EyeOutlined, FilePdfOutlined } from "@ant-design/icons";
 import apiService from "../../services/apiService";
 import { debounce } from "lodash";
-
+import axios from "axios";
 function Lead() {
   const [dataSource, setDataSource] = useState({
     loading: false,
@@ -139,7 +139,7 @@ function Lead() {
   };
 
   const handleGeneratePDF = async (leadData) => {
-   alert('Work in progress.');
+alert('In Progress');
     
   };
 
@@ -192,7 +192,7 @@ function Lead() {
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
-        width="60%" // Adjust modal width if needed
+        width="50%" // Adjust modal width if needed
       >
         {/* User Details */}
         <Row gutter={[16, 16]}>
