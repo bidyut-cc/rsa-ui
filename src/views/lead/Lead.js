@@ -139,7 +139,44 @@ function Lead() {
   };
 
   const handleGeneratePDF = async (leadData) => {
-alert('In Progress');
+  try {
+    setDataSource((prev) => ({ ...prev, loading: true }));
+    const response = await axios.post(
+      `${process.env.REACT_APP_API_URL}quotations/generateQuotationPDF`, 
+      leadData, // Directly passing the data object, no need to wrap in another object
+      {
+        headers: {
+          token: `${localStorage.getItem('token')}`, // Pass the token as a Bearer token
+        }
+      }
+    );
+    if (response.status === 200) {
+      const htmlContent = response.data.htmlContent; // Assuming response contains HTML content
+
+      // Create an iframe (hidden) to load the HTML content and print
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none'; // Hide the iframe
+      document.body.appendChild(iframe);
+  
+      // Get the iframe document and write the HTML content into it
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+      iframeDoc.open();
+      iframeDoc.write(htmlContent); // Write the HTML content
+      iframeDoc.close();
+  
+      // Wait for iframe content to load and trigger the print
+      iframe.onload = () => {
+        iframe.contentWindow.focus(); // Focus on the iframe window
+        iframe.contentWindow.print(); // Trigger print dialog
+        setDataSource((prev) => ({ ...prev, loading: false }));
+      };
+    }
+
+
+  } catch (error) {
+    setDataSource((prev) => ({ ...prev, loading: false }));
+    message.error(error.response.data.message);
+  }
     
   };
 
