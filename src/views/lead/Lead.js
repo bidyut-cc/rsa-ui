@@ -10,6 +10,7 @@ import {
   message,
   Tooltip,
   Card,
+  Descriptions
 } from "antd";
 import { EyeOutlined, FilePdfOutlined } from "@ant-design/icons";
 import apiService from "../../services/apiService";
@@ -232,34 +233,25 @@ function Lead() {
         width="50%" // Adjust modal width if needed
       >
         {/* User Details */}
-        <Row gutter={[16, 16]}>
-          <Col span={12}>
-            <strong>First Name:</strong> {quotationData.first_name}
-          </Col>
-          <Col span={12}>
-            <strong>Last Name:</strong> {quotationData.last_name}
-          </Col>
-        </Row>
-        <Row gutter={[16, 16]}>
-          <Col span={12}>
-            <strong>Email:</strong> {quotationData.email}
-          </Col>
-          <Col span={12}>
-            <strong>Phone Number:</strong> {quotationData.phone_number}
-          </Col>
-        </Row>
+     
+       <Descriptions bordered column={1} size="middle">
+        <Descriptions.Item label="Name">{quotationData.first_name} {quotationData.last_name}</Descriptions.Item>
+        <Descriptions.Item label="Email">{quotationData.email}</Descriptions.Item>
+        <Descriptions.Item label="Phone Number">{quotationData.phone_number}</Descriptions.Item>
+      </Descriptions>
+     
 
         {/* Materials Details */}
-        <h3 style={{ marginTop: "20px" }}>Materials</h3>
+        <h6 style={{ marginTop: "20px", fontWeight: "bold" }} >Materials</h6>
         {quotationData.materials.length > 0 ? (
           quotationData.materials.map((material) => (
-            <Card
-            key={material.id}
-            title={material.name}
-            style={{ marginBottom: "20px" }}
-          >
-            <Row gutter={16} align="middle">
-              <Col span={6}>
+            <Card key={material.id} title={material.name} style={{
+              marginBottom: "20px",
+              backgroundColor: "#f0f2f5", // Example background color
+            }}>
+            {/* Material Image and Price Details */}
+            <Descriptions bordered size="middle" column={1} style={{ marginBottom: "20px" }}>
+              <Descriptions.Item label="Material Image">
                 <img
                   alt={material.name}
                   src={material.src}
@@ -268,34 +260,33 @@ function Lead() {
                     objectFit: "contain",
                   }}
                 />
-              </Col>
-              <Col span={18}>
-                <p>
-                  <strong>Total Price:</strong> ${material.price}
-                </p>
-              </Col>
-            </Row>
-          
-           {/* Material Type Details */}
-           <h4>Room Material Type Details:</h4>
-            {quotationData.roomData.map((room_data) => (
-              <Row key={room_data.roomId} gutter={[8, 8]}>
-                <Col span={12}>
-                  <strong>Room {room_data.roomId}:</strong>
-                </Col>
-                <Col span={12}>{room_data.full_type_name}</Col>
-              </Row>
-            ))}
-            {/* Room Price Details */}
-            <h4>Room Price Details:</h4>
-            {material.price_details.map((priceDetail) => (
-              <Row key={priceDetail.room_id} gutter={[8, 8]}>
-                <Col span={12}>
-                  <strong>Room {priceDetail.room_id}:</strong>
-                </Col>
-                <Col span={12}>${priceDetail.price}</Col>
-              </Row>
-            ))}
+              </Descriptions.Item>
+              <Descriptions.Item label="Total Price">
+                ${material.price}
+              </Descriptions.Item>
+            </Descriptions>
+
+                {/* Room Price Details */}
+            <h6 style={{ marginTop: "20px", fontWeight: "bold" }}>Room Price Details:</h6>
+            <Descriptions bordered size="middle" column={1} style={{ marginBottom: "20px" }}>
+              {material.price_details.map((priceDetail) => (
+                <Descriptions.Item key={priceDetail.room_id} label={`Room ${priceDetail.room_id}`}>
+                  ${priceDetail.price}
+                </Descriptions.Item>
+              ))}
+            </Descriptions>
+      
+            {/* Material Type Details */}
+            <h6 style={{ marginTop: "20px", fontWeight: "bold" }}> Room Material Type Details:</h6>
+            <Descriptions bordered size="middle" column={1}>
+              {quotationData.roomData.map((room_data) => (
+                <Descriptions.Item key={room_data.roomId} label={`Room ${room_data.roomId}`}>
+                  {room_data.full_type_name}
+                </Descriptions.Item>
+              ))}
+            </Descriptions>
+      
+        
           </Card>
           ))
         ) : (
