@@ -229,7 +229,7 @@ function Lead() {
         />
       </Card>
       <Modal
-        title="View Quotation Details"
+        title="Quotation Details"
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
@@ -270,17 +270,27 @@ function Lead() {
             </Descriptions>
 
                 {/* Room Price Details */}
-            <h6 style={{ marginTop: "20px", fontWeight: "bold" }}>Room Price Details:</h6>
+            {/* <h6 style={{ marginTop: "20px", fontWeight: "bold" }}>Room Price Details:</h6>
             <Descriptions bordered size="middle" column={1} style={{ marginBottom: "20px" }}>
               {material.price_details.map((priceDetail) => (
                 <Descriptions.Item key={priceDetail.room_id} label={`Room ${priceDetail.room_id}`}>
                   ${priceDetail.price}
                 </Descriptions.Item>
               ))}
-            </Descriptions>
+            </Descriptions> */}
       
-            {/* Material Type Details */}
-            <h6 style={{ marginTop: "20px", fontWeight: "bold" }}> Room  Details:</h6>
+      
+        
+          </Card>
+          ))
+        ) : (
+          <p>No materials available</p>
+        )}
+       {/* Room Details (outside of the materials map loop) */}
+  {quotationData.submittedData.rooms && quotationData.submittedData.rooms.length > 0 && (
+    <>
+              {/* Material Type Details */}
+              <h6 style={{ marginTop: "20px", fontWeight: "bold" }}> Room  Details:</h6>
             {/* <Descriptions bordered size="middle" column={1}>
               {quotationData.roomData.map((room_data) => (
                 <Descriptions.Item key={room_data.roomId} label={`Room ${room_data.roomId}`}>
@@ -356,12 +366,8 @@ function Lead() {
       </Panel>
       ))}
     </Collapse>
-        
-          </Card>
-          ))
-        ) : (
-          <p>No materials available</p>
-        )}
+    </>
+  )}
       </Modal>
     </div>
   );
