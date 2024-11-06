@@ -13,7 +13,7 @@ import {
 } from "antd";
 import apiService from "../../services/apiService";
 
-function Layout() {
+function Layout({title}) {
   const [form] = Form.useForm();
 
   // Dynamically fetched layouts
@@ -147,7 +147,7 @@ function Layout() {
 
   return (
     <div className="container-fluid">
-      <h1 className="h3 mb-4 text-gray-800">Layout Setting</h1>
+      <h1 className="h3 mb-4 text-gray-800">{title}</h1>
       <Spin spinning={data.loading}>
         <Card>
           <Row justify="center">

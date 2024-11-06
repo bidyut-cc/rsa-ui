@@ -15,7 +15,7 @@ import apiService from "../../services/apiService";
 
 const { Option } = Select;
 
-function Measurement() {
+function Measurement({title}) {
   const [form] = Form.useForm();
     // Dynamically fetched layouts
     const [swings, setSwings] = useState([]); 
@@ -212,7 +212,7 @@ function Measurement() {
 
   return (
     <div className="container-fluid">
-      <h1 className="h3 mb-4 text-gray-800">Measurement Setting</h1>
+      <h1 className="h3 mb-4 text-gray-800">{title}</h1>
       <Spin spinning={data.loading}>
       <Card>
   <Row justify="center">
