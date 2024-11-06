@@ -3,7 +3,7 @@ import { Tabs, Card, Row, Col, Form, Input, Button, message, Spin } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import apiService from "../../services/apiService";
 
-function Quotation() {
+function Quotation({title}) {
   const [formIC] = Form.useForm();
   const [formBW] = Form.useForm(); 
   const [formALIC] = Form.useForm();
@@ -374,7 +374,7 @@ function Quotation() {
 
   return (
     <div className="container-fluid">
-    <h1 className="h3 mb-4 text-gray-800">Quotation Builder</h1>
+    <h1 className="h3 mb-4 text-gray-800">{title}</h1>
    
     <Card>
       <Tabs defaultActiveKey="1" type="card" items={tabItems} onChange={handleTabChange}/>

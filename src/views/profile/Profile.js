@@ -3,7 +3,7 @@ import apiService from "../../services/apiService";
 import { Form, Input, Button, Card, Row, Col, message, Spin } from "antd";
 import { useHeader } from "../../components/context/HeaderContext"; // Import the context
 
-function Profile() {
+function Profile({title}) {
   const { setHeaderTitle } = useHeader(); // Get the function to update the header
 
   const [form] = Form.useForm();
@@ -103,7 +103,7 @@ function Profile() {
   };
   return (
     <div className="container-fluid">
-      <h1 className="h3 mb-4 text-gray-800">Update Profile</h1>
+      <h1 className="h3 mb-4 text-gray-800">{title}</h1>
       <Card>
         <Row justify="center">
           <Col xs={24} sm={20} md={18} lg={12}>

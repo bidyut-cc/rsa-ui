@@ -11,7 +11,7 @@ import {
   Spin,
 } from "antd";
 
-function Password() {
+function Password({title}) {
   const [form] = Form.useForm();
   const [passwordData, setPasswordData] = useState({
     new_password: "",
@@ -71,7 +71,7 @@ function Password() {
 
   return (
     <div className="container-fluid">
-      <h1 className="h3 mb-4 text-gray-800">Change Password</h1>
+      <h1 className="h3 mb-4 text-gray-800">{title}</h1>
       <Card>
         <Row justify="center">
           <Col xs={24} sm={20} md={18} lg={12}>

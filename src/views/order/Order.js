@@ -17,7 +17,7 @@ import apiService from "../../services/apiService";
 import { debounce } from "lodash";
 import moment from 'moment';
 
-function Order() {
+function Order({ title }) {
   const [dataSource, setDataSource] = useState({
     loading: false,
     data: [],
@@ -186,7 +186,7 @@ function Order() {
   };
   return (
     <div className="container-fluid">
-      <h1 className="h3 mb-4 text-gray-800">Orders</h1>
+      <h1 className="h3 mb-4 text-gray-800">{title}</h1>
       <Card>
         <Row justify="end" style={{ marginBottom: 16 }}>
           <Col style={{ marginLeft: 8 }}>

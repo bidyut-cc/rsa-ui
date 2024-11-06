@@ -12,7 +12,7 @@ import {
 } from "antd";
 import apiService from "../../services/apiService";
 const { Option } = Select;
-function Project() {
+function Project({title}) {
   const [form] = Form.useForm();
   const [maxStall, setMaxStall] = useState([1]);
   const [maxUrinal, setMaxUrinal] = useState([1]);
@@ -128,7 +128,7 @@ function Project() {
   };
   return (
     <div className="container-fluid">
-      <h1 className="h3 mb-4 text-gray-800">Project Setting</h1>
+      <h1 className="h3 mb-4 text-gray-800">{title}</h1>
       <Card>
         <Row justify="center">
           <Col xs={24} sm={20} md={18} lg={12}>

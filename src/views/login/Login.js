@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import apiService from '../../services/apiService';
 import useAuth from '../../components/hooks/useAuth';
 import { message, Spin} from 'antd';
-function Login() {
+function Login({title}) {
     const [loginInput,setLogin] = useState({
       email:"",
       password:"",
@@ -84,7 +84,7 @@ function Login() {
                   <Spin spinning={loginInput.loading}>
                     <div className="p-5">
                       <div className="text-center">
-                        <h1 className="h4 text-gray-900 mb-4">Login!</h1>
+                        <h1 className="h4 text-gray-900 mb-4">{title}</h1>
                       </div>
                       <form className="user" onSubmit={handleLogin}>
                         <div className="form-group">
