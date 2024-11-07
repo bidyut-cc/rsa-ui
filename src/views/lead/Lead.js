@@ -303,10 +303,11 @@ function Lead({ title }) {
        <Panel header={`Room ${index + 1}`} key={room.id}>
         {/* Room Title and Images */}
         <Descriptions bordered size="middle" column={1}>
-        {room.title 
-    ? <Descriptions.Item label="Room Title">{room.title}</Descriptions.Item>
-    : ''}
-          
+        {room.title && (
+          <Descriptions.Item label="Room Title">
+            {room.title}
+          </Descriptions.Item>
+        )}
           {/* <Descriptions.Item label="3D Image">
             <Image width={100} src={room.image_3D} alt="3D View" />
           </Descriptions.Item> */}
