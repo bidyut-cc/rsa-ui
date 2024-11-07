@@ -337,11 +337,11 @@ function Lead({ title }) {
       <Descriptions bordered size="middle" column={1}>
         <Descriptions.Item label="Layout">
         {room.stall.type === 'IC' ? (
-        `In Corner ${room.stall.layout?.layoutDirection || ''}`
+        `In Corner}`
       ) : room.stall.type === 'BW' ? (
         'Between Wall'
       ) : room.stall.type === 'ALIC' ? (
-        `Alcove Corner ${room.stall.layout?.layoutDirection || ''}`
+        `Alcove Corner}`
       ) : room.stall.type === 'ALBW' ? (
         'Alcove Between Wall'
       ) : (
