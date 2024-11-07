@@ -303,18 +303,20 @@ function Lead({ title }) {
        <Panel header={`Room ${index + 1}`} key={room.id}>
         {/* Room Title and Images */}
         <Descriptions bordered size="middle" column={1}>
-        {room.title && (
-          <Descriptions.Item label="Room Title">
-            {room.title}
-          </Descriptions.Item>
-        )}
+          {room.title!='' && (
+            <Descriptions.Item label="Room Title">
+              {room.title}
+            </Descriptions.Item>
+          )}
+          
+          {/* Optional 3D Image item if needed */}
           {/* <Descriptions.Item label="3D Image">
             <Image width={100} src={room.image_3D} alt="3D View" />
           </Descriptions.Item> */}
+          
           <Descriptions.Item label="Preview">
             <Image width={100} src={room.image_2D} alt="2D View" />
           </Descriptions.Item>
-         
         </Descriptions>
 
         {/* Stall Details */}
@@ -341,11 +343,11 @@ function Lead({ title }) {
       <Descriptions bordered size="middle" column={1}>
         <Descriptions.Item label="Layout">
         {room.stall.type === 'IC' ? (
-        `In Corner}`
+        `In Corner`
       ) : room.stall.type === 'BW' ? (
         'Between Wall'
       ) : room.stall.type === 'ALIC' ? (
-        `Alcove Corner}`
+        `Alcove Corner`
       ) : room.stall.type === 'ALBW' ? (
         'Alcove Between Wall'
       ) : (
