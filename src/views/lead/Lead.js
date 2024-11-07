@@ -325,7 +325,7 @@ function Lead({ title }) {
             <Descriptions.Item label={`Stall ${index + 1}`}>
               <strong>Width:</strong> {stall.stallWidth}" <br />
               <strong>Door Opening:</strong> {stall.doorOpening}" <br />
-              <strong>Door Swing:</strong> {stall.doorSwing}
+              <strong>Door Swing:</strong> {stall.doorSwing?.name}
             </Descriptions.Item>
           </Descriptions>
         ))}
