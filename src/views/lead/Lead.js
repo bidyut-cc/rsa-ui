@@ -303,11 +303,14 @@ function Lead({ title }) {
        <Panel header={`Room ${index + 1}`} key={room.id}>
         {/* Room Title and Images */}
         <Descriptions bordered size="middle" column={1}>
-          <Descriptions.Item label="Room Title">{room.title}</Descriptions.Item>
-          <Descriptions.Item label="3D Image">
+        {room.title 
+    ? <Descriptions.Item label="Room Title">{room.title}</Descriptions.Item>
+    : ''}
+          
+          {/* <Descriptions.Item label="3D Image">
             <Image width={100} src={room.image_3D} alt="3D View" />
-          </Descriptions.Item>
-          <Descriptions.Item label="2D Image">
+          </Descriptions.Item> */}
+          <Descriptions.Item label="Preview">
             <Image width={100} src={room.image_2D} alt="2D View" />
           </Descriptions.Item>
          
@@ -337,11 +340,11 @@ function Lead({ title }) {
       <Descriptions bordered size="middle" column={1}>
         <Descriptions.Item label="Layout">
         {room.stall.type === 'IC' ? (
-        `In Corner ${room.stall.layout?.layoutDirection || ''}`
+        `In Corner}`
       ) : room.stall.type === 'BW' ? (
         'Between Wall'
       ) : room.stall.type === 'ALIC' ? (
-        `Alcove Corner ${room.stall.layout?.layoutDirection || ''}`
+        `Alcove Corner}`
       ) : room.stall.type === 'ALBW' ? (
         'Alcove Between Wall'
       ) : (
@@ -357,10 +360,10 @@ function Lead({ title }) {
    <h6 style={{ marginTop: "20px", fontWeight: "bold" }}>Urinal Screen Details:</h6>
         {/* Urinal Images in Descriptions */}
         <Descriptions bordered size="middle" column={1}>
-      <Descriptions.Item label="3D Image">
+      {/* <Descriptions.Item label="3D Image">
         <Image width={100} src={room.urinalScreen.urinal_3D} alt="3D View" />
-      </Descriptions.Item>
-      <Descriptions.Item label="2D Image">
+      </Descriptions.Item> */}
+      <Descriptions.Item label="Preview">
         <Image width={100} src={room.urinalScreen.urinal_2D} alt="2D View" />
       </Descriptions.Item>
     </Descriptions>
