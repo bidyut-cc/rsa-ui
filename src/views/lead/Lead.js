@@ -319,6 +319,9 @@ function Lead({ title }) {
       <Descriptions.Item label="Number of Stall">
         {room.stall.noOfStalls}
       </Descriptions.Item>
+      <Descriptions.Item label="Does this include a handicap accessible stall?">
+        {room.stall.adaStall==true ? 'Yes' : 'No'}
+      </Descriptions.Item>
     </Descriptions>
         {room.stall.stallConfig.map((stall, index) => (
           <Descriptions bordered size="middle" column={1} key={index}>
@@ -332,6 +335,19 @@ function Lead({ title }) {
 
       {/* Layout Details for the Room */}
       <Descriptions bordered size="middle" column={1}>
+        <Descriptions.Item label="Layout">
+        {room.stall.type === 'IC' ? (
+        `In Corner ${room.stall.layout?.layoutDirection || ''}`
+      ) : room.stall.type === 'BW' ? (
+        'Between Wall'
+      ) : room.stall.type === 'ALIC' ? (
+        `Alcove Corner ${room.stall.layout?.layoutDirection || ''}`
+      ) : room.stall.type === 'ALBW' ? (
+        'Alcove Between Wall'
+      ) : (
+        ''
+      )} {room.stall.layout?.layoutDirection}
+        </Descriptions.Item>
         <Descriptions.Item label="Layout Direction">
           {room.stall.layout?.layoutDirection}
         </Descriptions.Item>
