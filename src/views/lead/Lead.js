@@ -353,14 +353,18 @@ function Lead({ title }) {
         {room.urinalScreen.noOfUrinalScreens}
       </Descriptions.Item>
     </Descriptions>
-
-    {room.urinalScreen.urinalScreenConfig.map((screen, index) => (
+    <Descriptions bordered size="middle" column={1}>
+      <Descriptions.Item label="Screen Depth">
+        {room.urinalScreen?.urinalScreenConfig[0]?.screenDepth}"
+      </Descriptions.Item>
+    </Descriptions>
+    {/* {room.urinalScreen.urinalScreenConfig.map((screen, index) => (
       <Descriptions bordered size="middle" column={1} key={index}>
         <Descriptions.Item label={`Urinal Screen ${index + 1}`}>
           <strong>Screen Depth:</strong> {screen.screenDepth}"
         </Descriptions.Item>
       </Descriptions>
-    ))}
+    ))} */}
   </>
 )}
       </Panel>

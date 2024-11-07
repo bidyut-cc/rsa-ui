@@ -16,7 +16,7 @@ function Sidebar({ style, toggleSidebar }) {
         { path: '/measurement', label: 'Measurement (3)' }
       ]
     },
-   // { path: '/leads', label: 'Leads', icon: 'fas fa-list' },
+   { path: '/leads', label: 'Leads', icon: 'fas fa-list' },
     // { path: '/orders', label: 'Orders', icon: 'fas fa-list' },
     { path: '/quotation', label: 'Quatation Builder', icon: 'fas fa-list' },
     { path: '/users', label: 'Users', icon: 'fas fa-fw fa-users' }
