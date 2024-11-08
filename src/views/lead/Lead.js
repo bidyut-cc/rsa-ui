@@ -362,11 +362,20 @@ function Lead({ title }) {
       </Descriptions.Item>
       {room.stall.stallConfig.map((stall, index) => (
             <Descriptions.Item label={`Stall ${index + 1}`}>
-              <strong>Width:</strong> {stall.stallWidth}" <br />
+              <strong>Width:</strong> {stall.stallWidth} {stall.stallFraction}" <br />
               <strong>Door Opening:</strong> {stall.doorOpening}" <br />
               <strong>Door Swing:</strong> {stall.doorSwing?.name}
             </Descriptions.Item>
         ))}
+        <Descriptions.Item label="Overall Room Width">
+          {room.stall?.overallRoomWidth}"
+        </Descriptions.Item>
+        <Descriptions.Item label="Standard Depth">
+          {room.stall?.standardDepth}"
+        </Descriptions.Item>
+        <Descriptions.Item label="Ada Depth">
+          {room.stall?.adaDepth}"
+        </Descriptions.Item>
           <Descriptions.Item label="Layout">
         {room.stall.type === 'IC' ? (
         `In Corner`
