@@ -254,10 +254,10 @@ function Lead({ title }) {
         <Descriptions.Item label="Name">{quotationData.first_name} {quotationData.last_name}</Descriptions.Item>
         <Descriptions.Item label="Email">{quotationData.email}</Descriptions.Item>
         <Descriptions.Item label="Phone Number">{quotationData.phone_number}</Descriptions.Item>
-        <Descriptions.Item label="Materials Page Link">
+        <Descriptions.Item label="Abandoned Cart Link">
         <span>
                 <Link href={`${process.env.REACT_APP_QUOTATION_PDF_LINK_URL}?id=${quotationData.id}&abandoned=1`} target="_blank">
-                  Click here to view choose materials link
+                Click to copy abandoned cart link
                 </Link>
                 <Button
                   type="link"
@@ -286,10 +286,10 @@ function Lead({ title }) {
               <Descriptions.Item label="Total Price">
                 ${material.price}
               </Descriptions.Item>
-              <Descriptions.Item label="Checkout Url">
+              <Descriptions.Item label="Checkout URL">
               <span>
                 <Link href={`${process.env.REACT_APP_QUOTATION_PAYMENT_URL}?id=${quotationData.id}&material_id=${material.id}&color=3d58a4`} target="_blank">
-                  Click here to view payment link
+                Click to copy payment link
                 </Link>
                 <Button
                   type="link"
