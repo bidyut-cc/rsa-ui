@@ -255,14 +255,7 @@ function Lead({ title }) {
             {/* Material Image and Price Details */}
             <Descriptions bordered size="middle" column={1} style={{ marginBottom: "20px" }}>
               <Descriptions.Item label="Material Image">
-                <img
-                  alt={material.name}
-                  src={material.src}
-                  style={{
-                    width: "100px",
-                    objectFit: "contain",
-                  }}
-                />
+                <Image width={100} src={material.src} alt="2D View" />
               </Descriptions.Item>
               <Descriptions.Item label="Total Price">
                 ${material.price}
@@ -303,7 +296,7 @@ function Lead({ title }) {
        <Panel header={`Room ${index + 1}`} key={room.id}>
         {/* Room Title and Images */}
         <Descriptions bordered size="middle" column={1}>
-          {room.title!='' && (
+          {room.title!=='' && (
             <Descriptions.Item label="Room Title">
               {room.title}
             </Descriptions.Item>
@@ -328,20 +321,14 @@ function Lead({ title }) {
       <Descriptions.Item label="Does this include a handicap accessible stall?">
         {room.stall.adaStall==true ? 'Yes' : 'No'}
       </Descriptions.Item>
-    </Descriptions>
-        {room.stall.stallConfig.map((stall, index) => (
-          <Descriptions bordered size="middle" column={1} key={index}>
+      {room.stall.stallConfig.map((stall, index) => (
             <Descriptions.Item label={`Stall ${index + 1}`}>
               <strong>Width:</strong> {stall.stallWidth}" <br />
               <strong>Door Opening:</strong> {stall.doorOpening}" <br />
               <strong>Door Swing:</strong> {stall.doorSwing?.name}
             </Descriptions.Item>
-          </Descriptions>
         ))}
-
-      {/* Layout Details for the Room */}
-      <Descriptions bordered size="middle" column={1}>
-        <Descriptions.Item label="Layout">
+          <Descriptions.Item label="Layout">
         {room.stall.type === 'IC' ? (
         `In Corner`
       ) : room.stall.type === 'BW' ? (
@@ -357,25 +344,20 @@ function Lead({ title }) {
         <Descriptions.Item label="Layout Direction">
           {room.stall.layout?.layoutDirection}
         </Descriptions.Item>
-      </Descriptions>
+    </Descriptions>
       {room.hasUrinalScreens && (
   <>
    <h6 style={{ marginTop: "20px", fontWeight: "bold" }}>Urinal Screen Details:</h6>
-        {/* Urinal Images in Descriptions */}
-        <Descriptions bordered size="middle" column={1}>
-      {/* <Descriptions.Item label="3D Image">
+    <Descriptions bordered size="middle" column={1}>
+    <Descriptions.Item label="Preview">
+       {/* <Descriptions.Item label="3D Image">
         <Image width={100} src={room.urinalScreen.urinal_3D} alt="3D View" />
       </Descriptions.Item> */}
-      <Descriptions.Item label="Preview">
-        <Image width={100} src={room.urinalScreen.urinal_2D} alt="2D View" />
+      <Image width={100} src={room.urinalScreen.urinal_2D} alt="2D View" />
       </Descriptions.Item>
-    </Descriptions>
-    <Descriptions bordered size="middle" column={1}>
       <Descriptions.Item label="Number of Urinal Screens">
         {room.urinalScreen.noOfUrinalScreens}
       </Descriptions.Item>
-    </Descriptions>
-    <Descriptions bordered size="middle" column={1}>
       <Descriptions.Item label="Screen Depth">
         {room.urinalScreen?.urinalScreenConfig[0]?.screenDepth}"
       </Descriptions.Item>
