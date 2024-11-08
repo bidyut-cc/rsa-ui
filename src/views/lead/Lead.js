@@ -12,12 +12,14 @@ import {
   Card,
   Descriptions,
   Collapse,
-  Image
+  Image,
+  Typography
 } from "antd";
-import { EyeOutlined, FilePdfOutlined } from "@ant-design/icons";
+import { EyeOutlined, CopyOutlined } from "@ant-design/icons";
 import apiService from "../../services/apiService";
 import { debounce } from "lodash";
 import axios from "axios";
+const { Link } = Typography;
 const { Panel } = Collapse;
 function Lead({ title }) {
   const [dataSource, setDataSource] = useState({
@@ -200,6 +202,17 @@ function Lead({ title }) {
     setIsModalOpen(false);
   };
 
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        message.success('Link copied to clipboard!');
+      })
+      .catch((err) => {
+        message.error('Failed to copy link');
+        console.error('Copy error:', err);
+      });
+  };
+
   return (
     <div className="container-fluid">
       <h1 className="h3 mb-4 text-gray-800">{title}</h1>
@@ -241,6 +254,19 @@ function Lead({ title }) {
         <Descriptions.Item label="Name">{quotationData.first_name} {quotationData.last_name}</Descriptions.Item>
         <Descriptions.Item label="Email">{quotationData.email}</Descriptions.Item>
         <Descriptions.Item label="Phone Number">{quotationData.phone_number}</Descriptions.Item>
+        <Descriptions.Item label="Choose Materials Link">
+        <span>
+                <Link href={`${process.env.REACT_APP_QUOTATION_PDF_LINK_URL}?id=${quotationData.id}`} target="_blank">
+                  Click here to view choose materials link
+                </Link>
+                <Button
+                  type="link"
+                  icon={<CopyOutlined />}
+                  style={{ marginLeft: '10px' }}
+                  onClick={() => handleCopy(`${process.env.REACT_APP_QUOTATION_PDF_LINK_URL}?id=${quotationData.id}`)}
+                />
+              </span>
+        </Descriptions.Item>
       </Descriptions>
      
 
@@ -253,12 +279,25 @@ function Lead({ title }) {
               backgroundColor: "#f0f2f5", // Example background color
             }}>
             {/* Material Image and Price Details */}
-            <Descriptions bordered size="middle" column={1} style={{ marginBottom: "20px" }}>
+            <Descriptions bordered size="middle" column={1} style={{ marginBottom: '20px' }}>
               <Descriptions.Item label="Material Image">
                 <Image width={100} src={material.src} alt="2D View" />
               </Descriptions.Item>
               <Descriptions.Item label="Total Price">
                 ${material.price}
+              </Descriptions.Item>
+              <Descriptions.Item label="Checkout Url">
+              <span>
+                <Link href={`${process.env.REACT_APP_QUOTATION_PAYMENT_URL}?id=${quotationData.id}&material_id=${material.id}&color=3d58a4`} target="_blank">
+                  Click here to view payment link
+                </Link>
+                <Button
+                  type="link"
+                  icon={<CopyOutlined />}
+                  style={{ marginLeft: '10px' }}
+                  onClick={() => handleCopy(`${process.env.REACT_APP_QUOTATION_PAYMENT_URL}?id=${quotationData.id}&material_id=${material.id}&color=3d58a4`)}
+                />
+              </span>
               </Descriptions.Item>
             </Descriptions>
 
