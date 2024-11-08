@@ -367,15 +367,15 @@ function Lead({ title }) {
               <strong>Door Swing:</strong> {stall.doorSwing?.name}
             </Descriptions.Item>
         ))}
-        <Descriptions.Item label="Overall Room Width">
+        {/* <Descriptions.Item label="Overall Room Width">
           {room.stall?.overallRoomWidth}"
-        </Descriptions.Item>
-        <Descriptions.Item label="Standard Depth">
+        </Descriptions.Item> */}
+        {/* <Descriptions.Item label="Standard Depth">
           {room.stall?.standardDepth}"
-        </Descriptions.Item>
-        <Descriptions.Item label="Ada Depth">
+        </Descriptions.Item> */}
+        {/* <Descriptions.Item label="ADA Depth">
           {room.stall?.adaDepth}"
-        </Descriptions.Item>
+        </Descriptions.Item> */}
           <Descriptions.Item label="Layout">
         {room.stall.type === 'IC' ? (
         `In Corner`
