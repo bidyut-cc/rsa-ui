@@ -256,7 +256,7 @@ function Lead({ title }) {
         <Descriptions.Item label="Phone Number">{quotationData.phone_number}</Descriptions.Item>
         <Descriptions.Item label="Materials Page Link">
         <span>
-                <Link href={`${process.env.REACT_APP_QUOTATION_PDF_LINK_URL}?id=${quotationData.id}`} target="_blank">
+                <Link href={`${process.env.REACT_APP_QUOTATION_PDF_LINK_URL}?id=${quotationData.id}&abandoned=1`} target="_blank">
                   Click here to view choose materials link
                 </Link>
                 <Button
