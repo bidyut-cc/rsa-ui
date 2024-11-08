@@ -254,7 +254,7 @@ function Lead({ title }) {
         <Descriptions.Item label="Name">{quotationData.first_name} {quotationData.last_name}</Descriptions.Item>
         <Descriptions.Item label="Email">{quotationData.email}</Descriptions.Item>
         <Descriptions.Item label="Phone Number">{quotationData.phone_number}</Descriptions.Item>
-        <Descriptions.Item label="Choose Materials Link">
+        <Descriptions.Item label="Materials Page Link">
         <span>
                 <Link href={`${process.env.REACT_APP_QUOTATION_PDF_LINK_URL}?id=${quotationData.id}`} target="_blank">
                   Click here to view choose materials link
@@ -263,7 +263,7 @@ function Lead({ title }) {
                   type="link"
                   icon={<CopyOutlined />}
                   style={{ marginLeft: '10px' }}
-                  onClick={() => handleCopy(`${process.env.REACT_APP_QUOTATION_PDF_LINK_URL}?id=${quotationData.id}`)}
+                  onClick={() => handleCopy(`${process.env.REACT_APP_QUOTATION_PDF_LINK_URL}?id=${quotationData.id}&abandoned=1`)}
                 />
               </span>
         </Descriptions.Item>
