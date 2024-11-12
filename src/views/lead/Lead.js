@@ -358,7 +358,7 @@ function Lead({ title }) {
         {room.stall.noOfStalls}
       </Descriptions.Item>
       <Descriptions.Item label="Does this include a handicap accessible stall?">
-        {room.stall.adaStall==true ? 'Yes' : 'No'}
+        {room.stall?.adaStall ? 'Yes' : 'No'}
       </Descriptions.Item>
       {room.stall.stallConfig.map((stall, index) => (
             <Descriptions.Item label={`Stall ${index + 1}`}>
@@ -367,15 +367,62 @@ function Lead({ title }) {
               <strong>Door Swing:</strong> {stall.doorSwing?.name}
             </Descriptions.Item>
         ))}
-        {/* <Descriptions.Item label="Overall Room Width">
+        <Descriptions.Item label="Overall Room Width">
           {room.stall?.overallRoomWidth}"
-        </Descriptions.Item> */}
-        {/* <Descriptions.Item label="Standard Depth">
+        </Descriptions.Item>
+        <Descriptions.Item label="Standard Depth">
           {room.stall?.standardDepth}"
-        </Descriptions.Item> */}
+        </Descriptions.Item>
         {/* <Descriptions.Item label="ADA Depth">
           {room.stall?.adaDepth}"
         </Descriptions.Item> */}
+
+      {(() => {
+        const label = (() => {
+          if (room.stall?.adaStall && room.stall?.layout?.layoutOption?.includes('alcove')) {
+            // Scenario 4: ADA, Alcove Stall → Label: "ADA Depth"
+            return "ADA Depth";
+          } else if (!room.stall?.adaStall && room.stall?.layout?.layoutOption?.includes('alcove')) {
+            // Scenario 3: Non-ADA, Alcove Stall → Label: "Alcove Depth"
+            return "Alcove Depth";
+          } else if (room.stall?.adaStall && !room.stall?.layout?.layoutOption?.includes('alcove')) {
+            // Scenario 2: ADA, Normal Stall → Label: "ADA Depth"
+            return "ADA Depth";
+          } else if (!room.stall?.adaStall && !room.stall?.layout?.layoutOption?.includes('alcove')) {
+            // Scenario 1: Non-ADA, Normal Stall → No Label
+            return "";
+          }else {
+            return "";
+          }
+        })();
+
+        const value = (() => {
+          if (room.stall?.adaStall && room.stall?.layout?.layoutOption?.includes('alcove')) {
+            // Scenario 4: ADA, Alcove Stall → ADA Depth Value
+            return `${room.stall?.adaDepth}"`;
+          } else if (!room.stall?.adaStall && room.stall?.layout?.layoutOption?.includes('alcove')) {
+            // Scenario 3: Non-ADA, Alcove Stall → Alcove Depth Value
+            return `${room.stall?.alcoveDepth}"`;
+          } else if (room.stall?.adaStall && !room.stall?.layout?.layoutOption?.includes('alcove')) {
+            // Scenario 2: ADA, Normal Stall → ADA Depth Value
+            return `${room.stall?.adaDepth}"`;
+          } else if (!room.stall?.adaStall && !room.stall?.layout?.layoutOption?.includes('alcove')) {
+            // Scenario 1: Non-ADA, Normal Stall → No Value
+            return null;
+          }else{
+            return null;
+          }
+        })();
+
+        // Render Descriptions.Item only if label is not empty
+        return label ? (
+          <Descriptions.Item label={label}>
+            {value}
+          </Descriptions.Item>
+        ) : null;
+      })()}
+
+
           <Descriptions.Item label="Layout">
         {room.stall.type === 'IC' ? (
         `In Corner`
