@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import moment from "moment";
 import {
   Button,
   Col,
@@ -21,6 +22,7 @@ import { debounce } from "lodash";
 import axios from "axios";
 const { Link } = Typography;
 const { Panel } = Collapse;
+
 function Lead({ title }) {
   const [dataSource, setDataSource] = useState({
     loading: false,
@@ -69,6 +71,12 @@ function Lead({ title }) {
       title: "Phone",
       dataIndex: "phone_number",
       key: "phone_number",
+    },
+    {
+      title: "Created Date",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (text) => (text ? moment(text).format("YYYY-MM-DD HH:mm:ss") : "-"),
     },
     {
       title: "Action",
