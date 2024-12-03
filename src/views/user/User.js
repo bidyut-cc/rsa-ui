@@ -38,6 +38,8 @@ function User({title}) {
     first_name: "",
     last_name: "",
     email: "",
+    password:"",
+    confirm_password:"",
     phone: "",
     roles: "",
     status: "Inactive",
@@ -47,6 +49,7 @@ function User({title}) {
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false); // Separate state for button-specific loading
+
 
   const columns = [
     {
@@ -76,31 +79,42 @@ function User({title}) {
     },
     {
       title: "Action",
-      render: (_, record) => (
-        <Space size="middle">
-          <Button
-            type="primary"
-            shape="circle"
-            onClick={() => handleEdit(record)}
-          >
-            <Tooltip title="Edit">
-              <EditOutlined />
-            </Tooltip>
-          </Button>
-          <Button
-            type="primary"
-            shape="circle"
-            danger
-            onClick={() => handleDelete(record.id)}
-          >
-            <Tooltip title="Delete">
-              <DeleteOutlined />
-            </Tooltip>
-          </Button>
-        </Space>
-      ),
+      render: (_, record) => {
+        // Assuming you have a `loggedInUser` object with an `id` property
+        const user = JSON.parse(localStorage.getItem("user"));
+  
+        // If the logged-in user matches the record, hide the buttons
+        if (user.id === record.id) {
+          return null;
+        }
+  
+        return (
+          <Space size="middle">
+            <Button
+              type="primary"
+              shape="circle"
+              onClick={() => handleEdit(record)}
+            >
+              <Tooltip title="Edit">
+                <EditOutlined />
+              </Tooltip>
+            </Button>
+            <Button
+              type="primary"
+              shape="circle"
+              danger
+              onClick={() => handleDelete(record.id)}
+            >
+              <Tooltip title="Delete">
+                <DeleteOutlined />
+              </Tooltip>
+            </Button>
+          </Space>
+        );
+      },
     },
   ];
+  
 
   const fetchRecords = useCallback(async () => {
     setDataSource((prev) => ({ ...prev, loading: true }));
@@ -158,6 +172,8 @@ function User({title}) {
       first_name: userData.first_name,
       last_name: userData.last_name,
       email: userData.email,
+      password: userData.password,
+      confirm_password: userData.confirm_password,
       phone: userData.phone,
       roles: userData.roles,
       status: userData.status,
@@ -198,6 +214,8 @@ function User({title}) {
       first_name: "",
       last_name: "",
       email: "",
+      password:"",
+      confirm_password:"",
       phone: "",
       roles: "",
       status: "",
@@ -214,6 +232,8 @@ function User({title}) {
       first_name: "",
       last_name: "",
       email: "",
+      password:"",
+      confirm_password:"",
       phone: "",
       roles: "",
       status: "",
@@ -228,6 +248,8 @@ function User({title}) {
       first_name: row.first_name,
       last_name: row.last_name,
       email: row.email,
+      password:"",
+      confirm_password:"",
       phone: row.phone,
       roles: row.roles[0], // Ensure this matches a value in your Select options
       status: row.status, // Ensure this matches a value in your Select options
@@ -238,6 +260,8 @@ function User({title}) {
       first_name: row.first_name,
       last_name: row.last_name,
       email: row.email,
+      password:"",
+      confirm_password:"",
       phone: row.phone,
       roles: row.roles[0],
       status: row.status,
@@ -253,10 +277,19 @@ function User({title}) {
       first_name: userData.first_name,
       last_name: userData.last_name,
       email: userData.email,
+      password: userData.password,
+      confirm_password: userData.confirm_password,
       phone: userData.phone,
       roles: userData.roles,
       status: userData.status,
     };
+    // If password is empty, remove it and confirm_password from the update payload
+    if (!data.password) {
+      delete data.password;
+    }
+    if (!data.confirm_password) {
+      delete data.confirm_password;
+    }
     setUserData((prev) => ({ ...prev, loading: true }));
     setButtonLoading(true); // Set button loading to true when the update starts
     try {
@@ -420,6 +453,44 @@ function User({title}) {
                 onChange={handleInput}
               />
             </Form.Item>
+            <Form.Item
+                  label={
+                    <span>
+                      Password <span style={{ color: "red" }}>*</span>
+                    </span>
+                  }
+                  name="password"
+                  validateStatus={
+                    userData.errors?.password ? "error" : ""
+                  }
+                  help={userData.errors?.password?.message} // Display only the error message
+                >
+                  <AntInput.Password
+                    placeholder="Password"
+                    name="password"
+                    value={userData?.password}
+                    onChange={handleInput}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label={
+                    <span>
+                      Confirm Password <span style={{ color: "red" }}>*</span>
+                    </span>
+                  }
+                  name="confirm_password"
+                  validateStatus={
+                    userData.errors?.confirm_password ? "error" : ""
+                  }
+                  help={userData.errors?.confirm_password?.message} // Display only the error message
+                >
+                  <AntInput.Password
+                    placeholder="Confirm Password"
+                    name="confirm_password"
+                    value={userData?.confirm_password}
+                    onChange={handleInput}
+                  />
+                </Form.Item>
             <Form.Item
               label={
                 <span>

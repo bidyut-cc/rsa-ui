@@ -23,7 +23,7 @@ function Header({ style, toggleSidebar }) {
 
           {/*  <!-- Nav Item - Alerts --> */}
           <li className="nav-item dropdown no-arrow mx-1">
-            <Link
+            {/* <Link
               className="nav-link dropdown-toggle"
               href="#"
               id="alertsDropdown"
@@ -34,7 +34,7 @@ function Header({ style, toggleSidebar }) {
             >
               <i className="fas fa-bell fa-fw"></i>
               <span className="badge badge-danger badge-counter">3+</span>
-            </Link>
+            </Link> */}
             {/*   <!-- Dropdown - Alerts --> */}
             {/* <div
               className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -220,10 +220,10 @@ function Header({ style, toggleSidebar }) {
                 <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                 Change Password
               </Link>
-              <Link className="dropdown-item" href="#">
+              {/* <Link className="dropdown-item" href="#">
                 <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                 Activity Log
-              </Link>
+              </Link> */}
               <div className="dropdown-divider"></div>
               <Link
                 className="dropdown-item"
