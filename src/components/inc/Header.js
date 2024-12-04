@@ -220,7 +220,7 @@ function Header({ style, toggleSidebar }) {
                 <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                 Change Password
               </Link>
-              {/* <Link className="dropdown-item" href="#">
+              {/* <Link className="dropdown-item" to="/activity-logs">
                 <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                 Activity Log
               </Link> */}

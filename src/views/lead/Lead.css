@@ -1,0 +1,13 @@
+/* Customize the preview modal background */
+.custom-preview .ant-image-preview-img {
+    background-color: #f0f0f0; /* Add your desired background color */
+    padding: 20px; /* Add padding to the image */
+    border-radius: 8px; /* Optional: Rounded corners */
+    display: inline-block; /* Ensure the background only covers the image */
+  }
+  
+  /* Customize the modal itself (optional) */
+  .custom-preview .ant-image-preview {
+    background-color: rgba(0, 0, 0, 0.8); /* Modal overlay background */
+  }
+  
