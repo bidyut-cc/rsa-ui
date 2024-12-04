@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import moment from "moment";
+import "./Lead.css"; // Include your CSS file
 import {
   Button,
   Col,
@@ -289,7 +290,9 @@ function Lead({ title }) {
             {/* Material Image and Price Details */}
             <Descriptions bordered size="middle" column={1} style={{ marginBottom: '20px' }}>
               <Descriptions.Item label="Material Image">
-                <Image width={100} src={material.src} alt="2D View" />
+                <Image width={100} src={material.src} alt="2D View" preview={{
+            className: "custom-preview", // Add a class for the preview modal
+          }}/>
               </Descriptions.Item>
               <Descriptions.Item label="Total Price">
                 ${material.price}
@@ -355,7 +358,9 @@ function Lead({ title }) {
           </Descriptions.Item> */}
           
           <Descriptions.Item label="Preview">
-            <Image width={100} src={room.image_2D} alt="2D View" />
+            <Image width={100} src={room.image_2D} alt="2D View" preview={{
+            className: "custom-preview", // Add a class for the preview modal
+          }}/>
           </Descriptions.Item>
         </Descriptions>
 

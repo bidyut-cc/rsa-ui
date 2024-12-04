@@ -14,6 +14,7 @@ import Measurement from "./views/settings/Measurement";
 import Quatation from "./views/quotation/Quotation";
 import Lead from "./views/lead/Lead";
 import Order from "./views/order/Order";
+import Log from "./views/log/Log";
 function App() {
   return (
     <>
@@ -35,6 +36,7 @@ function App() {
           <Route path="quotation" element={<Quatation title="Quotation Builder" />} />
           <Route path="leads" element={<Lead title="Leads" />} />
           <Route path="orders" element={<Order title="Orders" />} />
+          <Route path="activity-logs" element={<Log title="Activity Logs" />} />
 
           {/* Catch-all route for unmatched URLs */}
           <Route path="*" element={<NotFound />} />

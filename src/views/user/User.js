@@ -50,7 +50,7 @@ function User({title}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false); // Separate state for button-specific loading
 
-
+  const loggedInUser = JSON.parse(localStorage.getItem("user"));
   const columns = [
     {
       title: "Sl No.",
@@ -80,11 +80,7 @@ function User({title}) {
     {
       title: "Action",
       render: (_, record) => {
-        // Assuming you have a `loggedInUser` object with an `id` property
-        const user = JSON.parse(localStorage.getItem("user"));
-  
-        // If the logged-in user matches the record, hide the buttons
-        if (user.id === record.id) {
+        if (loggedInUser?.id === record.id) {
           return null;
         }
   
