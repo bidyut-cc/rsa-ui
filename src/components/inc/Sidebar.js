@@ -13,7 +13,8 @@ function Sidebar({ style, toggleSidebar }) {
       subItems: [
         { path: '/project', label: 'Project (1)' },
         { path: '/layout', label: 'Layout (2)' },
-        { path: '/measurement', label: 'Measurement (3)' }
+        { path: '/measurement', label: 'Measurement (3)' },
+        { path: '/colors', label: 'Color (6)' }
       ]
     },
    { path: '/leads', label: 'Leads', icon: 'fas fa-list' },
