@@ -249,7 +249,7 @@ function Measurement({title}) {
           </Row>
         </Form.Item>
 
-        <Row gutter={[16, 16]}>
+        {/* <Row gutter={[16, 16]}>
           <Col xs={24} sm={12}>
             <Form.Item
               label={
@@ -493,7 +493,7 @@ function Measurement({title}) {
               />
             </Form.Item>
           </Col>
-        </Row>
+        </Row> */}
          <Row gutter={[16, 16]}>
           <Col xs={24} sm={24}>
            <Form.Item

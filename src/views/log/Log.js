@@ -12,16 +12,12 @@ import {
   Tooltip,
   Card,
   Descriptions,
-  Collapse,
   Image,
-  Typography
 } from "antd";
-import { EyeOutlined, CopyOutlined } from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
 import apiService from "../../services/apiService";
 import { debounce } from "lodash";
-import axios from "axios";
-const { Link } = Typography;
-const { Panel } = Collapse;
+
 
 
 function Log({ title }) {
@@ -33,17 +29,8 @@ function Log({ title }) {
     pageSize: 10,
   });
 
-  const [quotationData, setQuotationData] = useState({
-    id: "",
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone_number: "",
-    submittedData: "",
-    roomData: "",
-    materials: [], // Initialize as an empty array
-    errors: [],
-    loading: false,
+  const [logData, setLogData] = useState({
+    log:{}
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -113,29 +100,52 @@ function Log({ title }) {
       key: "createdAt",
       render: (text) => (text ? moment(text).format("YYYY-MM-DD HH:mm:ss") : "-"),
     },
-    // {
-    //   title: "Action",
-    //   render: (_, record) => (
-    //     <Space size="middle">
-    //       {/* <Button type="primary" shape="circle" danger onClick={() => handleGeneratePDF(record)}>
-    //         <Tooltip title="View PDF">
-    //           <FilePdfOutlined />
-    //         </Tooltip>
-    //       </Button> */}
-    //       <Button
-    //         type="primary"
-    //         shape="circle"
-    //         onClick={() => handleView(record)}
-    //       >
-    //         <Tooltip title="View">
-    //           <EyeOutlined />
-    //         </Tooltip>
-    //       </Button>
-    //     </Space>
-    //   ),
-    // },
+    {
+      title: "Action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            type="primary"
+            shape="circle"
+            onClick={() => handleView(record)}
+          >
+            <Tooltip title="View">
+              <EyeOutlined />
+            </Tooltip>
+          </Button>
+        </Space>
+      ),
+    },
   ];
-
+// Function to format the message based on the logic in columns render
+const formatLogMessage = (record) => {
+  if (record.modelName === "Setting") {
+    if (record.message && record.message.includes("price")) {
+      return `${record.user.username} has ${record.event} the ${record.message} settings.`;
+    } else {
+      const formattedStep = record.currentData.step
+        .replace(/_/g, " ") // Replace underscores with spaces
+        .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize first letters
+      return `${record.user.username} has ${record.event} the ${formattedStep} settings.`;
+    }
+  } else if (record.modelName === "User") {
+    if (record.event === "deleted") {
+      return `${record.user.username} ${record.event} ${record.previousData.username}'s account.`;
+    } else if (record.event === "updated") {
+      if (record.message === "Profile" || record.message === "Password") {
+        return `${record.user.username} has ${record.event} his ${record.message}.`;
+      } else {
+        return `${record.user.username} ${record.event} ${record.previousData?.username}'s account.`;
+      }
+    } else if (record.event === "saved") {
+      return `${record.user.username} created a new user: ${record.currentData?.username}`;
+    } else {
+      return `${record.user.username} has ${record.message}`;
+    }
+  } else {
+    return `${record.user.username} ${record.message}`;
+  }
+};
   const fetchRecords = useCallback(async () => {
     setDataSource((prev) => ({ ...prev, loading: true }));
     try {
@@ -172,75 +182,20 @@ function Log({ title }) {
   }, [fetchRecords]);
 
   const handleView = (row) => {
-    setQuotationData({
-      id: row._id,
-      first_name: row.first_name,
-      last_name: row.last_name,
-      email: row.email,
-      phone_number: row.phone_number,
-      submittedData: row.submittedData,
-      roomData: row.roomData,
-      materials: row.materials || [], // Default to empty array
-      errors: [],
-      loading: false,
+    const formattedMessage = formatLogMessage(row);
+    setLogData({
+      log: {
+        ...row,
+        formattedMessage: formattedMessage,  // Set the formatted message
+      }
     });
     setIsModalOpen(true);
   };
 
-  const handleGeneratePDF = async (leadData) => {
-  try {
-    setDataSource((prev) => ({ ...prev, loading: true }));
-    const response = await axios.post(
-      `${process.env.REACT_APP_API_URL}quotations/generateQuotationPDF`, 
-      leadData, // Directly passing the data object, no need to wrap in another object
-      {
-        headers: {
-          token: `${localStorage.getItem('token')}`, // Pass the token as a Bearer token
-        }
-      }
-    );
-    if (response.status === 200) {
-      const htmlContent = response.data.htmlContent; // Assuming response contains HTML content
-
-      // Create an iframe (hidden) to load the HTML content and print
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none'; // Hide the iframe
-      document.body.appendChild(iframe);
-  
-      // Get the iframe document and write the HTML content into it
-      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-      iframeDoc.open();
-      iframeDoc.write(htmlContent); // Write the HTML content
-      iframeDoc.close();
-  
-      // Wait for iframe content to load and trigger the print
-      iframe.onload = () => {
-        iframe.contentWindow.focus(); // Focus on the iframe window
-        iframe.contentWindow.print(); // Trigger print dialog
-        setDataSource((prev) => ({ ...prev, loading: false }));
-      };
-    }
-
-
-  } catch (error) {
-    setDataSource((prev) => ({ ...prev, loading: false }));
-    message.error(error.response.data.message);
-  }
-    
-  };
 
   const handleCancel = () => {
-    setQuotationData({
-      id: "",
-      first_name: "",
-      last_name: "",
-      email: "",
-      phone_number: "",
-      submittedData: "",
-      roomData: "",
-      materials: [],
-      errors: [],
-      loading: false,
+    setLogData({
+      log:{}
     });
     setIsModalOpen(false);
   };
@@ -271,20 +226,576 @@ function Log({ title }) {
             pageSize: dataSource.pageSize,
             total: dataSource.data.results_count,
             onChange: (page) => handlePaginate(page),
+            showSizeChanger: false, 
             showTotal: (total, range) =>
               `Showing ${range[0]} to ${range[1]} of ${total} entries`,
           }}
         />
       </Card>
       <Modal
-        title="Log Details"
-        open={isModalOpen}
-        onCancel={handleCancel}
-        footer={null}
-        width="50%" // Adjust modal width if needed
-      >
+      title="Log Details"
+      open={isModalOpen}
+      onCancel={handleCancel}
+      footer={null}
+      width="50%"
+    >
+      <Descriptions bordered column={1} size="middle">
+        <Descriptions.Item label="Created By">
+          {logData?.log?.user?.username || "Not Available"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Created Date">
+          { moment(logData?.log?.createdAt).format("YYYY-MM-DD HH:mm:ss") || "Not Available"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Message">
+      {logData?.log?.formattedMessage || "Not Available"}
+    </Descriptions.Item>
+      </Descriptions>
 
-      </Modal>
+      {logData?.log?.previousData?.step === "project" && (
+    <>
+      {/* Previous Data Section */}
+      <Descriptions
+        title="Previous Data"
+        bordered
+        column={1}
+        size="small"
+        style={{ marginTop: "20px" }}
+      >
+        {logData?.log?.previousData?.config &&
+          Object.keys(logData.log.previousData.config).map((key) => (
+            <Descriptions.Item
+              label={key
+                .replace(/_/g, " ") // Replace underscores with spaces
+                .replace(/\b\w/g, (char) => char.toUpperCase())} // Capitalize each word
+              key={`previous-${key}`}
+            >
+              {logData.log.previousData.config[key] || "Not Available"}
+            </Descriptions.Item>
+          ))}
+      </Descriptions>
+
+      {/* Current Data Section */}
+      <Descriptions
+        title="Current Data"
+        bordered
+        column={1}
+        size="small"
+        style={{ marginTop: "20px" }}
+      >
+        {logData?.log?.currentData?.config &&
+          Object.keys(logData.log.currentData.config).map((key) => (
+            <Descriptions.Item
+              label={key
+                .replace(/_/g, " ") // Replace underscores with spaces
+                .replace(/\b\w/g, (char) => char.toUpperCase())} // Capitalize each word
+              key={`current-${key}`}
+            >
+              {logData.log.currentData.config[key] || "Not Available"}
+            </Descriptions.Item>
+          ))}
+      </Descriptions>
+    </>
+  )}
+  {logData?.log?.previousData?.step === "layout" && (
+    <>
+      {/* Previous Data Section */}
+      <Descriptions
+        title="Previous Data"
+        bordered
+        column={1}
+        size="small"
+        style={{ marginTop: "20px" }}
+      >
+        <Descriptions.Item label="Show Handicap Accessible Stall">
+          {logData?.log?.previousData?.config?.show_handicap_accessible_stall || "Not Available"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Layouts">
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+            {logData?.log?.previousData?.config?.layouts?.map((layout) => (
+              <div
+                key={`previous-layout-${layout.id}`}
+                style={{
+                  border: "1px solid #ddd",
+                  padding: "10px",
+                  textAlign: "center",
+                  width: "calc(25% - 10px)",  // Ensures 4 images per row
+                  boxSizing: "border-box",
+                }}
+              >
+                <Image
+                  width={30}
+                  src={layout.src}
+                  preview={false}
+                  alt={layout.name}
+                  style={{ marginBottom: "8px" }}
+                />
+                <div>{layout.name}</div>
+              </div>
+            ))}
+          </div>
+        </Descriptions.Item>
+      </Descriptions>
+
+      {/* Current Data Section */}
+      <Descriptions
+        title="Current Data"
+        bordered
+        column={1}
+        size="small"
+        style={{ marginTop: "20px" }}
+      >
+        <Descriptions.Item label="Show Handicap Accessible Stall">
+          {logData?.log?.currentData?.config?.show_handicap_accessible_stall || "Not Available"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Layouts">
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+            {logData?.log?.currentData?.config?.layouts?.map((layout) => (
+              <div
+                key={`current-layout-${layout.id}`}
+                style={{
+                  border: "1px solid #ddd",
+                  padding: "10px",
+                  textAlign: "center",
+                  width: "calc(25% - 10px)",  // Ensures 4 images per row
+                  boxSizing: "border-box",
+                }}
+              >
+                <Image
+                  width={30} // Adjust image to fit within the layout
+                  src={layout.src}
+                  preview={false}
+                  alt={layout.name}
+                  style={{ marginBottom: "8px" }}
+                />
+                <div>{layout.name}</div>
+              </div>
+            ))}
+          </div>
+        </Descriptions.Item>
+      </Descriptions>
+    </>
+  )}
+  {logData?.log?.previousData?.step === "measurement" && (
+  <>
+    {/* Previous Data Section */}
+    <Descriptions
+      title="Previous Data"
+      bordered
+      column={1}
+      size="small"
+      style={{ marginTop: "20px" }}
+    >
+      <Descriptions.Item label="ADA Stall Min Width">
+        {logData?.log?.previousData?.config?.ada_stall_min_width || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="ADA Stall Max Width">
+        {logData?.log?.previousData?.config?.ada_stall_max_width || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="Standard Stall Min Width">
+        {logData?.log?.previousData?.config?.standard_stall_min_width || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="Standard Stall Max Width">
+        {logData?.log?.previousData?.config?.standard_stall_max_width || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="ADA Stall Min Depth">
+        {logData?.log?.previousData?.config?.ada_stall_min_depth || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="ADA Stall Max Depth">
+        {logData?.log?.previousData?.config?.ada_stall_max_depth || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="Standard Stall Min Depth">
+        {logData?.log?.previousData?.config?.standard_stall_min_depth || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="Standard Stall Max Depth">
+        {logData?.log?.previousData?.config?.standard_stall_max_depth || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="ADA Stall Min Door Opening">
+        {logData?.log?.previousData?.config?.ada_stall_min_door_opening || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="ADA Stall Max Door Opening">
+        {logData?.log?.previousData?.config?.ada_stall_max_door_opening || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="Standard Stall Min Door Opening">
+        {logData?.log?.previousData?.config?.standard_stall_min_door_opening || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="Standard Stall Max Door Opening">
+        {logData?.log?.previousData?.config?.standard_stall_max_door_opening || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="Maximum Room No">
+        {logData?.log?.previousData?.config?.maximum_room_no || "Not Available"}
+      </Descriptions.Item>
+
+      {/* Door Swing Options for Previous Data */}
+      <Descriptions.Item label="Door Swing Types">
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+          {logData?.log?.previousData?.config?.swings?.map((swing) => (
+            <div
+              key={`swing-prev-${swing.id}`}
+              style={{
+                border: "1px solid #ddd",
+                padding: "10px",
+                textAlign: "center",
+                width: "calc(25% - 10px)",  // Ensures 4 items per row
+                boxSizing: "border-box",
+              }}
+            >
+              <div>{swing.name}</div>
+            </div>
+          ))}
+        </div>
+      </Descriptions.Item>
+    </Descriptions>
+
+    {/* Current Data Section */}
+    <Descriptions
+      title="Current Data"
+      bordered
+      column={1}
+      size="small"
+      style={{ marginTop: "20px" }}
+    >
+      <Descriptions.Item label="ADA Stall Min Width">
+        {logData?.log?.currentData?.config?.ada_stall_min_width || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="ADA Stall Max Width">
+        {logData?.log?.currentData?.config?.ada_stall_max_width || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="Standard Stall Min Width">
+        {logData?.log?.currentData?.config?.standard_stall_min_width || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="Standard Stall Max Width">
+        {logData?.log?.currentData?.config?.standard_stall_max_width || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="ADA Stall Min Depth">
+        {logData?.log?.currentData?.config?.ada_stall_min_depth || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="ADA Stall Max Depth">
+        {logData?.log?.currentData?.config?.ada_stall_max_depth || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="Standard Stall Min Depth">
+        {logData?.log?.currentData?.config?.standard_stall_min_depth || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="Standard Stall Max Depth">
+        {logData?.log?.currentData?.config?.standard_stall_max_depth || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="ADA Stall Min Door Opening">
+        {logData?.log?.currentData?.config?.ada_stall_min_door_opening || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="ADA Stall Max Door Opening">
+        {logData?.log?.currentData?.config?.ada_stall_max_door_opening || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="Standard Stall Min Door Opening">
+        {logData?.log?.currentData?.config?.standard_stall_min_door_opening || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="Standard Stall Max Door Opening">
+        {logData?.log?.currentData?.config?.standard_stall_max_door_opening || "Not Available"}
+      </Descriptions.Item>
+      <Descriptions.Item label="Maximum Room No">
+        {logData?.log?.currentData?.config?.maximum_room_no || "Not Available"}
+      </Descriptions.Item>
+
+      {/* Door Swing Options for Current Data */}
+      <Descriptions.Item label="Door Swing Types">
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+          {logData?.log?.currentData?.config?.swings?.map((swing) => (
+            <div
+              key={`swing-cur-${swing.id}`}
+              style={{
+                border: "1px solid #ddd",
+                padding: "10px",
+                textAlign: "center",
+                width: "calc(25% - 10px)",  // Ensures 4 items per row
+                boxSizing: "border-box",
+              }}
+            >
+              <div>{swing.name}</div>
+            </div>
+          ))}
+        </div>
+      </Descriptions.Item>
+    </Descriptions>
+  </>
+)}
+{logData?.log?.previousData?.step === "color" && (
+  <>
+    {/* Previous Data Section */}
+    <Descriptions
+      title="Previous Data"
+      bordered
+      column={1}
+      size="small"
+      style={{ marginTop: "20px" }}
+    >
+      <Descriptions.Item label="Colors">
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+          {logData?.log?.previousData?.config?.colors?.map((color, index) => (
+            <div
+              key={`color-prev-${index}`}
+              style={{
+                backgroundColor: color,
+                width: "calc(12.5% - 10px)", // 8 colors in a row
+                height: "50px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+                boxSizing: "border-box",
+              }}
+            />
+          ))}
+        </div>
+      </Descriptions.Item>
+    </Descriptions>
+
+    {/* Current Data Section */}
+    <Descriptions
+      title="Current Data"
+      bordered
+      column={1}
+      size="small"
+      style={{ marginTop: "20px" }}
+    >
+      <Descriptions.Item label="Colors">
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+          {logData?.log?.currentData?.config?.colors?.map((color, index) => (
+            <div
+              key={`color-cur-${index}`}
+              style={{
+                backgroundColor: color,
+                width: "calc(12.5% - 10px)", // 8 colors in a row
+                height: "50px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+                boxSizing: "border-box",
+              }}
+            />
+          ))}
+        </div>
+      </Descriptions.Item>
+    </Descriptions>
+  </>
+)}
+{logData?.log?.message === "Profile" && (
+ <>
+     {/* Previous Data Section */}
+     <Descriptions
+      title="Previous Data"
+      bordered
+      column={1}
+      size="small"
+      style={{ marginTop: "20px" }}
+    >
+   <Descriptions.Item label="Username">
+        {logData?.log?.previousData?.username}
+      </Descriptions.Item>
+      <Descriptions.Item label="First Name">
+        {logData?.log?.previousData?.first_name}
+      </Descriptions.Item>
+      <Descriptions.Item label="Last Name">
+        {logData?.log?.previousData?.last_name}
+      </Descriptions.Item>
+      <Descriptions.Item label="Email">
+        {logData?.log?.previousData?.email}
+      </Descriptions.Item>
+      <Descriptions.Item label="Phone">
+        {logData?.log?.previousData?.phone}
+      </Descriptions.Item>
+      <Descriptions.Item label="Status">
+        {logData?.log?.previousData?.status}
+      </Descriptions.Item>
+      </Descriptions>
+           {/* Previous Data Section */}
+     <Descriptions
+      title="Current Data"
+      bordered
+      column={1}
+      size="small"
+      style={{ marginTop: "20px" }}
+    >
+   <Descriptions.Item label="Username">
+        {logData?.log?.currentData?.username}
+      </Descriptions.Item>
+      <Descriptions.Item label="First Name">
+        {logData?.log?.currentData?.first_name}
+      </Descriptions.Item>
+      <Descriptions.Item label="Last Name">
+        {logData?.log?.currentData?.last_name}
+      </Descriptions.Item>
+      <Descriptions.Item label="Email">
+        {logData?.log?.currentData?.email}
+      </Descriptions.Item>
+      <Descriptions.Item label="Phone">
+        {logData?.log?.currentData?.phone}
+      </Descriptions.Item>
+      <Descriptions.Item label="Status">
+        {logData?.log?.currentData?.status}
+      </Descriptions.Item>
+      </Descriptions>
+ </>
+)}
+{(logData?.log?.modelName === "User" && logData?.log?.message !== "Profile" && logData?.log?.message !== "Password") && (
+  <>
+    {/* Display Previous Data if the event is "updated" */}
+    {logData?.log?.event === "updated" && (
+      <Descriptions
+        title="Previous Data"
+        bordered
+        column={1}
+        size="small"
+        style={{ marginTop: "20px" }}
+      >
+        <Descriptions.Item label="Username">
+          {logData?.log?.previousData?.username || "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item label="First Name">
+          {logData?.log?.previousData?.first_name || "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Last Name">
+          {logData?.log?.previousData?.last_name || "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Email">
+          {logData?.log?.previousData?.email || "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Phone">
+          {logData?.log?.previousData?.phone || "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Status">
+          {logData?.log?.previousData?.status || "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Roles">
+          {logData?.log?.previousData?.roles?.map(
+            (role) =>
+              role.replace("_", " ").replace(/\b\w/g, (char) => char.toUpperCase())
+          ).join(", ") || "N/A"}
+        </Descriptions.Item>
+      </Descriptions>
+      
+    )}
+      {(logData?.log?.event === "saved" || logData?.log?.event === "updated") && (
+      <Descriptions
+        title="Current Data"
+        bordered
+        column={1}
+        size="small"
+        style={{ marginTop: "20px" }}
+      >
+        <Descriptions.Item label="Username">
+          {logData?.log?.currentData?.username || "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item label="First Name">
+          {logData?.log?.currentData?.first_name || "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Last Name">
+          {logData?.log?.currentData?.last_name || "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Email">
+          {logData?.log?.currentData?.email || "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Phone">
+          {logData?.log?.currentData?.phone || "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Status">
+          {logData?.log?.currentData?.status || "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Roles">
+          {logData?.log?.currentData?.roles?.map(
+            (role) =>
+              role.replace("_", " ").replace(/\b\w/g, (char) => char.toUpperCase())
+          ).join(", ") || "N/A"}
+        </Descriptions.Item>
+      </Descriptions>
+    )}
+  </>
+)}
+
+{logData?.log?.modelName === "Setting" && (
+  <>
+    {/* Display Previous Data if the event is "updated" */}
+    {logData?.log?.message === "ADA price" && (
+       <>
+      <Descriptions
+        title="Previous Data"
+        bordered
+        column={1}
+        size="small"
+        style={{ marginTop: "20px" }}
+      >
+        <Descriptions.Item label="ADA price">
+          {logData?.log?.previousData?.config?.ADA_price || "N/A"}
+        </Descriptions.Item>
+      </Descriptions>
+    <Descriptions
+    title="Current Data"
+    bordered
+    column={1}
+    size="small"
+    style={{ marginTop: "20px" }}
+  >
+    <Descriptions.Item label="ADA price">
+      {logData?.log?.currentData?.config?.ADA_price || "N/A"}
+    </Descriptions.Item>
+  </Descriptions>
+  </> 
+    )}
+  </>
+)}
+
+{logData?.log?.modelName === "Setting" && (
+  <>
+{['IC price', 'BW price' ,'ALIC price' ,'ALBW price'].includes(logData?.log?.message) && (
+  <>
+    <Descriptions
+      title="Previous Data"
+      bordered
+      column={1}
+      size="small"
+      style={{ marginTop: "20px" }}
+    >
+      {Object.keys(logData?.log?.previousData?.config[logData?.log?.message.split(' ')[0]] || {}).map((key) => (
+        <React.Fragment key={key}>
+          <Descriptions.Item label={`${logData?.log?.message.split(' ')[0]} ${key}`}>
+            <ul>
+              {logData?.log?.previousData?.config[logData?.log?.message.split(' ')[0]][key].map((item) => (
+                <li key={item.id}>
+                  {item.name}: ${item.price}
+                </li>
+              ))}
+            </ul>
+          </Descriptions.Item>
+        </React.Fragment>
+      ))}
+    </Descriptions>
+
+    <Descriptions
+      title="Current Data"
+      bordered
+      column={1}
+      size="small"
+      style={{ marginTop: "20px" }}
+    >
+      {Object.keys(logData?.log?.currentData?.config[logData?.log?.message.split(' ')[0]] || {}).map((key) => (
+        <React.Fragment key={key}>
+          <Descriptions.Item label={`${logData?.log?.message.split(' ')[0]} ${key}`}>
+            <ul>
+              {logData?.log?.currentData?.config[logData?.log?.message.split(' ')[0]][key].map((item) => (
+                <li key={item.id}>
+                  {item.name}: ${item.price}
+                </li>
+              ))}
+            </ul>
+          </Descriptions.Item>
+        </React.Fragment>
+      ))}
+    </Descriptions>
+  </>
+)}
+
+
+  </>
+)}
+
+
+ 
+    </Modal>
+
     </div>
   );
 }

@@ -385,6 +385,7 @@ function User({title}) {
             pageSize: dataSource.pageSize,
             total: dataSource.data.results_count,
             onChange: (page) => handlePaginate(page),
+            showSizeChanger: false, 
             showTotal: (total, range) =>
               `Showing ${range[0]} to ${range[1]} of ${total} entries`,
           }}
