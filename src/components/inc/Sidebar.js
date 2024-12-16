@@ -19,9 +19,9 @@ function Sidebar({ style, toggleSidebar }) {
         { path: '/colors', label: 'Color (6)' }
       ]
     },
-    { path: '/quotation', label: 'Quatation Builder', icon: 'fas fa-list' },
-    { path: '/leads', label: 'Leads', icon: 'fas fa-list' },
-    { path: '/orders', label: 'Orders', icon: 'fas fa-list' },
+    { path: '/quotation', label: 'Quatation Builder', icon: 'fas fa-dollar-sign' },
+    { path: '/leads', label: 'Leads', icon: 'fas fa-user-friends' },
+    { path: '/orders', label: 'Orders', icon: 'fas fa-boxes' },
     { path: '/users', label: 'Users', icon: 'fas fa-fw fa-users' }
 
   ];
