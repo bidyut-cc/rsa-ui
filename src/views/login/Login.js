@@ -3,7 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import apiService from '../../services/apiService';
 import useAuth from '../../components/hooks/useAuth';
 import { message, Spin} from 'antd';
+import { useUserRole } from "../../components/context/UserRoleContext"; 
 function Login({title}) {
+  const { setUserRole } = useUserRole(); // Access setUserRole from context
     const [loginInput,setLogin] = useState({
       email:"",
       password:"",
@@ -36,10 +38,11 @@ function Login({title}) {
       const response = await apiService.post('auth/login', data);
       if (response.status === 200) {
         // Assuming the response contains user data
-        const { id, first_name, last_name, email, phone } = response.data.data;
+        const { id, first_name, last_name, email, phone , roles } = response.data.data;
         // Store user data in localStorage
-        localStorage.setItem('user', JSON.stringify({ id, first_name, last_name, email, phone }));
+        localStorage.setItem('user', JSON.stringify({ id, first_name, last_name, email, phone, roles }));
         localStorage.setItem('token', response.data.access_token);
+        setUserRole(roles[0]);
         // Redirect to dashboard
         navigate('/dashboard');
         setLogin((prev) => ({ ...prev, loading: false,errors:[] }));
