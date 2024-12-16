@@ -531,8 +531,8 @@ if (userRole === "developer" || userRole === "super_admin") {
                 value={userData.roles}
               >
                 <Option value="sales_agent">Sales Agent</Option>
-                <Option value="developer">Developer</Option>
                 <Option value="super_admin">Super Admin</Option>
+                <Option value="developer">Developer</Option>
               </Select>
             </Form.Item>
             <Form.Item
