@@ -22,9 +22,12 @@ import {
 } from "@ant-design/icons";
 import apiService from "../../services/apiService";
 import { debounce } from "lodash";
+import { useUserRole } from "../../components/context/UserRoleContext";
 const { Option } = Select;
 
 function User({title}) {
+  const { userRole } = useUserRole();
+
   const [dataSource, setDataSource] = useState({
     loading: false,
     data: [],
@@ -77,39 +80,43 @@ function User({title}) {
       dataIndex: "phone",
       key: "phone",
     },
-    {
-      title: "Action",
-      render: (_, record) => {
-        if (loggedInUser?.id === record.id) {
-          return null;
-        }
-  
-        return (
-          <Space size="middle">
-            <Button
-              type="primary"
-              shape="circle"
-              onClick={() => handleEdit(record)}
-            >
-              <Tooltip title="Edit">
-                <EditOutlined />
-              </Tooltip>
-            </Button>
-            <Button
-              type="primary"
-              shape="circle"
-              danger
-              onClick={() => handleDelete(record.id)}
-            >
-              <Tooltip title="Delete">
-                <DeleteOutlined />
-              </Tooltip>
-            </Button>
-          </Space>
-        );
-      },
-    },
   ];
+
+  // Conditionally add the "Action" column based on the userRole
+if (userRole === "developer" || userRole === "super_admin") {
+  columns.push({
+    title: "Action",
+    render: (_, record) => {
+      if (loggedInUser?.id === record.id) {
+        return null;
+      }
+
+      return (
+        <Space size="middle">
+          <Button
+            type="primary"
+            shape="circle"
+            onClick={() => handleEdit(record)}
+          >
+            <Tooltip title="Edit">
+              <EditOutlined />
+            </Tooltip>
+          </Button>
+          <Button
+            type="primary"
+            shape="circle"
+            danger
+            onClick={() => handleDelete(record.id)}
+          >
+            <Tooltip title="Delete">
+              <DeleteOutlined />
+            </Tooltip>
+          </Button>
+        </Space>
+      );
+    },
+  });
+}
   
 
   const fetchRecords = useCallback(async () => {
@@ -214,7 +221,7 @@ function User({title}) {
       confirm_password:"",
       phone: "",
       roles: "",
-      status: "",
+      status: "Inactive",
       errors: [],
       loading: false,
     }));
@@ -356,6 +363,8 @@ function User({title}) {
       <Card>
         <Row justify="end" style={{ marginBottom: 16 }}>
           <Col>
+          {/* Conditionally render the Add button based on user role */}
+        {(userRole === "developer" || userRole === "super_admin") && ( 
             <Button
               type="primary"
               shape="circle"
@@ -366,6 +375,7 @@ function User({title}) {
                 <PlusCircleOutlined />
               </Tooltip>
             </Button>
+             )}
           </Col>
           <Col style={{ marginLeft: 8 }}>
             <AntInput
@@ -520,7 +530,7 @@ function User({title}) {
                 onChange={(value) => handleSelectChange(value, "roles")} // Handle select change
                 value={userData.roles}
               >
-                <Option value="user">User</Option>
+                <Option value="sales_agent">Sales Agent</Option>
                 <Option value="developer">Developer</Option>
                 <Option value="super_admin">Super Admin</Option>
               </Select>

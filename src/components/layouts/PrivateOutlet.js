@@ -7,9 +7,11 @@ import Header from "../inc/Header.js";
 import apiService from "../../services/apiService.js";
 import { message } from "antd";
 import { useHeader } from "../context/HeaderContext.js";
+import { useUserRole } from "../context/UserRoleContext.js"; 
 
 export default function PrivateOutlet() {
   const { setHeaderTitle } = useHeader(); // Access setHeaderTitle
+  const { setUserRole } = useUserRole(); // Access setUserRole from context
   const navigate = useNavigate();
   const auth = useAuth();
 
@@ -57,6 +59,8 @@ const [isSidebarToggled, setSidebarToggled] = useState(window.innerWidth <= 768)
       // Remove the token from localStorage
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      // Clear userRole in context
+      setUserRole(null); // This sets the userRole to null on logout
       // Manually trigger modal close
       const modalElement = document.getElementById("logoutModal");
       const modal = new window.bootstrap.Modal(modalElement); // For Bootstrap 5

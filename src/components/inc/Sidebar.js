@@ -1,7 +1,9 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useUserRole } from "../context/UserRoleContext";
 
 function Sidebar({ style, toggleSidebar }) {
+  const { userRole } = useUserRole();
   const location = useLocation(); // Get the current route path
 
   // Define navigation items
@@ -17,12 +19,37 @@ function Sidebar({ style, toggleSidebar }) {
         { path: '/colors', label: 'Color (6)' }
       ]
     },
-   { path: '/leads', label: 'Leads', icon: 'fas fa-list' },
-    // { path: '/orders', label: 'Orders', icon: 'fas fa-list' },
     { path: '/quotation', label: 'Quatation Builder', icon: 'fas fa-list' },
+    { path: '/leads', label: 'Leads', icon: 'fas fa-list' },
+    { path: '/orders', label: 'Orders', icon: 'fas fa-list' },
     { path: '/users', label: 'Users', icon: 'fas fa-fw fa-users' }
 
   ];
+
+  // Check if the route is accessible based on the role or condition
+  const isRouteAccessible = (item) => {
+    const restrictedPaths = ["/project", "/layout", "/measurement", "/colors", "/quotation"];
+    const restrictedRoles = ["developer", "super_admin"];
+    if (restrictedPaths.includes(item.path) && !restrictedRoles.includes(userRole)) {
+      return false; // Hide restricted paths for non-authorized roles
+    }
+    return true;
+  };
+
+// Filter navItems based on accessibility
+const filteredNavItems = navItems
+  .map((item) => {
+    if (item.subItems) {
+      // Filter subItems based on accessibility
+      const accessibleSubItems = item.subItems.filter(isRouteAccessible);
+      if (accessibleSubItems.length > 0) {
+        return { ...item, subItems: accessibleSubItems }; // Return item with accessible subItems
+      }
+      return null; // Hide main label if no subItems are accessible
+    }
+    return isRouteAccessible(item) ? item : null; // Check accessibility for single items
+  })
+  .filter(Boolean); // Remove null items
   return (
     <>
       {/*  <!-- Sidebar --> */}
@@ -56,7 +83,7 @@ function Sidebar({ style, toggleSidebar }) {
 
         {/*   <!-- Divider --> */}
         <hr className="sidebar-divider my-0" />
-          {navItems.map((item, index) => (
+          {filteredNavItems.map((item, index) => (
               item.subItems ? (
                 <li className={`nav-item ${item.subItems.some(subItem => location.pathname === subItem.path) ? 'active' : ''}`} key={index}>
                   <Link

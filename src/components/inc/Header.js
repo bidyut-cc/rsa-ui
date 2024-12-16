@@ -1,9 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useHeader } from "../context/HeaderContext"; // Import the context
+import { useUserRole } from "../context/UserRoleContext";
 
 function Header({ style, toggleSidebar }) {
   const { headerTitle } = useHeader(); // Access the shared state
+  const { userRole } = useUserRole();
   return (
     <>
       {/*  <!-- Topbar --> */}
@@ -220,10 +222,12 @@ function Header({ style, toggleSidebar }) {
                 <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                 Change Password
               </Link>
+              {(userRole === "developer" || userRole === "super_admin") && (
               <Link className="dropdown-item" to="/activity-logs">
                 <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                 Activity Log
               </Link>
+               )}
               <div className="dropdown-divider"></div>
               <Link
                 className="dropdown-item"
