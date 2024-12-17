@@ -35,12 +35,14 @@ function Lead({ title }) {
 
   const [quotationData, setQuotationData] = useState({
     id: "",
+    quotation_no:"",
     first_name: "",
     last_name: "",
     email: "",
     phone_number: "",
     submittedData: "",
     roomData: "",
+    is_converted_to_deal:"",
     materials: [], // Initialize as an empty array
     errors: [],
     loading: false,
@@ -52,6 +54,11 @@ function Lead({ title }) {
       title: "Sl No.",
       key: "index",
       render: (text, record, index) => index + 1,
+    },
+    {
+      title: "Quotation No",
+      dataIndex: "quotation_no",
+      key: "quotation_no",
     },
     {
       title: "First Name",
@@ -72,6 +79,11 @@ function Lead({ title }) {
       title: "Phone",
       dataIndex: "phone_number",
       key: "phone_number",
+    },
+    {
+      title: "Converted to deal",
+      dataIndex: "is_converted_to_deal",
+      key: "is_converted_to_deal",
     },
     {
       title: "Created Date",
@@ -140,6 +152,7 @@ function Lead({ title }) {
   const handleView = (row) => {
     setQuotationData({
       id: row._id,
+      quotation_no: row.quotation_no,
       first_name: row.first_name,
       last_name: row.last_name,
       email: row.email,
@@ -147,6 +160,7 @@ function Lead({ title }) {
       submittedData: row.submittedData,
       roomData: row.roomData,
       materials: row.materials || [], // Default to empty array
+      is_converted_to_deal:row.is_converted_to_deal,
       errors: [],
       loading: false,
     });
@@ -261,9 +275,11 @@ function Lead({ title }) {
         {/* User Details */}
      
        <Descriptions bordered column={1} size="middle">
+       <Descriptions.Item label="Quotation Number">{quotationData.quotation_no}</Descriptions.Item>
         <Descriptions.Item label="Name">{quotationData.first_name} {quotationData.last_name}</Descriptions.Item>
         <Descriptions.Item label="Email">{quotationData.email}</Descriptions.Item>
         <Descriptions.Item label="Phone Number">{quotationData.phone_number}</Descriptions.Item>
+        <Descriptions.Item label="Converted to deal">{quotationData.is_converted_to_deal}</Descriptions.Item>
         <Descriptions.Item label="Abandoned Cart Link">
         <span>
                 <Link href={`${process.env.REACT_APP_QUOTATION_PDF_LINK_URL}?id=${quotationData.id}&abandoned=1`} target="_blank">
