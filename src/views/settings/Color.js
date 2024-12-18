@@ -105,10 +105,17 @@ function Color({ title }) {
 
   return (
     <div className="container-fluid">
-        <Breadcrumb style={{ marginBottom: "16px" }}>
-          <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
-        <Breadcrumb.Item>Colors</Breadcrumb.Item>
-      </Breadcrumb>
+      <Breadcrumb
+      style={{ marginBottom: "16px" }}
+      items={[
+        {
+          title: <Link to="/">Home</Link>,
+        },
+        {
+          title: "Colors",
+        },
+      ]}
+    />
       <h1 className="h3 mb-4 text-gray-800">{title}</h1>
       <Spin spinning={data.loading}>
         <Card>

@@ -220,10 +220,17 @@ function Dashboard({ title }) {
   ];
   return (
     <div className="container-fluid">
-      <Breadcrumb style={{ marginBottom: "16px" }}>
-        <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
-        <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-      </Breadcrumb>
+      <Breadcrumb
+      style={{ marginBottom: "16px" }}
+      items={[
+        {
+          title: <Link to="/">Home</Link>,
+        },
+        {
+          title: "Dashboard",
+        },
+      ]}
+    />
       <h1 className="h3 mb-4 text-gray-800">{title}</h1>
 
       {/* <div className="row">
@@ -339,7 +346,7 @@ function Dashboard({ title }) {
                 <Table
                   dataSource={recentOrders}
                   columns={columns}
-                  rowKey="order_id"
+                  rowKey="_id"
                   pagination={false}
                 />
               </Card>
