@@ -10,12 +10,14 @@ import {
   message,
   Tooltip,
   Card,
-  Descriptions
+  Descriptions,
+  Breadcrumb
 } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 import apiService from "../../services/apiService";
 import { debounce } from "lodash";
 import moment from 'moment';
+import { Link } from "react-router-dom";
 
 function Order({ title }) {
   const [materials, setMaterials] = useState([]);
@@ -248,6 +250,10 @@ function Order({ title }) {
   
   return (
     <div className="container-fluid">
+        <Breadcrumb style={{ marginBottom: "16px" }}>
+         <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Orders</Breadcrumb.Item>
+      </Breadcrumb>
       <h1 className="h3 mb-4 text-gray-800">{title}</h1>
       <Card>
         <Row justify="end" style={{ marginBottom: 16 }}>

@@ -13,7 +13,9 @@ import {
   Card,
   Descriptions,
   Image,
+  Breadcrumb
 } from "antd";
+import { Link  } from "react-router-dom";
 import { EyeOutlined } from "@ant-design/icons";
 import apiService from "../../services/apiService";
 import { debounce } from "lodash";
@@ -204,6 +206,10 @@ const formatLogMessage = (record) => {
 
   return (
     <div className="container-fluid">
+        <Breadcrumb style={{ marginBottom: "16px" }}>
+         <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Activity Logs</Breadcrumb.Item>
+      </Breadcrumb>
       <h1 className="h3 mb-4 text-gray-800">{title}</h1>
       <Card>
         <Row justify="end" style={{ marginBottom: 16 }}>

@@ -10,7 +10,9 @@ import {
   Spin,
   message,
   Switch,
+  Breadcrumb
 } from "antd";
+import { Link } from "react-router-dom";
 import apiService from "../../services/apiService";
 
 function Layout({title}) {
@@ -147,6 +149,10 @@ function Layout({title}) {
 
   return (
     <div className="container-fluid">
+        <Breadcrumb style={{ marginBottom: "16px" }}>
+          <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Layouts</Breadcrumb.Item>
+      </Breadcrumb>
       <h1 className="h3 mb-4 text-gray-800">{title}</h1>
       <Spin spinning={data.loading}>
         <Card>

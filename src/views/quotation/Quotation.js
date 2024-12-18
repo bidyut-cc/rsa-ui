@@ -1,7 +1,8 @@
 // Full Quotation Component
-import { Tabs, Card, Row, Col, Form, Input, Button, message, Spin } from "antd";
+import { Tabs, Card, Row, Col, Form, Input, Button, message, Spin, Breadcrumb } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import apiService from "../../services/apiService";
+import { Link } from "react-router-dom";
 
 function Quotation({title}) {
   const [formIC] = Form.useForm();
@@ -374,6 +375,10 @@ function Quotation({title}) {
 
   return (
     <div className="container-fluid">
+        <Breadcrumb style={{ marginBottom: "16px" }}>
+         <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Quotations</Breadcrumb.Item>
+      </Breadcrumb>
     <h1 className="h3 mb-4 text-gray-800">{title}</h1>
    
     <Card>

@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Card, Row, Col, Popover, Button, Typography, message, Spin,Form } from "antd";
+import { Card, Row, Col, Popover, Button, Typography, message, Spin,Form, Breadcrumb } from "antd";
 import { SketchPicker } from "react-color";
 import apiService from "../../services/apiService";
+import { Link } from "react-router-dom";
 
 function Color({ title }) {
     const [form] = Form.useForm();
@@ -104,6 +105,10 @@ function Color({ title }) {
 
   return (
     <div className="container-fluid">
+        <Breadcrumb style={{ marginBottom: "16px" }}>
+          <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Colors</Breadcrumb.Item>
+      </Breadcrumb>
       <h1 className="h3 mb-4 text-gray-800">{title}</h1>
       <Spin spinning={data.loading}>
         <Card>
