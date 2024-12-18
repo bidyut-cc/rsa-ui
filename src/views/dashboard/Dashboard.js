@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Bar, Line, Pie } from "react-chartjs-2";
+import moment from 'moment';
+import { Link } from "react-router-dom";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,7 +16,7 @@ import {
   Filler, // Filler element is required for filling the area under the line
 } from "chart.js";
 
-import { message, Card, Row, Col, Spin } from "antd";
+import { Breadcrumb, message, Card, Row, Col, Spin, Table } from "antd";
 import apiService from "../../services/apiService";
 
 // Register chart components
@@ -40,6 +42,7 @@ function Dashboard({ title }) {
     labels: [],
     datasets: [],
   });
+  const [recentOrders, setRecentOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   // Bar chart options
   const barOptions = {
@@ -130,6 +133,7 @@ function Dashboard({ title }) {
             },
           ],
         });
+        setRecentOrders(response.data.data.recentOrders);
         setLoading(false);
       }
     } catch (error) {
@@ -145,8 +149,81 @@ function Dashboard({ title }) {
   useEffect(() => {
     fetchMonthlyChart();
   }, []);
+  const columns = [
+    {
+      title: "Sl No.",
+      key: "index",
+      render: (text, record, index) => index + 1,
+    },
+    {
+      title: "First Name",
+      dataIndex: "first_name",
+      key: "first_name",
+    },
+    {
+      title: "Last Name",
+      dataIndex: "last_name",
+      key: "last_name",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Phone",
+      dataIndex: "phone_number",
+      key: "phone_number",
+    },
+    {
+        title: "Order Total",
+        dataIndex: "amount",
+        key: "amount",
+        render: (amount) => `$${amount}`,
+    },
+    {
+      title: "Payment Status",
+      dataIndex: "payment_status",
+      key: "payment_status",
+      render: (status) => {
+        if (status) {
+          // Capitalize the first letter of each word
+          return status
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+        }
+        return status; // Return status as is if it's empty or null
+      },
+    },
+    {
+      title: "Order Status",
+      dataIndex: "order_status",
+      key: "order_status",
+      render: (status) => {
+        if (status) {
+          // Capitalize the first letter of each word
+          return status
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+        }
+        return status; // Return status as is if it's empty or null
+      },
+    },
+    {
+      title: "Order Date",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (date) => moment(date).format('MM-DD-YYYY HH:mm:ss'),
+  }
+  ];
   return (
     <div className="container-fluid">
+      <Breadcrumb style={{ marginBottom: "16px" }}>
+        <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
+      </Breadcrumb>
       <h1 className="h3 mb-4 text-gray-800">{title}</h1>
 
       {/* <div className="row">
@@ -253,6 +330,18 @@ function Dashboard({ title }) {
             <Col span={24}>
               <Card title="Monthly Orders - Line Chart" bordered={false}>
                 <Line data={barData} options={barOptions} />
+              </Card>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={24}>
+              <Card title="Recent Orders" bordered={false}>
+                <Table
+                  dataSource={recentOrders}
+                  columns={columns}
+                  rowKey="order_id"
+                  pagination={false}
+                />
               </Card>
             </Col>
           </Row>

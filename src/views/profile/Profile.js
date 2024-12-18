@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import apiService from "../../services/apiService";
-import { Form, Input, Button, Card, Row, Col, message, Spin } from "antd";
+import { Form, Input, Button, Card, Row, Col, message, Spin, Breadcrumb } from "antd";
+import { Link  } from "react-router-dom";
 import { useHeader } from "../../components/context/HeaderContext"; // Import the context
 
 function Profile({title}) {
@@ -103,6 +104,10 @@ function Profile({title}) {
   };
   return (
     <div className="container-fluid">
+        <Breadcrumb style={{ marginBottom: "16px" }}>
+         <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Profile</Breadcrumb.Item>
+      </Breadcrumb>
       <h1 className="h3 mb-4 text-gray-800">{title}</h1>
       <Card>
         <Row justify="center">

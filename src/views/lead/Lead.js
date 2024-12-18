@@ -15,13 +15,13 @@ import {
   Descriptions,
   Collapse,
   Image,
-  Typography
+  Breadcrumb
 } from "antd";
+import { Link  } from "react-router-dom";
 import { EyeOutlined, CopyOutlined } from "@ant-design/icons";
 import apiService from "../../services/apiService";
 import { debounce } from "lodash";
-import axios from "axios";
-const { Link } = Typography;
+
 const { Panel } = Collapse;
 
 function Lead({ title }) {
@@ -81,7 +81,7 @@ function Lead({ title }) {
       key: "phone_number",
     },
     {
-      title: "Converted to deal",
+      title: "Converted to Deal",
       dataIndex: "is_converted_to_deal",
       key: "is_converted_to_deal",
     },
@@ -95,11 +95,6 @@ function Lead({ title }) {
       title: "Action",
       render: (_, record) => (
         <Space size="middle">
-          {/* <Button type="primary" shape="circle" danger onClick={() => handleGeneratePDF(record)}>
-            <Tooltip title="View PDF">
-              <FilePdfOutlined />
-            </Tooltip>
-          </Button> */}
           <Button
             type="primary"
             shape="circle"
@@ -167,47 +162,7 @@ function Lead({ title }) {
     setIsModalOpen(true);
   };
 
-  const handleGeneratePDF = async (leadData) => {
-  try {
-    setDataSource((prev) => ({ ...prev, loading: true }));
-    const response = await axios.post(
-      `${process.env.REACT_APP_API_URL}quotations/generateQuotationPDF`, 
-      leadData, // Directly passing the data object, no need to wrap in another object
-      {
-        headers: {
-          token: `${localStorage.getItem('token')}`, // Pass the token as a Bearer token
-        }
-      }
-    );
-    if (response.status === 200) {
-      const htmlContent = response.data.htmlContent; // Assuming response contains HTML content
 
-      // Create an iframe (hidden) to load the HTML content and print
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none'; // Hide the iframe
-      document.body.appendChild(iframe);
-  
-      // Get the iframe document and write the HTML content into it
-      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-      iframeDoc.open();
-      iframeDoc.write(htmlContent); // Write the HTML content
-      iframeDoc.close();
-  
-      // Wait for iframe content to load and trigger the print
-      iframe.onload = () => {
-        iframe.contentWindow.focus(); // Focus on the iframe window
-        iframe.contentWindow.print(); // Trigger print dialog
-        setDataSource((prev) => ({ ...prev, loading: false }));
-      };
-    }
-
-
-  } catch (error) {
-    setDataSource((prev) => ({ ...prev, loading: false }));
-    message.error(error.response.data.message);
-  }
-    
-  };
 
   const handleCancel = () => {
     setQuotationData({
@@ -238,6 +193,10 @@ function Lead({ title }) {
 
   return (
     <div className="container-fluid">
+       <Breadcrumb style={{ marginBottom: "16px" }}>
+         <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Leads</Breadcrumb.Item>
+      </Breadcrumb>
       <h1 className="h3 mb-4 text-gray-800">{title}</h1>
       <Card>
         <Row justify="end" style={{ marginBottom: 16 }}>
@@ -279,7 +238,7 @@ function Lead({ title }) {
         <Descriptions.Item label="Name">{quotationData.first_name} {quotationData.last_name}</Descriptions.Item>
         <Descriptions.Item label="Email">{quotationData.email}</Descriptions.Item>
         <Descriptions.Item label="Phone Number">{quotationData.phone_number}</Descriptions.Item>
-        <Descriptions.Item label="Converted to deal">{quotationData.is_converted_to_deal}</Descriptions.Item>
+        <Descriptions.Item label="Converted to Deal">{quotationData.is_converted_to_deal}</Descriptions.Item>
         <Descriptions.Item label="Abandoned Cart Link">
         <span>
                 <Link href={`${process.env.REACT_APP_QUOTATION_PDF_LINK_URL}?id=${quotationData.id}&abandoned=1`} target="_blank">

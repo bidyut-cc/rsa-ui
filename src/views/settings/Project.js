@@ -9,7 +9,9 @@ import {
   Select,
   Spin,
   Switch,
+  Breadcrumb
 } from "antd";
+import { Link } from "react-router-dom";
 import apiService from "../../services/apiService";
 const { Option } = Select;
 function Project({title}) {
@@ -128,6 +130,10 @@ function Project({title}) {
   };
   return (
     <div className="container-fluid">
+        <Breadcrumb style={{ marginBottom: "16px" }}>
+         <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+        <Breadcrumb.Item>Projects</Breadcrumb.Item>
+      </Breadcrumb>
       <h1 className="h3 mb-4 text-gray-800">{title}</h1>
       <Card>
         <Row justify="center">
