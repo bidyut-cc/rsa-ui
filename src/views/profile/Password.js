@@ -72,10 +72,17 @@ function Password({title}) {
 
   return (
     <div className="container-fluid">
-        <Breadcrumb style={{ marginBottom: "16px" }}>
-         <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
-        <Breadcrumb.Item>Change Password</Breadcrumb.Item>
-      </Breadcrumb>
+      <Breadcrumb
+      style={{ marginBottom: "16px" }}
+      items={[
+        {
+          title: <Link to="/">Home</Link>,
+        },
+        {
+          title: "Change Password",
+        },
+      ]}
+    />
       <h1 className="h3 mb-4 text-gray-800">{title}</h1>
       <Card>
         <Row justify="center">
