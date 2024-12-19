@@ -130,7 +130,7 @@ function Order({ title }) {
       title: "Order Date",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (date) => moment(date).format('MM-DD-YYYY HH:mm:ss'),
+      render: (date) => moment(date).format('MM-DD-YYYY hh:mm:ss A'),
   },
     {
       title: "Action",
@@ -335,9 +335,9 @@ function Order({ title }) {
         {/* <Descriptions.Item label="Cart ID">{orderData.cart_id}</Descriptions.Item>
         <Descriptions.Item label="Quotation ID">{orderData.quotation_id}</Descriptions.Item> */}
         <Descriptions.Item label="Payment Status">{capitalizeWords(orderData.payment_status)}</Descriptions.Item>
-        <Descriptions.Item label="Payment Date">{moment(orderData.paymentDate).format('MM-DD-YYYY HH:mm:ss')}</Descriptions.Item>
+        <Descriptions.Item label="Payment Date">{moment(orderData.paymentDate).format('MM-DD-YYYY hh:mm:ss A')}</Descriptions.Item>
         <Descriptions.Item label="Order Status">{capitalizeWords(orderData.order_status)}</Descriptions.Item>
-        <Descriptions.Item label="Order Date">{moment(orderData.createdAt).format('MM-DD-YYYY HH:mm:ss')}</Descriptions.Item>
+        <Descriptions.Item label="Order Date">{moment(orderData.createdAt).format('MM-DD-YYYY hh:mm:ss A')}</Descriptions.Item>
         <Descriptions.Item label="Billing Details">
         <div>
           <p><b>Name:</b> 

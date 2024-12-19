@@ -42,6 +42,10 @@ function Dashboard({ title }) {
     labels: [],
     datasets: [],
   });
+  const [lineData, setLineData] = useState({
+    labels: [],
+    datasets: [],
+  });
   const [recentOrders, setRecentOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   // Bar chart options
@@ -50,6 +54,7 @@ function Dashboard({ title }) {
     plugins: {
       legend: {
         position: "top",
+        onClick: null, // Disable click interactions
       },
       title: {
         display: false,
@@ -80,6 +85,7 @@ function Dashboard({ title }) {
     plugins: {
       legend: {
         position: "top",
+        onClick: null, // Disable click interactions
       },
       title: {
         display: false,
@@ -87,6 +93,21 @@ function Dashboard({ title }) {
       },
     },
   };
+    // Line chart options
+    const lineOptions = {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "top",
+          onClick: null, // Disable click interactions
+        },
+        title: {
+          display: false,
+          text: "Monthly Leads",
+        },
+      },
+     
+    };
   const fetchMonthlyChart = async () => {
     setLoading(true);
     try {
@@ -108,9 +129,19 @@ function Dashboard({ title }) {
           orderRatioData.totalCompleteOrders,
         ];
         const pieLabels = ["Total Quotations", "Completed Orders"];
+          // Data for Line Chart
+          const lineLabels = response.data.data.monthlyOrders.map((item) =>
+          new Date(item.year, item.month - 1).toLocaleString("default", {
+            month: "long",
+          })
+        );
+        const lineDatasetValues = response.data.data.monthlyLeads.map(
+          (item) => item.count
+        );
+       
         // Update chart data
         setBarData({
-          labels,
+          labels: labels,
           datasets: [
             {
               label: "Total Amount",
@@ -133,12 +164,26 @@ function Dashboard({ title }) {
             },
           ],
         });
+          // Update Line data
+          setLineData({
+            labels: lineLabels,
+            datasets: [
+              {
+                label: "Total Leads",
+                data: lineDatasetValues,
+                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                borderColor: "rgba(75, 192, 192, 1)",
+                borderWidth: 1,
+              },
+            ],
+          });
         setRecentOrders(response.data.data.recentOrders);
         setLoading(false);
       }
     } catch (error) {
       setBarData({});
       setPieData({});
+      setLineData({});
       setLoading(false);
       message.error(
         error.response?.statusText || "Error fetching monthly orders"
@@ -215,11 +260,7 @@ function Dashboard({ title }) {
       title: "Order Date",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (date) => (
-        <span style={{ whiteSpace: "nowrap" }}>
-          {moment(date).format("MM-DD-YYYY")}
-        </span>
-      ),
+      render: (date) => moment(date).format('MM-DD-YYYY hh:mm:ss A'),
   }
   ];
   return (
@@ -336,13 +377,13 @@ function Dashboard({ title }) {
               </Card>
             </Col>
           </Row>
-          {/* <Row gutter={16}>
+          <Row gutter={16}>
             <Col span={24}>
-              <Card title="Monthly Orders - Line Chart" bordered={false}>
-                <Line data={barData} options={barOptions} />
+              <Card title="Monthly Leads" bordered={false}>
+                <Line data={lineData} options={lineOptions} />
               </Card>
             </Col>
-          </Row> */}
+          </Row>
           <Row gutter={16}>
             <Col span={24}>
               <Card title="Recent Orders" bordered={false}>

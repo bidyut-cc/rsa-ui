@@ -90,7 +90,7 @@ function Lead({ title }) {
       title: "Created Date",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (text) => (text ? moment(text).format("YYYY-MM-DD HH:mm:ss") : "-"),
+      render: (date) => moment(date).format('MM-DD-YYYY hh:mm:ss A'),
     },
     {
       title: "Action",
@@ -248,7 +248,7 @@ function Lead({ title }) {
         <Descriptions.Item label="Email">{quotationData.email}</Descriptions.Item>
         <Descriptions.Item label="Phone Number">{quotationData.phone_number}</Descriptions.Item>
         <Descriptions.Item label="Converted to Deal">{quotationData.is_converted_to_deal}</Descriptions.Item>
-        <Descriptions.Item label="Created Date">{moment(quotationData.createdAt).format('MM-DD-YYYY HH:mm:ss')}</Descriptions.Item>
+        <Descriptions.Item label="Created Date">{moment(quotationData.createdAt).format('MM-DD-YYYY hh:mm:ss A')}</Descriptions.Item>
         <Descriptions.Item label="Abandoned Cart Link">
         <span>
                 <Link href={`${process.env.REACT_APP_QUOTATION_PDF_LINK_URL}?id=${quotationData.id}&abandoned=1`} target="_blank">
