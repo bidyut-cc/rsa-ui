@@ -43,6 +43,7 @@ function Lead({ title }) {
     submittedData: "",
     roomData: "",
     is_converted_to_deal:"",
+    createdAt:"",
     materials: [], // Initialize as an empty array
     errors: [],
     loading: false,
@@ -156,6 +157,7 @@ function Lead({ title }) {
       roomData: row.roomData,
       materials: row.materials || [], // Default to empty array
       is_converted_to_deal:row.is_converted_to_deal,
+      createdAt:row.createdAt,
       errors: [],
       loading: false,
     });
@@ -246,6 +248,7 @@ function Lead({ title }) {
         <Descriptions.Item label="Email">{quotationData.email}</Descriptions.Item>
         <Descriptions.Item label="Phone Number">{quotationData.phone_number}</Descriptions.Item>
         <Descriptions.Item label="Converted to Deal">{quotationData.is_converted_to_deal}</Descriptions.Item>
+        <Descriptions.Item label="Created Date">{moment(quotationData.createdAt).format('MM-DD-YYYY HH:mm:ss')}</Descriptions.Item>
         <Descriptions.Item label="Abandoned Cart Link">
         <span>
                 <Link href={`${process.env.REACT_APP_QUOTATION_PDF_LINK_URL}?id=${quotationData.id}&abandoned=1`} target="_blank">

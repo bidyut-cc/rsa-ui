@@ -107,7 +107,7 @@ function Dashboard({ title }) {
           orderRatioData.totalOrders,
           orderRatioData.totalCompleteOrders,
         ];
-        const pieLabels = ["Total Orders", "Complete Orders"];
+        const pieLabels = ["Total Quotations", "Completed Orders"];
         // Update chart data
         setBarData({
           labels,
@@ -215,7 +215,11 @@ function Dashboard({ title }) {
       title: "Order Date",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (date) => moment(date).format('MM-DD-YYYY HH:mm:ss'),
+      render: (date) => (
+        <span style={{ whiteSpace: "nowrap" }}>
+          {moment(date).format("MM-DD-YYYY")}
+        </span>
+      ),
   }
   ];
   return (
@@ -327,19 +331,18 @@ function Dashboard({ title }) {
               </Card>
             </Col>
             <Col span={8}>
-              <Card title="Order Ratio" bordered={false}>
-                {/* Your other content goes here */}
+              <Card title="Orders Ratio" bordered={false}>
                 <Pie data={pieData} options={pieOptions} />
               </Card>
             </Col>
           </Row>
-          <Row gutter={16}>
+          {/* <Row gutter={16}>
             <Col span={24}>
               <Card title="Monthly Orders - Line Chart" bordered={false}>
                 <Line data={barData} options={barOptions} />
               </Card>
             </Col>
-          </Row>
+          </Row> */}
           <Row gutter={16}>
             <Col span={24}>
               <Card title="Recent Orders" bordered={false}>

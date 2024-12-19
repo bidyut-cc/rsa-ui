@@ -331,21 +331,26 @@ function Order({ title }) {
         </div>
       </Descriptions.Item>
         <Descriptions.Item label="Amount">${orderData.amount}</Descriptions.Item>
-        <Descriptions.Item label="Order ID">{orderData.order_id}</Descriptions.Item>
+        <Descriptions.Item label="Order ID">{orderData.order_id || "N/A"}</Descriptions.Item>
         {/* <Descriptions.Item label="Cart ID">{orderData.cart_id}</Descriptions.Item>
         <Descriptions.Item label="Quotation ID">{orderData.quotation_id}</Descriptions.Item> */}
         <Descriptions.Item label="Payment Status">{capitalizeWords(orderData.payment_status)}</Descriptions.Item>
-        <Descriptions.Item label="Payment Status">{capitalizeWords(orderData.order_status)}</Descriptions.Item>
         <Descriptions.Item label="Payment Date">{moment(orderData.paymentDate).format('MM-DD-YYYY HH:mm:ss')}</Descriptions.Item>
+        <Descriptions.Item label="Order Status">{capitalizeWords(orderData.order_status)}</Descriptions.Item>
+        <Descriptions.Item label="Order Date">{moment(orderData.createdAt).format('MM-DD-YYYY HH:mm:ss')}</Descriptions.Item>
         <Descriptions.Item label="Billing Details">
         <div>
-          <p><b>Name:</b> {orderData.billing_address?.first_name} {orderData.billing_address?.last_name}</p>
+          <p><b>Name:</b> 
+            {orderData.billing_address?.first_name || orderData.billing_address?.last_name 
+              ? `${orderData.billing_address?.first_name || ''} ${orderData.billing_address?.last_name || ''}` 
+              : 'N/A'}
+          </p>
           <p><b>Company:</b> {orderData.billing_address?.company || "N/A"}</p>
-          <p><b>Street:</b> {orderData.billing_address?.street_1}</p>
-          <p><b>City:</b> {orderData.billing_address?.city}</p>
-          <p><b>State:</b> {orderData.billing_address?.state}</p>
-          <p><b>Zip:</b> {orderData.billing_address?.zip}</p>
-          <p><b>Country:</b> {orderData.billing_address?.country}</p>
+          <p><b>Street:</b> {orderData.billing_address?.street_1 || "N/A"}</p>
+          <p><b>City:</b> {orderData.billing_address?.city || "N/A"}</p>
+          <p><b>State:</b> {orderData.billing_address?.state || "N/A"}</p>
+          <p><b>Zip:</b> {orderData.billing_address?.zip || "N/A"}</p>
+          <p><b>Country:</b> {orderData.billing_address?.country || "N/A"}</p>
         </div>
       </Descriptions.Item>
       </Descriptions>
