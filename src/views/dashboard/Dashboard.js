@@ -387,18 +387,27 @@ function Dashboard({ title }) {
           <Row gutter={16}>
             <Col span={24}>
               <Card title="Recent Orders" bordered={false}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+                <Link to="/orders" style={{
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                  padding: '10px 20px',
+                  backgroundColor: '#007bff',
+                  color: '#fff',
+                  borderRadius: '5px',
+                  textDecoration: 'none',
+                  display: 'inline-block',
+                  textAlign: 'center',
+                }}>
+                  View All Orders
+                </Link>
+            </div>
                 <Table
                   dataSource={recentOrders}
                   columns={columns}
                   rowKey="_id"
                   pagination={false}
                 />
-                  {/* Link Below the Table */}
-  <div style={{ marginTop: "16px", textAlign: "center" }}>
-    <Link to="/orders" style={{ fontSize: "16px", color: "#1890ff" }}>
-      View All Orders
-    </Link>
-  </div>
               </Card>
             </Col>
           </Row>
