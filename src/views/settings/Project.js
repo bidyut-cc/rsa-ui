@@ -134,7 +134,7 @@ function Project({title}) {
       style={{ marginBottom: "16px" }}
       items={[
         {
-          title: <Link to="/">Home</Link>,
+          title: <Link to="/dashboard">Home</Link>,
         },
         {
           title: "Projects",

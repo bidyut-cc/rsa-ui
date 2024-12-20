@@ -269,7 +269,7 @@ function Dashboard({ title }) {
       style={{ marginBottom: "16px" }}
       items={[
         {
-          title: <Link to="/">Home</Link>,
+          title: <Link to="/dashboard">Home</Link>,
         },
         {
           title: "Dashboard",
@@ -393,6 +393,12 @@ function Dashboard({ title }) {
                   rowKey="_id"
                   pagination={false}
                 />
+                  {/* Link Below the Table */}
+  <div style={{ marginTop: "16px", textAlign: "center" }}>
+    <Link to="/orders" style={{ fontSize: "16px", color: "#1890ff" }}>
+      View All Orders
+    </Link>
+  </div>
               </Card>
             </Col>
           </Row>

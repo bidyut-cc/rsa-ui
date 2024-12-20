@@ -365,7 +365,7 @@ if (userRole === "developer" || userRole === "super_admin") {
       style={{ marginBottom: "16px" }}
       items={[
         {
-          title: <Link to="/">Home</Link>,
+          title: <Link to="/dashboard">Home</Link>,
         },
         {
           title: "Users",
