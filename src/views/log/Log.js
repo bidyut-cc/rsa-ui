@@ -100,7 +100,7 @@ function Log({ title }) {
       title: "Created Date",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (text) => (text ? moment(text).format("YYYY-MM-DD HH:mm:ss") : "-"),
+      render: (date) => moment(date).format('MM-DD-YYYY hh:mm:ss A'),
     },
     {
       title: "Action",
