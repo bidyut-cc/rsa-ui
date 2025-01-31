@@ -18,6 +18,7 @@ import Lead from "./views/lead/Lead";
 import Order from "./views/order/Order";
 import Log from "./views/log/Log";
 import Color from "./views/settings/Color";
+import Quote from "./views/quote/Quote";
 
 function App() {
 
@@ -99,6 +100,14 @@ function App() {
             element={
               <RoleBasedRoute roles={['developer', 'super_admin']}>
                 <Log title="Activity Logs" />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="material-installation-quote"
+            element={
+              <RoleBasedRoute roles={['developer', 'super_admin']}>
+                <Quote title="Material Installation Quote" />
               </RoleBasedRoute>
             }
           />
