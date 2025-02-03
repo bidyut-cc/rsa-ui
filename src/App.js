@@ -19,6 +19,7 @@ import Order from "./views/order/Order";
 import Log from "./views/log/Log";
 import Color from "./views/settings/Color";
 import Quote from "./views/quote/Quote";
+import Material from "./views/settings/Material";
 
 function App() {
 
@@ -83,7 +84,7 @@ function App() {
             path="colors"
             element={
               <RoleBasedRoute roles={['developer', 'super_admin']}>
-                <Color title="Color Setting" />
+                <Color title="Color & Textures Setting" />
               </RoleBasedRoute>
             }
           />
@@ -108,6 +109,14 @@ function App() {
             element={
               <RoleBasedRoute roles={['developer', 'super_admin']}>
                 <Quote title="Material Installation Quote" />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="materials"
+            element={
+              <RoleBasedRoute roles={['developer', 'super_admin']}>
+                <Material title="Materials" />
               </RoleBasedRoute>
             }
           />

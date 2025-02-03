@@ -16,7 +16,15 @@ function Sidebar({ style, toggleSidebar }) {
         { path: '/project', label: 'Project (1)' },
         { path: '/layout', label: 'Layout (2)' },
         { path: '/measurement', label: 'Measurement (3)' },
-        { path: '/colors', label: 'Color (6)' }
+      //  { path: '/colors', label: 'Color (6)' }
+      ]
+    },
+    { 
+      label: 'Material Setup', 
+      icon: 'fas fa-fw fa-cogs', 
+      subItems: [
+        { path: '/materials', label: 'Material Descriptions' },
+        { path: '/colors', label: 'Color & Textures' }
       ]
     },
     { path: '/quotation', label: 'Quotation Builder', icon: 'fas fa-dollar-sign' },
@@ -91,17 +99,17 @@ const filteredNavItems = navItems
                     className={`nav-link collapsed ${item.subItems.some(subItem => location.pathname === subItem.path) ? 'active' : ''}`}
                     href="#"
                     data-toggle="collapse"
-                    data-target={`#collapse${item.label}`}
+                    data-target={`#collapse${item.label.replace(/\s+/g, '')}`} 
                     aria-expanded={item.subItems.some(subItem => location.pathname === subItem.path)}
-                    aria-controls={`collapse${item.label}`}
+                    aria-controls={`collapse${item.label.replace(/\s+/g, '')}`}
                   >
                     <i className={item.icon}></i>
                     <span>{item.label}</span>
                   </Link>
                   <div
-                    id={`collapse${item.label}`}
+                   id={`collapse${item.label.replace(/\s+/g, '')}`} // Match the ID
                     className={`collapse ${item.subItems.some(subItem => location.pathname === subItem.path) ? 'show' : ''}`}
-                    aria-labelledby={`heading${item.label}`}
+                    aria-labelledby={`heading${item.label.replace(/\s+/g, '')}`}
                     data-parent="#accordionSidebar"
                   >
                     <div className="bg-white py-2 collapse-inner rounded">
