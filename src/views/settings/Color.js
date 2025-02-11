@@ -33,6 +33,10 @@ function Color({ title }) {
 
   // Fetch materials
   const fetchMaterials = async () => {
+    setData((prevState) => ({
+      ...prevState,
+      loading: true
+    }));
     try {
       const response = await apiService.get(
         `masterSettings/materialView/?key=materials`
@@ -48,6 +52,10 @@ function Color({ title }) {
         }
       }
     } catch (error) {
+      setData((prevState) => ({
+        ...prevState,
+        loading: false
+      }));
       console.log(error);
       setMaterials([]);
       message.error(error.response?.statusText || "Error fetching materials");

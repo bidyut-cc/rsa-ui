@@ -85,7 +85,20 @@ function Log({ title }) {
             return <span>{record.user.username} has <strong>{record.message}</strong></span>;
           }
          
-        } else {
+        } else if(record.modelName === "Color"){
+          return (
+            <span>
+              {record.user.username} has <strong>{record.event}</strong> the <strong>{record.modelName} and Textures</strong>{" "}
+              settings.
+            </span>
+          );
+        }else if(record.modelName === "MasterSetting"){
+          return (
+            <span>
+              {record.user.username} has <strong>{record.event}</strong> the <strong>Material Descriptions.</strong>{" "}
+            </span>
+          );
+        }else {
           return <span>{record.user.username} <strong>{record.message}</strong></span>;
         }
       },
@@ -144,7 +157,11 @@ const formatLogMessage = (record) => {
     } else {
       return `${record.user.username} has ${record.message}`;
     }
-  } else {
+  } else if(record.modelName === "Color"){
+    return `${record.user.username} has ${record.event} the ${record.modelName} and Textures settings.` ;
+  }else if(record.modelName === "MasterSetting"){
+    return `${record.user.username} has ${record.event} the Material Descriptions.` ;
+  }else {
     return `${record.user.username} ${record.message}`;
   }
 };
@@ -804,6 +821,146 @@ const formatLogMessage = (record) => {
 
   </>
 )}
+
+{logData?.log?.modelName === "Color" && (
+  <>
+
+{logData?.log?.previousData && (
+  <>
+    {/* Previous Data Section */}
+    <Descriptions
+      title="Previous Data"
+      bordered
+      column={1}
+      size="small"
+      style={{ marginTop: "20px" }}
+    >
+    
+
+      <Descriptions.Item label="Colors">
+        {logData?.log?.previousData?.colors?.length > 0 ? (
+          logData?.log?.previousData?.colors.map((color, index) => (
+            <div key={index} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <span style={{ backgroundColor: color.color, width: "20px", height: "20px", display: "inline-block", border: "1px solid #000" }}></span>
+              <span>{color.name}</span>
+            </div>
+          ))
+        ) : (
+          "Not Available"
+        )}
+      </Descriptions.Item>
+
+      <Descriptions.Item label="Textures">
+  {logData?.log?.previousData?.textures?.length > 0 ? (
+    logData?.log?.previousData?.textures.map((texture, index) => (
+      <div key={index}>
+        {texture.images?.map((img, imgIndex) => (
+          <div key={imgIndex} style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "5px" }}>
+            <img
+              src={`${process.env.REACT_APP_API_URL}uploads/textures/${img.filename}`} // Adjust the path accordingly
+              alt={texture.name}
+              style={{ width: "50px", height: "50px", objectFit: "cover", border: "1px solid #000" }}
+            />
+            <span>{`${texture.name}`}</span>
+          </div>
+        ))}
+      </div>
+    ))
+  ) : (
+    "Not Available"
+  )}
+</Descriptions.Item>
+
+    </Descriptions>
+
+    {/* Current Data Section */}
+    <Descriptions
+      title="Current Data"
+      bordered
+      column={1}
+      size="small"
+      style={{ marginTop: "20px" }}
+    >
+      <Descriptions.Item label="Colors">
+        {logData?.log?.currentData?.colors?.length > 0 ? (
+          logData?.log?.currentData?.colors.map((color, index) => (
+            <div key={index} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <span style={{ backgroundColor: color.color, width: "20px", height: "20px", display: "inline-block", border: "1px solid #000" }}></span>
+              <span>{color.name}</span>
+            </div>
+          ))
+        ) : (
+          "Not Available"
+        )}
+      </Descriptions.Item>
+
+      <Descriptions.Item label="Textures">
+  {logData?.log?.currentData?.textures?.length > 0 ? (
+    logData?.log?.currentData?.textures.map((texture, index) => (
+      <div key={index}>
+        {texture.images?.map((img, imgIndex) => (
+          <div key={imgIndex} style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "5px" }}>
+            <img
+              src={`${process.env.REACT_APP_API_URL}uploads/textures/${img.filename}`} // Adjust the path accordingly
+              alt={texture.name}
+              style={{ width: "50px", height: "50px", objectFit: "cover", border: "1px solid #000" }}
+            />
+            <span>{`${texture.name}`}</span>
+          </div>
+        ))}
+      </div>
+    ))
+  ) : (
+    "Not Available"
+  )}
+</Descriptions.Item>
+    </Descriptions>
+  </>
+)}
+
+
+  </>
+)}
+{logData?.log?.modelName === "MasterSetting" && (
+  <>
+    {/* Previous Data Section */}
+    {logData?.log?.previousData && (
+      <Descriptions title="Previous Data" bordered column={1} size="small" style={{ marginTop: "20px" }}>
+        <Descriptions.Item label="Materials">
+          {logData?.log?.previousData?.value?.length > 0 ? (
+            logData?.log?.previousData?.value.map((material, index) => (
+              <div key={index} style={{ marginBottom: "10px" }}>
+                <div><strong>Name:</strong> {material.name}</div>
+                <div><strong>Description:</strong> {material.description}</div>
+              </div>
+            ))
+          ) : (
+            "Not Available"
+          )}
+        </Descriptions.Item>
+      </Descriptions>
+    )}
+
+    {/* Current Data Section */}
+    {logData?.log?.currentData && (
+      <Descriptions title="Current Data" bordered column={1} size="small" style={{ marginTop: "20px" }}>
+        <Descriptions.Item label="Materials">
+          {logData?.log?.currentData?.value?.length > 0 ? (
+            logData?.log?.currentData?.value.map((material, index) => (
+              <div key={index} style={{ marginBottom: "10px" }}>
+              <div><strong>Name:</strong> {material.name}</div>
+              <div><strong>Description:</strong> {material.description}</div>
+            </div>
+            ))
+          ) : (
+            "Not Available"
+          )}
+        </Descriptions.Item>
+      </Descriptions>
+    )}
+  </>
+)}
+
 
 
  

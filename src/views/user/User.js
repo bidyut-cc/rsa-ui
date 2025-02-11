@@ -81,6 +81,18 @@ function User({title}) {
       title: "Phone",
       dataIndex: "phone",
       key: "phone",
+      render: (phone) => {
+        if (!phone) return "N/A"; // Handle empty or null values
+        const cleaned = ("" + phone).replace(/\D/g, ""); // Remove non-numeric characters
+        if (cleaned.length === 10) {
+          return (
+            <span style={{ whiteSpace: "nowrap" }}>
+              {cleaned.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3")}
+            </span>
+          );
+        }
+        return <span style={{ whiteSpace: "nowrap" }}>{phone}</span>;
+      },
     },
   ];
 
