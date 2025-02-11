@@ -89,7 +89,21 @@ function Order({ title }) {
       title: "Phone",
       dataIndex: "phone_number",
       key: "phone_number",
+      render: (phone) => {
+        if (!phone) return "N/A"; // Handle empty or null values
+        const cleaned = ("" + phone).replace(/\D/g, ""); // Remove non-numeric characters
+        if (cleaned.length === 10) {
+          return (
+            <span style={{ whiteSpace: "nowrap" }}>
+              {cleaned.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3")}
+            </span>
+          );
+        }
+        return <span style={{ whiteSpace: "nowrap" }}>{phone}</span>;
+      },
     },
+    
+    
     {
         title: "Order Total",
         dataIndex: "amount",
@@ -197,7 +211,7 @@ function Order({ title }) {
       last_name: row.last_name,
       email: row.email,
       phone_number: row.phone_number,
-      color: row?.colors[0]?.color,
+      color: row?.colors,
       amount: row.amount,
       order_id: row.order_id,
       cart_id: row.cart_id,
@@ -246,6 +260,19 @@ function Order({ title }) {
       .split(' ')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
+  };
+  const formatPhoneNumber = (phone) => {
+    if (!phone) return "N/A";
+  
+    // Remove non-numeric characters
+    const cleaned = ("" + phone).replace(/\D/g, "");
+  
+    // Format as (123) 456-7890
+    if (cleaned.length === 10) {
+      return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
+    }
+  
+    return phone; // Return original if format is unknown
   };
   
   return (
@@ -298,24 +325,7 @@ function Order({ title }) {
       <Descriptions bordered column={1} size="middle">
         <Descriptions.Item label="Name">{orderData.first_name} {orderData.last_name}</Descriptions.Item>
         <Descriptions.Item label="Email">{orderData.email}</Descriptions.Item>
-        <Descriptions.Item label="Phone Number">{orderData.phone_number}</Descriptions.Item>
-        <Descriptions.Item label="Color">
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            {orderData.color ? (
-              <div
-                style={{
-                  width: "20px",
-                  height: "20px",
-                  backgroundColor: orderData.color,
-                  border: "1px solid #000",
-                  borderRadius: "4px",
-                }}
-              ></div>
-            ) : (
-              <span>N/A</span> // Fallback if color is not available
-            )}
-          </div>
-        </Descriptions.Item>
+        <Descriptions.Item label="Phone Number"> {formatPhoneNumber(orderData.phone_number)}</Descriptions.Item>
         <Descriptions.Item label="Material">
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           {orderData.materialImage ? (
@@ -330,6 +340,22 @@ function Order({ title }) {
           <span>{orderData.materialName}</span>
         </div>
       </Descriptions.Item>
+      {orderData.material_id !== 4 && (
+  <Descriptions.Item 
+    label={
+      orderData.color && orderData.color.type
+        ? orderData.color.type.charAt(0).toUpperCase() + orderData.color.type.slice(1)
+        : "Color"
+    }
+  >
+    {
+      orderData.color && Array.isArray(orderData.color.data) && orderData.color.data.length > 0
+        ? orderData.color.data[0].name
+        : "N/A"
+    }
+  </Descriptions.Item>
+)}
+
         <Descriptions.Item label="Amount">${orderData.amount}</Descriptions.Item>
         <Descriptions.Item label="Order ID">{orderData.order_id || "N/A"}</Descriptions.Item>
         {/* <Descriptions.Item label="Cart ID">{orderData.cart_id}</Descriptions.Item>

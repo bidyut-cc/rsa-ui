@@ -80,7 +80,20 @@ function Lead({ title }) {
       title: "Phone",
       dataIndex: "phone_number",
       key: "phone_number",
+      render: (phone) => {
+        if (!phone) return "N/A"; // Handle empty or null values
+        const cleaned = ("" + phone).replace(/\D/g, ""); // Remove non-numeric characters
+        if (cleaned.length === 10) {
+          return (
+            <span style={{ whiteSpace: "nowrap" }}>
+              {cleaned.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3")}
+            </span>
+          );
+        }
+        return <span style={{ whiteSpace: "nowrap" }}>{phone}</span>;
+      },
     },
+    
     {
       title: "Converted to Deal",
       dataIndex: "is_converted_to_deal",
@@ -192,7 +205,19 @@ function Lead({ title }) {
         console.error('Copy error:', err);
       });
   };
-
+  const formatPhoneNumber = (phone) => {
+    if (!phone) return "N/A";
+  
+    // Remove non-numeric characters
+    const cleaned = ("" + phone).replace(/\D/g, "");
+  
+    // Format as (123) 456-7890
+    if (cleaned.length === 10) {
+      return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
+    }
+  
+    return phone; // Return original if format is unknown
+  };
   return (
     <div className="container-fluid">
       <Breadcrumb
@@ -246,12 +271,12 @@ function Lead({ title }) {
        <Descriptions.Item label="Quotation Number">{quotationData.quotation_no}</Descriptions.Item>
         <Descriptions.Item label="Name">{quotationData.first_name} {quotationData.last_name}</Descriptions.Item>
         <Descriptions.Item label="Email">{quotationData.email}</Descriptions.Item>
-        <Descriptions.Item label="Phone Number">{quotationData.phone_number}</Descriptions.Item>
+        <Descriptions.Item label="Phone Number">{formatPhoneNumber(quotationData.phone_number)}</Descriptions.Item>
         <Descriptions.Item label="Converted to Deal">{quotationData.is_converted_to_deal}</Descriptions.Item>
         <Descriptions.Item label="Created Date">{moment(quotationData.createdAt).format('MM-DD-YYYY hh:mm:ss A')}</Descriptions.Item>
         <Descriptions.Item label="Abandoned Cart Link">
         <span>
-                <Link href={`${process.env.REACT_APP_QUOTATION_PDF_LINK_URL}?id=${quotationData.id}&abandoned=1`} target="_blank">
+                <Link to={`${process.env.REACT_APP_QUOTATION_PDF_LINK_URL}?id=${quotationData.id}&abandoned=1`} target="_blank">
                 Click to copy abandoned cart link
                 </Link>
                 <Button
@@ -285,14 +310,14 @@ function Lead({ title }) {
               </Descriptions.Item>
               <Descriptions.Item label="Checkout URL">
               <span>
-                <Link href={`${process.env.REACT_APP_QUOTATION_PAYMENT_URL}?id=${quotationData.id}&material_id=${material.id}&color=3d58a4`} target="_blank">
+                <Link to={`${process.env.REACT_APP_QUOTATION_PAYMENT_URL}?id=${quotationData.id}&material_id=${material.id}`} target="_blank">
                 Click to copy payment link
                 </Link>
                 <Button
                   type="link"
                   icon={<CopyOutlined />}
                   style={{ marginLeft: '10px' }}
-                  onClick={() => handleCopy(`${process.env.REACT_APP_QUOTATION_PAYMENT_URL}?id=${quotationData.id}&material_id=${material.id}&color=3d58a4`)}
+                  onClick={() => handleCopy(`${process.env.REACT_APP_QUOTATION_PAYMENT_URL}?id=${quotationData.id}&material_id=${material.id}`)}
                 />
               </span>
               </Descriptions.Item>

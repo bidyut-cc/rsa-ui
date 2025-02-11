@@ -37,7 +37,7 @@ function Sidebar({ style, toggleSidebar }) {
 
   // Check if the route is accessible based on the role or condition
   const isRouteAccessible = (item) => {
-    const restrictedPaths = ["/project", "/layout", "/measurement", "/colors", "/quotation"];
+    const restrictedPaths = ["/project", "/layout", "/measurement", "/colors", "/quotation","/material-installation-quote","/materials"];
     const restrictedRoles = ["developer", "super_admin"];
     if (restrictedPaths.includes(item.path) && !restrictedRoles.includes(userRole)) {
       return false; // Hide restricted paths for non-authorized roles
