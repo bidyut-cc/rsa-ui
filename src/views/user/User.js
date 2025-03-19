@@ -147,7 +147,7 @@ if (userRole === "developer" || userRole === "super_admin") {
         }));
       }
     } catch (error) {
-      message.error(error.response.statusText);
+      message.error(error?.response?.statusText);
       setDataSource((prev) => ({ ...prev, loading: false }));
     }
   }, [dataSource.page, dataSource.search, dataSource.pageSize]);
