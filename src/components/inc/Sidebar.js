@@ -31,7 +31,7 @@ function Sidebar({ style, toggleSidebar }) {
     { path: '/leads', label: 'Leads', icon: 'fas fa-user-friends' },
     { path: '/orders', label: 'Orders', icon: 'fas fa-boxes' },
     { path: '/users', label: 'Users', icon: 'fas fa-fw fa-users' },
-    { path: '/material-installation-quote', label: 'Material Installation Quote', icon: 'fa fa-fax' }
+    // { path: '/material-installation-quote', label: 'Material Installation Quote', icon: 'fa fa-fax' }
 
   ];
 

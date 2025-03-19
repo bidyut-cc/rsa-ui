@@ -137,7 +137,7 @@ function Lead({ title }) {
         }));
       }
     } catch (error) {
-      message.error(error.response.statusText);
+      message.error(error?.response?.statusText);
       setDataSource((prev) => ({ ...prev, loading: false }));
     }
   }, [dataSource.page, dataSource.search, dataSource.pageSize]);
@@ -306,7 +306,7 @@ function Lead({ title }) {
           }}/>
               </Descriptions.Item>
               <Descriptions.Item label="Total Price">
-                ${material.price}
+                ${Number(material.price).toLocaleString("en-US", { maximumFractionDigits: 0 })}
               </Descriptions.Item>
               <Descriptions.Item label="Checkout URL">
               <span>
@@ -472,7 +472,9 @@ function Lead({ title }) {
        {/* <Descriptions.Item label="3D Image">
         <Image width={100} src={room.urinalScreen.urinal_3D} alt="3D View" />
       </Descriptions.Item> */}
-      <Image width={100} src={room.urinalScreen.urinal_2D} alt="2D View" />
+      <Image width={100} src={room.urinalScreen.urinal_2D} alt="2D View" preview={{
+            className: "custom-preview", // Add a class for the preview modal
+          }}/>
       </Descriptions.Item>
       <Descriptions.Item label="Number of Urinal Screens">
         {room.urinalScreen.noOfUrinalScreens}

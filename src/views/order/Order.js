@@ -37,6 +37,8 @@ function Order({ title }) {
     phone_number: "",
     color: "",
     amount: "",
+    shipping_amount: "",
+    total_amount: "",
     order_id: "",
     cart_id: "",
     material_id: "",
@@ -105,10 +107,10 @@ function Order({ title }) {
     
     
     {
-        title: "Order Total",
+        title: "Quote Amount",
         dataIndex: "amount",
         key: "amount",
-        render: (amount) => `$${amount}`,
+        render: (amount) => `$${Number(amount).toLocaleString("en-US", { maximumFractionDigits: 0 })}`,
     },
     {
       title: "Payment Status",
@@ -178,7 +180,7 @@ function Order({ title }) {
         }));
       }
     } catch (error) {
-      message.error(error.response.statusText);
+      message.error(error?.response?.statusText);
       setDataSource((prev) => ({ ...prev, loading: false }));
     }
   }, [dataSource.page, dataSource.search, dataSource.pageSize]);
@@ -212,7 +214,9 @@ function Order({ title }) {
       email: row.email,
       phone_number: row.phone_number,
       color: row?.colors,
-      amount: row.amount,
+      amount:`$${Number(row.amount).toLocaleString("en-US", { maximumFractionDigits: 0 })}`,
+      shipping_amount: row.shipping_amount ? `$${Number(row.shipping_amount).toLocaleString("en-US", { maximumFractionDigits: 0 })}` : "NA",
+      total_amount: row.total_amount ?`$${Number(row.total_amount).toLocaleString("en-US", { maximumFractionDigits: 0 })}` : "NA",
       order_id: row.order_id,
       cart_id: row.cart_id,
       material_id: row.material_id,
@@ -238,6 +242,8 @@ function Order({ title }) {
       phone_number: "",
       color: "",
       amount: "",
+      shipping_amount: "",
+      total_amount: "",
       order_id: "",
       cart_id: "",
       material_id: "",
@@ -323,6 +329,7 @@ function Order({ title }) {
         width="50%" // Adjust modal width if needed
       >
       <Descriptions bordered column={1} size="middle">
+      <Descriptions.Item label="Order ID">{orderData.order_id || "N/A"}</Descriptions.Item>
         <Descriptions.Item label="Name">{orderData.first_name} {orderData.last_name}</Descriptions.Item>
         <Descriptions.Item label="Email">{orderData.email}</Descriptions.Item>
         <Descriptions.Item label="Phone Number"> {formatPhoneNumber(orderData.phone_number)}</Descriptions.Item>
@@ -356,8 +363,10 @@ function Order({ title }) {
   </Descriptions.Item>
 )}
 
-        <Descriptions.Item label="Amount">${orderData.amount}</Descriptions.Item>
-        <Descriptions.Item label="Order ID">{orderData.order_id || "N/A"}</Descriptions.Item>
+        <Descriptions.Item label="Quote Amount">{orderData.amount}</Descriptions.Item>
+        <Descriptions.Item label="Shipping Amount">{orderData.shipping_amount}</Descriptions.Item>
+        <Descriptions.Item label="Total Amount">{orderData.total_amount}</Descriptions.Item>
+      
         {/* <Descriptions.Item label="Cart ID">{orderData.cart_id}</Descriptions.Item>
         <Descriptions.Item label="Quotation ID">{orderData.quotation_id}</Descriptions.Item> */}
         <Descriptions.Item label="Payment Status">{capitalizeWords(orderData.payment_status)}</Descriptions.Item>

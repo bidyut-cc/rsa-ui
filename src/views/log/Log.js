@@ -179,7 +179,7 @@ const formatLogMessage = (record) => {
         }));
       }
     } catch (error) {
-      message.error(error.response.statusText);
+      message.error(error?.response?.statusText);
       setDataSource((prev) => ({ ...prev, loading: false }));
     }
   }, [dataSource.page, dataSource.search, dataSource.pageSize]);

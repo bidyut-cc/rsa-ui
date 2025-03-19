@@ -104,14 +104,14 @@ function App() {
               </RoleBasedRoute>
             }
           />
-          <Route
+          {/* <Route
             path="material-installation-quote"
             element={
               <RoleBasedRoute roles={['developer', 'super_admin']}>
                 <Quote title="Material Installation Quote" />
               </RoleBasedRoute>
             }
-          />
+          /> */}
           <Route
             path="materials"
             element={
