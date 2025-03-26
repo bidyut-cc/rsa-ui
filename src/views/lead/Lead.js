@@ -301,7 +301,9 @@ function Lead({ title }) {
             {/* Material Image and Price Details */}
             <Descriptions bordered size="middle" column={1} style={{ marginBottom: '20px' }}>
               <Descriptions.Item label="Material Image">
-                <Image width={100} src={material.src} alt="2D View" preview={{
+                <Image width={100} 
+                src={material.src.startsWith("http") ? material.src : `${process.env.REACT_APP_API_URL}${material.src}`} 
+                alt="2D View" preview={{
             className: "custom-preview", // Add a class for the preview modal
           }}/>
               </Descriptions.Item>

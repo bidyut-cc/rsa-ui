@@ -178,7 +178,7 @@ function Layout({title}) {
                     {layouts.map((layout) => (
                       <Col xs={24} sm={12} md={6} key={layout.id}>
                         <div>
-                          <Image width={50} src={layout.src} preview={false} />
+                          <Image width={50} src={`${process.env.REACT_APP_API_URL}${layout.src}`} preview={false} />
                           <Form.Item
                             name={`layout_${layout.id}`}
                             validateStatus={data.errors?.layouts ? "error" : ""}
