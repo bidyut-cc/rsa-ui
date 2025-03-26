@@ -337,7 +337,7 @@ function Order({ title }) {
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           {orderData.materialImage ? (
             <img
-              src={orderData.materialImage}
+              src={`${process.env.REACT_APP_API_URL}${orderData.materialImage}`}
               alt={orderData.materialName}
               style={{ width: "40px", height: "40px", borderRadius: "4px" }}
             />

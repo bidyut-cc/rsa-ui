@@ -354,7 +354,7 @@ const formatLogMessage = (record) => {
               >
                 <Image
                   width={30}
-                  src={layout.src}
+                  src={`${process.env.REACT_APP_API_URL}${layout.src}`}
                   preview={false}
                   alt={layout.name}
                   style={{ marginBottom: "8px" }}
@@ -392,7 +392,7 @@ const formatLogMessage = (record) => {
               >
                 <Image
                   width={30} // Adjust image to fit within the layout
-                  src={layout.src}
+                  src={`${process.env.REACT_APP_API_URL}${layout.src}`}
                   preview={false}
                   alt={layout.name}
                   style={{ marginBottom: "8px" }}
