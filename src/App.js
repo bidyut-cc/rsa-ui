@@ -20,6 +20,7 @@ import Log from "./views/log/Log";
 import Color from "./views/settings/Color";
 import Quote from "./views/quote/Quote";
 import Material from "./views/settings/Material";
+import InstallationSetup from "./views/settings/InstallationSetup";
 
 function App() {
 
@@ -117,6 +118,14 @@ function App() {
             element={
               <RoleBasedRoute roles={['developer', 'super_admin']}>
                 <Material title="Materials" />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="installation-setup"
+            element={
+              <RoleBasedRoute roles={['developer', 'super_admin']}>
+                <InstallationSetup title="Installation Setup" />
               </RoleBasedRoute>
             }
           />

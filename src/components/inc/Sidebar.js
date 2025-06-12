@@ -31,13 +31,14 @@ function Sidebar({ style, toggleSidebar }) {
     { path: '/leads', label: 'Leads', icon: 'fas fa-user-friends' },
     { path: '/orders', label: 'Orders', icon: 'fas fa-boxes' },
     { path: '/users', label: 'Users', icon: 'fas fa-fw fa-users' },
+    { path: '/installation-setup', label: 'Installation Setup', icon: 'fas fa-fw fa-cogs' },
     // { path: '/material-installation-quote', label: 'Material Installation Quote', icon: 'fa fa-fax' }
 
   ];
 
   // Check if the route is accessible based on the role or condition
   const isRouteAccessible = (item) => {
-    const restrictedPaths = ["/project", "/layout", "/measurement", "/colors", "/quotation","/material-installation-quote","/materials"];
+    const restrictedPaths = ["/project", "/layout", "/measurement", "/colors", "/quotation","/material-installation-quote","/materials","installation-setup"];
     const restrictedRoles = ["developer", "super_admin"];
     if (restrictedPaths.includes(item.path) && !restrictedRoles.includes(userRole)) {
       return false; // Hide restricted paths for non-authorized roles
