@@ -30,6 +30,7 @@ function Sidebar({ style, toggleSidebar }) {
     { path: '/quotation', label: 'Quotation Builder', icon: 'fas fa-dollar-sign' },
     { path: '/leads', label: 'Leads', icon: 'fas fa-user-friends' },
     { path: '/orders', label: 'Orders', icon: 'fas fa-boxes' },
+    { path: '/abandoned-orders', label: 'Abandoned Orders', icon: 'fas fa-boxes' },
     { path: '/users', label: 'Users', icon: 'fas fa-fw fa-users' },
     // { path: '/material-installation-quote', label: 'Material Installation Quote', icon: 'fa fa-fax' }
 

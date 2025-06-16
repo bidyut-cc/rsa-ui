@@ -20,6 +20,7 @@ import Log from "./views/log/Log";
 import Color from "./views/settings/Color";
 import Quote from "./views/quote/Quote";
 import Material from "./views/settings/Material";
+import AbandonedOrder from "./views/order/AbandonedOrder";
 
 function App() {
 
@@ -49,6 +50,7 @@ function App() {
           <Route path="profile" element={<Profile title="Update Profile" />} />
           <Route path="change-password" element={<Password title="Change Password" />} />
           <Route path="orders" element={<Order title="Orders" />} />
+          <Route path="abandoned-orders" element={<AbandonedOrder title="Abandoned Orders" />} />
           <Route path="users" element={<User title="Users" />} />
           <Route path="leads" element={<Lead title="Leads" />} />
           {/* <Route 
