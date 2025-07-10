@@ -61,12 +61,12 @@ function InstallationSetup({ title }) {
 
     const request = {
       material_types: updatedMaterialTypes,
-      no_of_stalls: values.no_of_stalls,
-      no_of_screens: values.no_of_screens,
-      per_mile_charge: values.per_mile_charge,
-      max_mile_limit: values.max_mile_limit,
-      per_night_price: values.per_night_price,
-      per_diem: values.per_diem,
+      charge_per_stalls: values.charge_per_stalls,
+      charge_per_screens: values.charge_per_screens,
+      charge_per_mile: values.charge_per_mile,
+      max_distance_limit: values.max_distance_limit,
+      charge_per_hotel_night: values.charge_per_hotel_night,
+      charge_per_diem: values.charge_per_diem,
     };
 
     setData((prev) => ({ ...prev, loading: true }));
@@ -94,19 +94,20 @@ function InstallationSetup({ title }) {
   };
 
   const priceFields = [
-    "per_mile_charge",
-    "max_mile_limit",
-    "per_night_price",
-    "per_diem",
+    "charge_per_mile",
+    "charge_per_stalls",
+    "charge_per_screens",
+    "charge_per_hotel_night",
+    "charge_per_diem",
   ];
 
   const formFields = [
-    { name: "no_of_stalls", label: "Number of Stalls" },
-    { name: "no_of_screens", label: "Number of Screens" },
-    { name: "per_mile_charge", label: "Per Mile Charge" },
-    { name: "max_mile_limit", label: "Max Mile Limit" },
-    { name: "per_night_price", label: "Per Night Price" },
-    { name: "per_diem", label: "Per Diem" },
+    { name: "charge_per_mile", label: "Charge Per Mile" },
+    { name: "charge_per_stalls", label: "Charge Per Stall" },
+    { name: "charge_per_screens", label: "Charge Per Screen" },
+    { name: "charge_per_hotel_night", label: "Charge Per Hotel Night" },
+    { name: "charge_per_diem", label: "Charge Per Diem" },
+    { name: "max_distance_limit", label: "Max Distance Limit (Miles)" },
   ];
 
   return (
@@ -132,17 +133,17 @@ function InstallationSetup({ title }) {
                 layout="vertical"
                 onFinish={updateData}
                 initialValues={{
-                  no_of_stalls: "",
-                  no_of_screens: "",
-                  per_mile_charge: "",
-                  max_mile_limit: "",
-                  per_night_price: "",
-                  per_diem: "",
+                  charge_per_stalls: "",
+                  charge_per_screens: "",
+                  charge_per_mile: "",
+                  max_distance_limit: "",
+                  charge_per_hotel_night: "",
+                  charge_per_diem: "",
                   material_types: [],
                 }}
               >
                 <Row gutter={[16, 16]}>
-                  <Col xs={24}>
+                  <Col xs={24} style={{ display: "none" }}>
                     <Form.Item label={
                         <span>
                         Material Types Prices <span style={{ color: "red" }}>*</span>
@@ -207,7 +208,7 @@ function InstallationSetup({ title }) {
                         name={field.name}
                         rules={[
                           { required: true, message: `Please enter ${field.label.toLowerCase()}.` },
-                          ...(priceFields.includes(field.name) || ["no_of_stalls", "no_of_screens"].includes(field.name)
+                          ...(priceFields.includes(field.name) || ["charge_per_stalls", "charge_per_screens"].includes(field.name)
                             ? [
                                 {
                                   validator: (_, value) => {
