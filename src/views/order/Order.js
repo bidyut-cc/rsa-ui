@@ -107,10 +107,10 @@ function Order({ title }) {
     
     
     {
-        title: "Quote Amount",
-        dataIndex: "amount",
-        key: "amount",
-        render: (amount) => `$${Number(amount).toLocaleString("en-US", { maximumFractionDigits: 0 })}`,
+        title: "Total Amount",
+        dataIndex: "total_amount",
+        key: "total_amount",
+        render: (total_amount) => `$${Number(total_amount).toLocaleString("en-US", { maximumFractionDigits: 0 })}`,
     },
     {
       title: "Payment Status",
@@ -216,6 +216,7 @@ function Order({ title }) {
       color: row?.colors,
       amount:`$${Number(row.amount).toLocaleString("en-US", { maximumFractionDigits: 0 })}`,
       shipping_amount: row.shipping_amount ? `$${Number(row.shipping_amount).toLocaleString("en-US", { maximumFractionDigits: 0 })}` : "NA",
+      tax_amount : row.tax_amount ? `$${Number(row.tax_amount).toLocaleString("en-US", { maximumFractionDigits: 0 })}` : "NA",
       total_amount: row.total_amount ?`$${Number(row.total_amount).toLocaleString("en-US", { maximumFractionDigits: 0 })}` : "NA",
       order_id: row.order_id,
       cart_id: row.cart_id,
@@ -365,6 +366,7 @@ function Order({ title }) {
 
         <Descriptions.Item label="Quote Amount">{orderData.amount}</Descriptions.Item>
         <Descriptions.Item label="Shipping Amount">{orderData.shipping_amount}</Descriptions.Item>
+        <Descriptions.Item label="Tax Amount">{orderData.tax_amount}</Descriptions.Item>
         <Descriptions.Item label="Total Amount">{orderData.total_amount}</Descriptions.Item>
       
         {/* <Descriptions.Item label="Cart ID">{orderData.cart_id}</Descriptions.Item>
