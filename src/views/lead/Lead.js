@@ -43,6 +43,9 @@ function Lead({ title }) {
     submittedData: "",
     roomData: "",
     is_converted_to_deal:"",
+    distance:"",
+    is_within_max_distance:"",
+    installation_price:"",
     createdAt:"",
     materials: [], // Initialize as an empty array
     errors: [],
@@ -168,6 +171,9 @@ function Lead({ title }) {
       phone_number: row.phone_number,
       submittedData: row.submittedData,
       roomData: row.roomData,
+      installation_price:row.installation_price,
+      distance:row.distance,
+      is_within_max_distance:row.is_within_max_distance,
       materials: row.materials || [], // Default to empty array
       is_converted_to_deal:row.is_converted_to_deal,
       createdAt:row.createdAt,
@@ -287,8 +293,13 @@ function Lead({ title }) {
                 />
               </span>
         </Descriptions.Item>
+        {typeof quotationData.is_within_max_distance !== 'undefined' && quotationData?.is_within_max_distance === true && (
+          <Descriptions.Item label="Installation Price">
+            ${Number(quotationData?.installation_price).toLocaleString("en-US")}
+          </Descriptions.Item>
+        )}
       </Descriptions>
-     
+      
 
         {/* Materials Details */}
         <h6 style={{ marginTop: "20px", fontWeight: "bold" }} >Materials</h6>
