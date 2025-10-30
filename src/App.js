@@ -23,6 +23,8 @@ import Material from "./views/settings/Material";
 
 import AbandonedOrder from "./views/order/AbandonedOrder";
 import InstallationSetup from "./views/settings/InstallationSetup";
+import BidsConsole from "./views/bids/Bids";
+import BidsSetting from "./views/bids/Settings";
 
 function App() {
 
@@ -129,6 +131,22 @@ function App() {
             element={
               <RoleBasedRoute roles={['developer', 'super_admin']}>
                 <InstallationSetup title="Installation Setup" />
+              </RoleBasedRoute>
+            }
+          />
+           <Route
+            path="bids-setting"
+            element={
+              <RoleBasedRoute roles={['developer', 'super_admin']}>
+                <BidsSetting title="Bids Setting" />
+              </RoleBasedRoute>
+            }
+          />
+            <Route
+            path="bids-console"
+            element={
+              <RoleBasedRoute roles={['developer', 'super_admin']}>
+                <BidsConsole title="Bids Console" />
               </RoleBasedRoute>
             }
           />
