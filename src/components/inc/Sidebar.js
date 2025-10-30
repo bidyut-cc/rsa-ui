@@ -34,6 +34,14 @@ function Sidebar({ style, toggleSidebar }) {
     { path: '/users', label: 'Users', icon: 'fas fa-fw fa-users' },
     { path: '/installation-setup', label: 'Installation Setup', icon: 'fas fa-fw fa-cogs' },
     // { path: '/material-installation-quote', label: 'Material Installation Quote', icon: 'fa fa-fax' }
+    { 
+      label: 'Bids Console', 
+      icon: 'fas fa-fw fa-cogs', 
+      subItems: [
+        { path: '/bids-setting', label: 'Bids Setting' },
+        { path: '/bids-console', label: 'Bids Console' }
+      ]
+    },
 
   ];
 
